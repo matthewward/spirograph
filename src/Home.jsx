@@ -9,14 +9,6 @@ function Home() {
     // we'll need to define our routes manually
     const availableRoutes = [
       {
-        path: "/snake",
-        name: "Snake Game",
-        title: "Snake Game",
-        date: "2024-03-21", // You can adjust these values
-        description: "Classic Snake game implementation",
-        new: true,
-      },
-      {
         path: "/spirograph",
         name: "Spirograph",
         title: "Spirograph",
