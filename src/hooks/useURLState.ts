@@ -5,7 +5,6 @@ import {
   stateToHookParams,
 } from "../lib/url/serialization";
 import { SpirographParams, CurveType } from "../lib/spirograph/types";
-import { ColorOscillation } from "../lib/animation/colorOscillation";
 import { SpirographOscillations } from "../lib/animation/parameterOscillation";
 import { EasingType } from "../lib/animation/easing";
 import { LoopDirection } from "./useAnimation";
@@ -41,7 +40,6 @@ export function useURLState() {
   const generateShareURL = (
     params: SpirographParams,
     curveType: CurveType,
-    colorOscillation: ColorOscillation,
     paramOscillations: SpirographOscillations,
     animSpeed: number,
     animEasing: EasingType,
@@ -53,7 +51,6 @@ export function useURLState() {
     const stateString = serializeState(
       params,
       curveType,
-      colorOscillation,
       paramOscillations,
       animSpeed,
       animEasing,
@@ -76,7 +73,6 @@ export function useURLState() {
   const updateURL = (
     params: SpirographParams,
     curveType: CurveType,
-    colorOscillation: ColorOscillation,
     paramOscillations: SpirographOscillations,
     animSpeed: number,
     animEasing: EasingType,
@@ -87,7 +83,6 @@ export function useURLState() {
     const url = generateShareURL(
       params,
       curveType,
-      colorOscillation,
       paramOscillations,
       animSpeed,
       animEasing,

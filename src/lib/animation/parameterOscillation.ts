@@ -1,4 +1,4 @@
-import { WaveType, applyWaveShape } from "./colorOscillation";
+import { WaveType, applyWaveShape } from "./oscillationWaves";
 
 /**
  * Parameter oscillation configuration for a single parameter

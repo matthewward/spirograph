@@ -1,5 +1,5 @@
 import { SpirographParams, CurveType } from '../spirograph/types';
-import { ColorOscillation, WaveType } from '../animation/colorOscillation';
+import { WaveType } from '../animation/oscillationWaves';
 import { SpirographOscillations } from '../animation/parameterOscillation';
 import { EasingType } from '../animation/easing';
 import { LoopDirection } from '../../hooks/useAnimation';
@@ -18,12 +18,6 @@ export interface SerializableState {
 
   // CurveType
   curveType: CurveType;
-
-  // ColorOscillation
-  colorOscEnabled: boolean;
-  colorOscColors: string[];
-  colorOscFrequency: number;
-  colorOscWaveType: WaveType;
 
   // ParameterOscillations - R
   oscR_enabled: boolean;
@@ -64,10 +58,6 @@ export function getDefaultState(): SerializableState {
     rotation: 0,
     backgroundColor: '#111529',
     curveType: 'hypotrochoid',
-    colorOscEnabled: false,
-    colorOscColors: ['#00d9ff', '#ff00ff'],
-    colorOscFrequency: 1,
-    colorOscWaveType: 'sine',
     oscR_enabled: false,
     oscR_amplitude: 20,
     oscR_frequency: 2,
@@ -92,7 +82,6 @@ export function getDefaultState(): SerializableState {
 export function serializeState(
   params: SpirographParams,
   curveType: CurveType,
-  colorOscillation: ColorOscillation,
   paramOscillations: SpirographOscillations,
   animSpeed: number,
   animEasing: EasingType,
@@ -111,10 +100,6 @@ export function serializeState(
     rotation: params.rotation,
     backgroundColor: params.backgroundColor,
     curveType,
-    colorOscEnabled: colorOscillation.enabled,
-    colorOscColors: colorOscillation.colors,
-    colorOscFrequency: colorOscillation.frequency,
-    colorOscWaveType: colorOscillation.waveType,
     oscR_enabled: paramOscillations.R.enabled,
     oscR_amplitude: paramOscillations.R.amplitude,
     oscR_frequency: paramOscillations.R.frequency,
@@ -183,14 +168,6 @@ function validateLoopDirection(val: any, defaultVal: LoopDirection): LoopDirecti
   return validLoops.includes(val) ? val : defaultVal;
 }
 
-function validateColorArray(val: any, defaultVal: string[]): string[] {
-  if (!Array.isArray(val) || val.length < 2) return defaultVal;
-  // Basic hex color validation
-  const hexRegex = /^#[0-9A-Fa-f]{6}$/;
-  const validColors = val.filter(c => typeof c === 'string' && hexRegex.test(c));
-  return validColors.length >= 2 ? validColors : defaultVal;
-}
-
 // Deserialize Base64 string to state with validation
 export function deserializeState(base64: string): SerializableState | null {
   try {
@@ -210,10 +187,6 @@ export function deserializeState(base64: string): SerializableState | null {
       rotation: validateNumber(parsed.rotation, 0, 360, defaults.rotation),
       backgroundColor: validateString(parsed.backgroundColor, defaults.backgroundColor),
       curveType: validateCurveType(parsed.curveType, defaults.curveType),
-      colorOscEnabled: validateBoolean(parsed.colorOscEnabled, defaults.colorOscEnabled),
-      colorOscColors: validateColorArray(parsed.colorOscColors, defaults.colorOscColors),
-      colorOscFrequency: validateNumber(parsed.colorOscFrequency, 1, 20, defaults.colorOscFrequency),
-      colorOscWaveType: validateWaveType(parsed.colorOscWaveType, defaults.colorOscWaveType),
       oscR_enabled: validateBoolean(parsed.oscR_enabled, defaults.oscR_enabled),
       oscR_amplitude: validateNumber(parsed.oscR_amplitude, 0, 100, defaults.oscR_amplitude),
       oscR_frequency: validateNumber(parsed.oscR_frequency, 1, 20, defaults.oscR_frequency),
@@ -254,13 +227,6 @@ export function stateToHookParams(state: SerializableState) {
     backgroundColor: state.backgroundColor,
   };
 
-  const colorOscillation: ColorOscillation = {
-    enabled: state.colorOscEnabled,
-    colors: state.colorOscColors,
-    frequency: state.colorOscFrequency,
-    waveType: state.colorOscWaveType,
-  };
-
   const paramOscillations: SpirographOscillations = {
     R: {
       enabled: state.oscR_enabled,
@@ -288,7 +254,6 @@ export function stateToHookParams(state: SerializableState) {
   return {
     params,
     curveType: state.curveType,
-    colorOscillation,
     paramOscillations,
     animSpeed: state.animSpeed,
     animEasing: state.animEasing,

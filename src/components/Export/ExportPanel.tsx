@@ -2,7 +2,6 @@ import { useState } from "react";
 import { EasingType } from "../../lib/animation/easing";
 import { LoopDirection } from "../../hooks/useAnimation";
 import { SpirographParams, CurveType } from "../../lib/spirograph/types";
-import { ColorOscillation } from "../../lib/animation/colorOscillation";
 import { SpirographOscillations } from "../../lib/animation/parameterOscillation";
 import { useURLState } from "../../hooks/useURLState";
 import styles from "./ExportPanel.module.css";
@@ -20,7 +19,6 @@ interface ExportPanelProps {
   // New props for sharing
   params: SpirographParams;
   curveType: CurveType;
-  colorOscillation: ColorOscillation;
   paramOscillations: SpirographOscillations;
   animSpeed: number;
   animEasing: EasingType;
@@ -37,7 +35,6 @@ export function ExportPanel({
   onExportAnimated,
   params,
   curveType,
-  colorOscillation,
   paramOscillations,
   animSpeed,
   animEasing,
@@ -59,7 +56,6 @@ export function ExportPanel({
     const shareURL = generateShareURL(
       params,
       curveType,
-      colorOscillation,
       paramOscillations,
       animSpeed,
       animEasing,

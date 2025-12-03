@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { SpirographParams, Point, CurveType } from '../lib/spirograph/types';
 import { sampleSpirograph, sampleSpirographWithOscillation, getBoundingBox } from '../lib/spirograph/math';
 import { pointsToPath, simplifyPath, calculatePathLength } from '../lib/svg/generator';
-import { ColorOscillation } from '../lib/animation/colorOscillation';
 import { SpirographOscillations, createDefaultOscillation, getOscillatedValue } from '../lib/animation/parameterOscillation';
 
 export interface UseSpirographResult {
@@ -10,8 +9,6 @@ export interface UseSpirographResult {
   setParams: (params: Partial<SpirographParams>) => void;
   curveType: CurveType;
   setCurveType: (type: CurveType) => void;
-  colorOscillation: ColorOscillation;
-  setColorOscillation: (oscillation: Partial<ColorOscillation>) => void;
   parameterOscillations: SpirographOscillations;
   setParameterOscillations: (oscillations: Partial<SpirographOscillations>) => void;
   points: Point[];
@@ -35,12 +32,6 @@ const DEFAULT_PARAMS: SpirographParams = {
 export function useSpirograph(): UseSpirographResult {
   const [params, setParamsState] = useState<SpirographParams>(DEFAULT_PARAMS);
   const [curveType, setCurveType] = useState<CurveType>('hypotrochoid');
-  const [colorOscillation, setColorOscillationState] = useState<ColorOscillation>({
-    enabled: false,
-    colors: ['#00d9ff', '#ff00ff'],  // Default: cyan to magenta
-    frequency: 1,
-    waveType: 'sine',
-  });
   const [parameterOscillations, setParameterOscillationsState] = useState<SpirographOscillations>({
     R: createDefaultOscillation(DEFAULT_PARAMS.R),
     r: createDefaultOscillation(DEFAULT_PARAMS.r),
@@ -58,10 +49,6 @@ export function useSpirograph(): UseSpirographResult {
       }));
       return updated;
     });
-  };
-
-  const setColorOscillation = (update: Partial<ColorOscillation>) => {
-    setColorOscillationState((prev) => ({ ...prev, ...update }));
   };
 
   const setParameterOscillations = (update: Partial<SpirographOscillations>) => {
@@ -123,8 +110,6 @@ export function useSpirograph(): UseSpirographResult {
     setParams,
     curveType,
     setCurveType,
-    colorOscillation,
-    setColorOscillation,
     parameterOscillations,
     setParameterOscillations,
     points,

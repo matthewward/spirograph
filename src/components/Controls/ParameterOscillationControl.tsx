@@ -1,5 +1,5 @@
 import { ParameterOscillation } from "../../lib/animation/parameterOscillation";
-import { WaveType } from "../../lib/animation/colorOscillation";
+import { WaveType } from "../../lib/animation/oscillationWaves";
 import { NumberInput } from "./NumberInput";
 import styles from "./ParameterOscillationControl.module.css";
 

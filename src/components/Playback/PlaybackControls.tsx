@@ -61,9 +61,10 @@ export function PlaybackControls({
             Reset
           </button>
         </div>
-        <div>
-          <div className={styles.speedControl}>
-            <label>Speed</label>
+
+        <div className={styles.controlsGrid}>
+          <div className={styles.controlRow}>
+            <label className={styles.controlLabel}>Speed</label>
             <div className={styles.speedButtons}>
               {speedOptions.map((s) => (
                 <button
@@ -76,44 +77,63 @@ export function PlaybackControls({
               ))}
             </div>
           </div>
-        </div>
 
-        <div className={styles.easingControl}>
-          <label htmlFor="easing">Easing</label>
-          <select
-            id="easing"
-            value={easing}
-            onChange={(e) => onEasingChange(e.target.value as EasingType)}
-            className={styles.easingSelect}
-          >
-            {Object.entries(easingGroups).map(([groupName, families]) => (
-              <optgroup key={groupName} label={groupName}>
-                {families.map((family) =>
-                  getEasingVariants(family).map((variant) => (
-                    <option key={variant} value={variant}>
-                      {variant}
-                    </option>
-                  ))
-                )}
-              </optgroup>
-            ))}
-          </select>
-        </div>
+          <div className={styles.controlRow}>
+            <label htmlFor="easing" className={styles.controlLabel}>
+              Easing
+            </label>
+            <select
+              id="easing"
+              value={easing}
+              onChange={(e) => onEasingChange(e.target.value as EasingType)}
+              className={styles.easingSelect}
+            >
+              {Object.entries(easingGroups).map(([groupName, families]) => (
+                <optgroup key={groupName} label={groupName}>
+                  {families.map((family) =>
+                    getEasingVariants(family).map((variant) => (
+                      <option key={variant} value={variant}>
+                        {variant}
+                      </option>
+                    ))
+                  )}
+                </optgroup>
+              ))}
+            </select>
+          </div>
 
-        <div className={styles.loopControl}>
-          <label htmlFor="loop-direction">Loop</label>
-          <select
-            id="loop-direction"
-            value={loopDirection}
-            onChange={(e) =>
-              onLoopDirectionChange(e.target.value as LoopDirection)
-            }
-            className={styles.loopSelect}
-          >
-            <option value="none">None</option>
-            <option value="continue">Continue</option>
-            <option value="pingpong">Ping-Pong</option>
-          </select>
+          <div className={styles.controlRow}>
+            <label htmlFor="loop-direction" className={styles.controlLabel}>
+              Loop
+            </label>
+            <select
+              id="loop-direction"
+              value={loopDirection}
+              onChange={(e) =>
+                onLoopDirectionChange(e.target.value as LoopDirection)
+              }
+              className={styles.loopSelect}
+            >
+              <option value="none">None</option>
+              <option value="continue">Continue</option>
+              <option value="pingpong">Ping-Pong</option>
+            </select>
+          </div>
+
+          <div className={styles.controlRow}>
+            <div className={styles.progressLabel}>
+              {Math.round(progress * 100)}%
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.001"
+              value={progress}
+              onChange={(e) => onProgressChange(Number(e.target.value))}
+              className={styles.timelineSlider}
+            />
+          </div>
         </div>
 
         {/* <div className={styles.dotToggle}>
@@ -141,21 +161,6 @@ export function PlaybackControls({
             <span>Rings</span>
           </label>
         </div> */}
-      </div>
-
-      <div className={styles.timeline}>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.001"
-          value={progress}
-          onChange={(e) => onProgressChange(Number(e.target.value))}
-          className={styles.timelineSlider}
-        />
-        <div className={styles.progressLabel}>
-          {Math.round(progress * 100)}%
-        </div>
       </div>
     </div>
   );

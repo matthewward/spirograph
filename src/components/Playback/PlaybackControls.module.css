@@ -9,9 +9,8 @@
 
 .controlsRow {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--spacing-md);
-  flex-wrap: wrap;
 }
 
 /* Playback Buttons */
@@ -46,15 +45,21 @@
   opacity: 1;
 }
 
-.speedControl {
-  display: flex;
+.controlsGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-sm) var(--spacing-md);
   align-items: center;
-  gap: var(--spacing-sm);
-  margin-left: auto;
 }
 
-.speedControl label {
+.controlRow {
+  display: contents;
+}
+
+.controlLabel {
   font-size: 0.75rem;
+  color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .speedButtons {
@@ -63,6 +68,7 @@
 }
 
 .speedButton {
+  flex: 1;
   padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--bg-tertiary);
   border-radius: var(--border-radius-sm);
@@ -74,22 +80,13 @@
 .speedButton.active {
   background: var(--accent-amber);
   color: var(--bg-primary);
+  height: 28px;
 }
 
 .speedButton:hover {
   background: var(--accent-amber);
   color: var(--bg-primary);
   opacity: 1;
-}
-
-.easingControl {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.easingControl label {
-  font-size: 0.75rem;
 }
 
 .easingSelect {
@@ -99,22 +96,12 @@
   border-radius: var(--border-radius-sm);
   font-size: 0.75rem;
   font-family: var(--font-mono);
-  min-width: 140px;
+  width: 100%;
   transition: all var(--transition-fast);
 }
 
 .easingSelect:hover {
   background: var(--bg-primary);
-}
-
-.loopControl {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.loopControl label {
-  font-size: 0.75rem;
 }
 
 .loopSelect {
@@ -124,7 +111,7 @@
   border-radius: var(--border-radius-sm);
   font-size: 0.75rem;
   font-family: var(--font-mono);
-  min-width: 110px;
+  width: 100%;
   transition: all var(--transition-fast);
 }
 
@@ -172,12 +159,6 @@
   cursor: pointer;
 }
 
-.timeline {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
 .timelineSlider {
   flex: 1;
   pointer-events: none;
@@ -185,8 +166,8 @@
 
 .progressLabel {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  min-width: 50px;
-  text-align: right;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 0.7;
 }
