@@ -1,4 +1,5 @@
 import { EasingType } from '../animation/easing';
+import { LoopDirection } from '../../hooks/useAnimation';
 
 /**
  * Convert easing type to SMIL keySplines
@@ -70,13 +71,44 @@ export function generateAnimatedSVG(
   strokeWidth: number,
   pathLength: number,
   duration: number = 5,
-  loop: boolean = false,
+  loopDirection: LoopDirection = 'none',
   easing: EasingType = 'linear'
 ): string {
   const keySplines = getKeySplines(easing);
 
-  if (loop) {
-    // Bidirectional loop: draw (0 -> 1) then undraw (1 -> 0)
+  if (loopDirection === 'none') {
+    // One-way animation (no loop)
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="800" height="800">
+  <style>
+    path {
+      stroke-dasharray: ${pathLength};
+    }
+  </style>
+
+  <path
+    d="${pathString}"
+    fill="none"
+    stroke="${strokeColor}"
+    stroke-width="${strokeWidth}"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <animate
+      attributeName="stroke-dashoffset"
+      from="${pathLength}"
+      to="0"
+      dur="${duration}s"
+      keySplines="${keySplines}"
+      keyTimes="0;1"
+      calcMode="spline"
+      fill="freeze"
+    />
+  </path>
+</svg>`;
+  } else {
+    // Both continue and pingpong use same animation (draw -> undraw)
+    // The difference is visual only (both show the same effect in SMIL)
     const cycleDuration = duration * 2;
 
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -103,36 +135,6 @@ export function generateAnimatedSVG(
       dur="${cycleDuration}s"
       repeatCount="indefinite"
       calcMode="spline"
-    />
-  </path>
-</svg>`;
-  } else {
-    // One-way animation
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="800" height="800">
-  <style>
-    path {
-      stroke-dasharray: ${pathLength};
-    }
-  </style>
-
-  <path
-    d="${pathString}"
-    fill="none"
-    stroke="${strokeColor}"
-    stroke-width="${strokeWidth}"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  >
-    <animate
-      attributeName="stroke-dashoffset"
-      from="${pathLength}"
-      to="0"
-      dur="${duration}s"
-      keySplines="${keySplines}"
-      keyTimes="0;1"
-      calcMode="spline"
-      fill="freeze"
     />
   </path>
 </svg>`;

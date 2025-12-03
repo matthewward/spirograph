@@ -7,10 +7,11 @@
   border-radius: var(--border-radius);
 }
 
-.controls {
+.controlsRow {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  flex-wrap: wrap;
 }
 
 .button {
@@ -95,9 +96,34 @@
 .loopControl {
   display: flex;
   align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .loopControl label {
+  font-size: 0.75rem;
+}
+
+.loopSelect {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  min-width: 110px;
+  transition: all var(--transition-fast);
+}
+
+.loopSelect:hover {
+  background: var(--bg-primary);
+}
+
+.dotToggle {
+  display: flex;
+  align-items: center;
+}
+
+.dotToggle label {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -105,7 +131,7 @@
   cursor: pointer;
 }
 
-.loopCheckbox {
+.dotCheckbox {
   width: 16px;
   height: 16px;
   accent-color: var(--accent-cyan);

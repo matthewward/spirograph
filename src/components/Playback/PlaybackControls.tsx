@@ -1,4 +1,5 @@
 import { EasingType, easingGroups, getEasingVariants } from '../../lib/animation/easing';
+import { LoopDirection } from '../../hooks/useAnimation';
 import styles from './PlaybackControls.module.css';
 
 interface PlaybackControlsProps {
@@ -6,14 +7,16 @@ interface PlaybackControlsProps {
   progress: number;
   speed: number;
   easing: EasingType;
-  loop: boolean;
+  loopDirection: LoopDirection;
+  showDot: boolean;
   onPlay: () => void;
   onPause: () => void;
   onReset: () => void;
   onProgressChange: (progress: number) => void;
   onSpeedChange: (speed: number) => void;
   onEasingChange: (easing: EasingType) => void;
-  onLoopChange: (loop: boolean) => void;
+  onLoopDirectionChange: (direction: LoopDirection) => void;
+  onShowDotChange: (show: boolean) => void;
 }
 
 export function PlaybackControls({
@@ -21,20 +24,22 @@ export function PlaybackControls({
   progress,
   speed,
   easing,
-  loop,
+  loopDirection,
+  showDot,
   onPlay,
   onPause,
   onReset,
   onProgressChange,
   onSpeedChange,
   onEasingChange,
-  onLoopChange,
+  onLoopDirectionChange,
+  onShowDotChange,
 }: PlaybackControlsProps) {
   const speedOptions = [0.25, 0.5, 1, 2, 4];
 
   return (
     <div className={styles.container}>
-      <div className={styles.controls}>
+      <div className={styles.controlsRow}>
         <button
           className={styles.button}
           onClick={isPlaying ? onPause : onPlay}
@@ -101,15 +106,29 @@ export function PlaybackControls({
         </div>
 
         <div className={styles.loopControl}>
-          <label htmlFor="loop">
+          <label htmlFor="loop-direction">Loop</label>
+          <select
+            id="loop-direction"
+            value={loopDirection}
+            onChange={(e) => onLoopDirectionChange(e.target.value as LoopDirection)}
+            className={styles.loopSelect}
+          >
+            <option value="none">None</option>
+            <option value="continue">Continue</option>
+            <option value="pingpong">Ping-Pong</option>
+          </select>
+        </div>
+
+        <div className={styles.dotToggle}>
+          <label htmlFor="show-dot">
             <input
-              id="loop"
+              id="show-dot"
               type="checkbox"
-              checked={loop}
-              onChange={(e) => onLoopChange(e.target.checked)}
-              className={styles.loopCheckbox}
+              checked={showDot}
+              onChange={(e) => onShowDotChange(e.target.checked)}
+              className={styles.dotCheckbox}
             />
-            <span>Loop</span>
+            <span>Dot</span>
           </label>
         </div>
       </div>

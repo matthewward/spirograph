@@ -139,9 +139,9 @@ export function SimpleControls({ params, onChange }: SimpleControlsProps) {
           <input
             id="duration"
             type="range"
-            min="1"
+            min="0.1"
             max="30"
-            step="0.5"
+            step="0.1"
             value={params.duration}
             onChange={(e) => onChange({ duration: Number(e.target.value) })}
           />
@@ -149,7 +149,8 @@ export function SimpleControls({ params, onChange }: SimpleControlsProps) {
             type="number"
             className={styles.numberInput}
             value={params.duration}
-            step="0.5"
+            step="0.1"
+            min="0.1"
             onChange={(e) => onChange({ duration: Number(e.target.value) })}
           />
         </div>

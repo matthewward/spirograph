@@ -11,6 +11,7 @@ function App() {
   const {
     params,
     setParams,
+    points,
     pathString,
     pathLength,
     viewBox,
@@ -19,16 +20,19 @@ function App() {
   const {
     isPlaying,
     progress,
+    isErasing,
     speed,
     easing,
-    loop,
+    loopDirection,
+    showDot,
     play,
     pause,
     reset,
     setProgress,
     setSpeed,
     setEasing,
-    setLoop,
+    setLoopDirection,
+    setShowDot,
   } = useAnimation(params.duration * 1000); // Convert seconds to milliseconds
 
   const { exportStatic, exportAnimated } = useExport({
@@ -57,21 +61,23 @@ function App() {
             progress={progress}
             speed={speed}
             easing={easing}
-            loop={loop}
+            loopDirection={loopDirection}
+            showDot={showDot}
             onPlay={play}
             onPause={pause}
             onReset={reset}
             onProgressChange={setProgress}
             onSpeedChange={setSpeed}
             onEasingChange={setEasing}
-            onLoopChange={setLoop}
+            onLoopDirectionChange={setLoopDirection}
+            onShowDotChange={setShowDot}
           />
 
           <h3 className={styles.sectionTitle}>Export</h3>
           <ExportPanel
             duration={params.duration}
             easing={easing}
-            loop={loop}
+            loopDirection={loopDirection}
             onExportStatic={exportStatic}
             onExportAnimated={exportAnimated}
           />
@@ -79,6 +85,7 @@ function App() {
 
         <main className={styles.canvasArea}>
           <SpirographCanvas
+            points={points}
             pathString={pathString}
             viewBox={viewBox}
             strokeColor={params.strokeColor}
@@ -86,6 +93,9 @@ function App() {
             pathLength={pathLength}
             isAnimating={isPlaying}
             progress={progress}
+            loopDirection={loopDirection}
+            isErasing={isErasing}
+            showDot={showDot}
           />
         </main>
       </div>

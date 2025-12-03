@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
+import { LoopDirection } from '../../hooks/useAnimation';
+import { Point } from '../../lib/spirograph/types';
+import { pointsToPath } from '../../lib/svg/generator';
 import styles from './SpirographCanvas.module.css';
 
 interface SpirographCanvasProps {
+  points: Point[];
   pathString: string;
   viewBox: string;
   strokeColor: string;
@@ -9,9 +13,13 @@ interface SpirographCanvasProps {
   pathLength: number;
   isAnimating: boolean;
   progress: number;
+  loopDirection: LoopDirection;
+  isErasing?: boolean;
+  showDot?: boolean;
 }
 
 export function SpirographCanvas({
+  points,
   pathString,
   viewBox,
   strokeColor,
@@ -19,12 +27,39 @@ export function SpirographCanvas({
   pathLength,
   isAnimating,
   progress,
+  loopDirection,
+  isErasing = false,
+  showDot = false,
 }: SpirographCanvasProps) {
-  // Calculate stroke-dashoffset for animation
-  const dashOffset = useMemo(() => {
-    if (!isAnimating) return 0;
-    return pathLength * (1 - progress);
-  }, [isAnimating, progress, pathLength]);
+  // For "continue" mode during erase, we need to slice the points array
+  // and regenerate the path to remove points from the START
+  const { actualPath, dashOffset, dashArray }: { actualPath: string; dashOffset: number; dashArray: number | string } = useMemo(() => {
+    if (!isAnimating) {
+      return { actualPath: pathString, dashOffset: 0, dashArray: pathLength };
+    }
+
+    // For "continue" mode during erase phase:
+    // Slice points from the end (remove from start) and regenerate path
+    if (loopDirection === 'continue' && isErasing) {
+      const startIndex = Math.floor((1 - progress) * points.length);
+      const slicedPoints = points.slice(startIndex);
+      const newPath = pointsToPath(slicedPoints);
+
+      return {
+        actualPath: newPath,
+        dashOffset: 0,
+        dashArray: pathLength // No dash tricks needed!
+      };
+    }
+
+    // Default behavior (none, pingpong, and continue during draw phase):
+    // Normal stroke-dashoffset animation
+    return {
+      actualPath: pathString,
+      dashOffset: pathLength * (1 - progress),
+      dashArray: pathLength
+    };
+  }, [isAnimating, progress, pathLength, loopDirection, isErasing, points, pathString]);
 
   return (
     <div className={styles.container}>
@@ -54,7 +89,7 @@ export function SpirographCanvas({
 
         {/* The spirograph path */}
         <path
-          d={pathString}
+          d={actualPath}
           fill="none"
           stroke={strokeColor}
           strokeWidth={strokeWidth}
@@ -63,7 +98,7 @@ export function SpirographCanvas({
           style={
             isAnimating
               ? {
-                  strokeDasharray: pathLength,
+                  strokeDasharray: dashArray,
                   strokeDashoffset: dashOffset,
                 }
               : undefined
@@ -71,14 +106,16 @@ export function SpirographCanvas({
         />
 
         {/* Preview dot during animation */}
-        {isAnimating && progress > 0 && progress < 1 && (
+        {isAnimating && showDot && progress > 0 && progress < 1 && (
           <circle
             className={styles.previewDot}
             r={strokeWidth * 2}
             fill={strokeColor}
             style={{
-              offsetPath: `path('${pathString}')`,
-              offsetDistance: `${progress * 100}%`,
+              offsetPath: `path('${actualPath}')`,
+              offsetDistance: loopDirection === 'continue' && isErasing
+                ? '100%'  // Always at the end of the visible path during continue erase
+                : `${progress * 100}%`,
             }}
           />
         )}

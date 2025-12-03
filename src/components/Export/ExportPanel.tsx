@@ -1,21 +1,25 @@
 import { EasingType } from '../../lib/animation/easing';
+import { LoopDirection } from '../../hooks/useAnimation';
 import styles from './ExportPanel.module.css';
 
 interface ExportPanelProps {
   duration: number;
   easing: EasingType;
-  loop: boolean;
+  loopDirection: LoopDirection;
   onExportStatic: () => void;
-  onExportAnimated: (duration: number, loop: boolean, easing: EasingType) => void;
+  onExportAnimated: (duration: number, loopDirection: LoopDirection, easing: EasingType) => void;
 }
 
 export function ExportPanel({
   duration,
   easing,
-  loop,
+  loopDirection,
   onExportStatic,
   onExportAnimated
 }: ExportPanelProps) {
+  const loopLabel = loopDirection === 'none' ? 'one-way'
+    : loopDirection === 'continue' ? 'continue loop'
+    : 'ping-pong loop';
 
   return (
     <div className={styles.container}>
@@ -33,14 +37,14 @@ export function ExportPanel({
             <p className={styles.infoText}>
               Using current animation settings: <strong>{duration}s</strong> duration,
               <strong> {easing}</strong> easing,
-              <strong> {loop ? 'bidirectional loop' : 'one-way'}</strong>
+              <strong> {loopLabel}</strong>
             </p>
           </div>
         </div>
 
         <button
           className={styles.exportButton}
-          onClick={() => onExportAnimated(duration, loop, easing)}
+          onClick={() => onExportAnimated(duration, loopDirection, easing)}
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="9" cy="9" r="7" />
