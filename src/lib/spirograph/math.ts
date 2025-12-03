@@ -45,9 +45,23 @@ export function hypotrochoidPoint(
   t: number,
   params: SpirographParams
 ): Point {
-  const { R, r, d } = params;
+  const { R, r, d, rotation = 0 } = params;
+
+  // Calculate point
   const x = (R - r) * Math.cos(t) + d * Math.cos(((R - r) / r) * t);
   const y = (R - r) * Math.sin(t) - d * Math.sin(((R - r) / r) * t);
+
+  // Apply rotation if specified
+  if (rotation !== 0) {
+    const rad = (rotation * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    return {
+      x: x * cos - y * sin,
+      y: x * sin + y * cos
+    };
+  }
+
   return { x, y };
 }
 
@@ -59,9 +73,23 @@ export function epitrochoidPoint(
   t: number,
   params: SpirographParams
 ): Point {
-  const { R, r, d } = params;
+  const { R, r, d, rotation = 0 } = params;
+
+  // Calculate point
   const x = (R + r) * Math.cos(t) - d * Math.cos(((R + r) / r) * t);
   const y = (R + r) * Math.sin(t) - d * Math.sin(((R + r) / r) * t);
+
+  // Apply rotation if specified
+  if (rotation !== 0) {
+    const rad = (rotation * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    return {
+      x: x * cos - y * sin,
+      y: x * sin + y * cos
+    };
+  }
+
   return { x, y };
 }
 

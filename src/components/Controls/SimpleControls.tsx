@@ -204,6 +204,21 @@ export function SimpleControls({
       </div>
 
       <div className={styles.controlGroup}>
+        <label htmlFor="rotation">Starting Position</label>
+        <select
+          id="rotation"
+          value={params.rotation}
+          onChange={(e) => onChange({ rotation: Number(e.target.value) })}
+          className={styles.select}
+        >
+          <option value="0">3 o'clock (0°)</option>
+          <option value="90">12 o'clock (90°)</option>
+          <option value="180">9 o'clock (180°)</option>
+          <option value="270">6 o'clock (270°)</option>
+        </select>
+      </div>
+
+      <div className={styles.controlGroup}>
         <ColorOscillationControls
           oscillation={colorOscillation}
           onChange={onColorOscillationChange}
