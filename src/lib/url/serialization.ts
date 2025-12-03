@@ -4,6 +4,34 @@ import { SpirographOscillations } from '../animation/parameterOscillation';
 import { EasingType } from '../animation/easing';
 import { LoopDirection } from '../../hooks/useAnimation';
 
+// Randomization utilities
+function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randomFloat(min: number, max: number, decimals: number = 1): number {
+  const value = Math.random() * (max - min) + min;
+  return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
+
+function randomColor(): string {
+  const hue = randomInt(0, 360);
+  const saturation = randomInt(30, 100);
+  const lightness = randomInt(40, 80);
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+function randomDarkColor(): string {
+  const hue = randomInt(0, 360);
+  const saturation = randomInt(20, 60);
+  const lightness = randomInt(10, 30);
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+function randomItem<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
 export interface SerializableState {
   // SpirographParams
   R: number;
@@ -47,31 +75,47 @@ export interface SerializableState {
 
 // Default state (matches defaults from hooks)
 export function getDefaultState(): SerializableState {
+  const R = randomInt(50, 200);
+  const r = randomInt(10, Math.min(150, R - 10)); // Ensure r < R
+  const d = randomInt(10, 150);
+  
+  const easingOptions: EasingType[] = [
+    'linear', 'power1.in', 'power1.out', 'power1.inOut',
+    'power2.in', 'power2.out', 'power2.inOut',
+    'power3.in', 'power3.out', 'power3.inOut',
+    'sine.in', 'sine.out', 'sine.inOut',
+    'circ.in', 'circ.out', 'circ.inOut',
+    'expo.in', 'expo.out', 'expo.inOut',
+  ];
+  
+  const waveTypes: WaveType[] = ['sine', 'triangle', 'square', 'sawtooth', 'reverseSawtooth'];
+  const curveTypes: CurveType[] = ['hypotrochoid', 'epitrochoid'];
+  
   return {
-    R: 120,
-    r: 48,
-    d: 84,
-    strokeWidth: 2,
-    strokeColor: '#00d9ff',
+    R,
+    r,
+    d,
+    strokeWidth: 0.5,
+    strokeColor: '#ffffff',
     completion: 100,
-    duration: 5,
-    rotation: 0,
+    duration: randomFloat(2, 10, 1),
+    rotation: 90,
     backgroundColor: '#111529',
-    curveType: 'hypotrochoid',
-    oscR_enabled: false,
-    oscR_amplitude: 20,
-    oscR_frequency: 2,
-    oscR_waveType: 'sine',
-    oscr_enabled: false,
-    oscr_amplitude: 10,
-    oscr_frequency: 2,
-    oscr_waveType: 'sine',
-    oscd_enabled: false,
-    oscd_amplitude: 20,
-    oscd_frequency: 2,
-    oscd_waveType: 'sine',
-    animSpeed: 1,
-    animEasing: 'linear',
+    curveType: randomItem(curveTypes),
+    oscR_enabled: Math.random() < 0.3, // 30% chance
+    oscR_amplitude: randomInt(5, 30),
+    oscR_frequency: randomInt(1, 5),
+    oscR_waveType: randomItem(waveTypes),
+    oscr_enabled: Math.random() < 0.3,
+    oscr_amplitude: randomInt(5, 20),
+    oscr_frequency: randomInt(1, 5),
+    oscr_waveType: randomItem(waveTypes),
+    oscd_enabled: Math.random() < 0.3,
+    oscd_amplitude: randomInt(5, 30),
+    oscd_frequency: randomInt(1, 5),
+    oscd_waveType: randomItem(waveTypes),
+    animSpeed: randomFloat(0.5, 2, 1),
+    animEasing: randomItem(easingOptions),
     animLoopDirection: 'continue',
     animShowDot: false,
     animShowRings: false,

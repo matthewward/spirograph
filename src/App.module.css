@@ -44,6 +44,7 @@
 }
 
 .sectionTitle {
+  font-family: var(--font-mono);
   font-size: 1.1rem;
   color: var(--text-primary);
   margin-bottom: var(--spacing-sm);

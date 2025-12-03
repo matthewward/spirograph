@@ -31,21 +31,44 @@ export interface UseSpirographResult {
   viewBox: string;
 }
 
-const DEFAULT_PARAMS: SpirographParams = {
-  R: 110,
-  r: 48,
-  d: 84,
-  strokeWidth: 1,
-  strokeColor: "#ffffff",
-  completion: 100,
-  duration: 3, // 5 seconds default
-  rotation: 90, // 0 = 3 o'clock (default)
-  backgroundColor: "#222222", // current bg-secondary value
-};
+// Randomization utilities
+function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randomFloat(min: number, max: number, decimals: number = 1): number {
+  const value = Math.random() * (max - min) + min;
+  return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
+
+function randomItem<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function getRandomDefaultParams(): SpirographParams {
+  const R = randomInt(50, 200);
+  const r = randomInt(10, Math.min(150, R - 10)); // Ensure r < R
+
+  return {
+    R,
+    r,
+    d: randomInt(10, 150),
+    strokeWidth: 0.5,
+    strokeColor: "#ffffff",
+    completion: 100,
+    duration: randomFloat(2, 10, 1),
+    rotation: 90,
+    backgroundColor: "var(--bg-secondary)",
+  };
+}
+
+const DEFAULT_PARAMS: SpirographParams = getRandomDefaultParams();
 
 export function useSpirograph(): UseSpirographResult {
   const [params, setParamsState] = useState<SpirographParams>(DEFAULT_PARAMS);
-  const [curveType, setCurveType] = useState<CurveType>("hypotrochoid");
+  const [curveType, setCurveType] = useState<CurveType>(
+    randomItem<CurveType>(["hypotrochoid", "epitrochoid"])
+  );
   const [parameterOscillations, setParameterOscillationsState] =
     useState<SpirographOscillations>({
       R: createDefaultOscillation(DEFAULT_PARAMS.R),

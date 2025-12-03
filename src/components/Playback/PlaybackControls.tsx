@@ -51,15 +51,15 @@ export function PlaybackControls({
         <div className={styles.playbackButtons}>
           <button
             className={styles.button}
-            onClick={isPlaying ? onPause : onPlay}
+            onClick={isPlaying ? onReset : onPlay}
             title={isPlaying ? "Pause" : "Play"}
           >
-            {isPlaying ? <p>▶︎</p> : <p>⏸</p>}
+            {isPlaying ? "Reset" : "Play"}
           </button>
 
-          <button className={styles.button} onClick={onReset} title="Reset">
+          {/* <button className={styles.button} onClick={onReset} title="Reset">
             Reset
-          </button>
+          </button> */}
         </div>
 
         <div className={styles.controlsGrid}>
