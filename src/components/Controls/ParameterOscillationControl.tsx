@@ -1,5 +1,8 @@
-import { ParameterOscillation, WaveType } from '../../lib/animation/parameterOscillation';
-import styles from './ParameterOscillationControl.module.css';
+import {
+  ParameterOscillation,
+  WaveType,
+} from "../../lib/animation/parameterOscillation";
+import styles from "./ParameterOscillationControl.module.css";
 
 interface ParameterOscillationControlProps {
   label: string;
@@ -10,7 +13,7 @@ interface ParameterOscillationControlProps {
 export function ParameterOscillationControl({
   label,
   oscillation,
-  onChange
+  onChange,
 }: ParameterOscillationControlProps) {
   return (
     <div className={styles.container}>
@@ -28,7 +31,7 @@ export function ParameterOscillationControl({
       {oscillation.enabled && (
         <div className={styles.settings}>
           <div className={styles.controlRow}>
-            <label>Amplitude (±)</label>
+            <label>AMP</label>
             <input
               type="number"
               min="1"
@@ -41,11 +44,11 @@ export function ParameterOscillationControl({
           </div>
 
           <div className={styles.controlRow}>
-            <label>Frequency</label>
+            <label>FREQ</label>
             <input
               type="number"
-              min="1"
-              max="20"
+              min="-100"
+              max="100"
               step="1"
               value={oscillation.frequency}
               onChange={(e) => onChange({ frequency: Number(e.target.value) })}
@@ -54,17 +57,19 @@ export function ParameterOscillationControl({
           </div>
 
           <div className={styles.controlRow}>
-            <label>Wave Shape</label>
+            <label>SHAPE</label>
             <select
               value={oscillation.waveType}
-              onChange={(e) => onChange({ waveType: e.target.value as WaveType })}
+              onChange={(e) =>
+                onChange({ waveType: e.target.value as WaveType })
+              }
               className={styles.select}
             >
               <option value="sine">Sine</option>
               <option value="triangle">Triangle</option>
               <option value="square">Square</option>
-              <option value="sawtooth">Sawtooth</option>
-              <option value="reverseSawtooth">Reverse Sawtooth</option>
+              <option value="sawtooth">Saw</option>
+              <option value="reverseSawtooth">Rev. Saw</option>
             </select>
           </div>
         </div>

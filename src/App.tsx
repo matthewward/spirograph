@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useSpirograph } from './hooks/useSpirograph';
-import { useAnimation } from './hooks/useAnimation';
-import { useExport } from './hooks/useExport';
-import { useURLState } from './hooks/useURLState';
-import { SpirographCanvas } from './components/Canvas/SpirographCanvas';
-import { SimpleControls } from './components/Controls/SimpleControls';
-import { PlaybackControls } from './components/Playback/PlaybackControls';
-import { ExportPanel } from './components/Export/ExportPanel';
-import styles from './App.module.css';
+import { useEffect, useState } from "react";
+import { useSpirograph } from "./hooks/useSpirograph";
+import { useAnimation } from "./hooks/useAnimation";
+import { useExport } from "./hooks/useExport";
+import { useURLState } from "./hooks/useURLState";
+import { SpirographCanvas } from "./components/Canvas/SpirographCanvas";
+import { SimpleControls } from "./components/Controls/SimpleControls";
+import { PlaybackControls } from "./components/Playback/PlaybackControls";
+import { ExportPanel } from "./components/Export/ExportPanel";
+import styles from "./App.module.css";
 
 function App() {
   const { isPreviewMode, loadStateFromURL } = useURLState();
@@ -70,20 +70,26 @@ function App() {
       setShowDot(urlState.animShowDot);
       setShowRings(urlState.animShowRings);
     }
+    setControlsVisible(isPreviewMode);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className={styles.app}>
-      <header className={styles.header}>
-        <h1>Spirograph</h1>
-        <p className={styles.subtitle}>Create beautiful mathematical curves</p>
-      </header>
-
       <div className={styles.layout}>
         {controlsVisible && (
           <aside className={styles.sidebar}>
-            <h3 className={styles.sectionTitle}>Controls</h3>
+            <div className={styles.headerContainer}>
+              <h3 className={styles.sectionTitle} style={{ margin: 0 }}>
+                Controls
+              </h3>
+              <button
+                onClick={() => setControlsVisible(false)}
+                className={styles.hideControlsButton}
+              >
+                Hide
+              </button>
+            </div>
             <SimpleControls
               params={params}
               onChange={setParams}
@@ -141,7 +147,7 @@ function App() {
               onClick={() => setControlsVisible(true)}
               className={styles.showControlsButton}
             >
-              Show Controls
+              →
             </button>
           )}
           <SpirographCanvas
