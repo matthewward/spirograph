@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { LoopDirection } from '../../hooks/useAnimation';
-import { Point } from '../../lib/spirograph/types';
+import { Point, CurveType } from '../../lib/spirograph/types';
 import { pointsToPath } from '../../lib/svg/generator';
+import { RingVisualization } from './RingVisualization';
 import styles from './SpirographCanvas.module.css';
 
 interface SpirographCanvasProps {
@@ -16,6 +17,11 @@ interface SpirographCanvasProps {
   loopDirection: LoopDirection;
   isErasing?: boolean;
   showDot?: boolean;
+  showRings?: boolean;
+  R: number;
+  r: number;
+  d: number;
+  curveType: CurveType;
 }
 
 export function SpirographCanvas({
@@ -30,6 +36,11 @@ export function SpirographCanvas({
   loopDirection,
   isErasing = false,
   showDot = false,
+  showRings = false,
+  R,
+  r,
+  d,
+  curveType,
 }: SpirographCanvasProps) {
   // For "continue" mode during erase, we need to slice the points array
   // and regenerate the path to remove points from the START
@@ -104,6 +115,18 @@ export function SpirographCanvas({
               : undefined
           }
         />
+
+        {/* Ring visualization */}
+        {showRings && (
+          <RingVisualization
+            R={R}
+            r={r}
+            d={d}
+            progress={progress}
+            isAnimating={isAnimating}
+            curveType={curveType}
+          />
+        )}
 
         {/* Preview dot during animation */}
         {isAnimating && showDot && progress > 0 && progress < 1 && (

@@ -138,6 +138,26 @@
   cursor: pointer;
 }
 
+.ringToggle {
+  display: flex;
+  align-items: center;
+}
+
+.ringToggle label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.ringCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+}
+
 .timeline {
   display: flex;
   align-items: center;

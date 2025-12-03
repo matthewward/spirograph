@@ -1,12 +1,14 @@
-import { SpirographParams } from '../../lib/spirograph/types';
+import { SpirographParams, CurveType } from '../../lib/spirograph/types';
 import styles from './SimpleControls.module.css';
 
 interface SimpleControlsProps {
   params: SpirographParams;
   onChange: (params: Partial<SpirographParams>) => void;
+  curveType: CurveType;
+  onCurveTypeChange: (type: CurveType) => void;
 }
 
-export function SimpleControls({ params, onChange }: SimpleControlsProps) {
+export function SimpleControls({ params, onChange, curveType, onCurveTypeChange }: SimpleControlsProps) {
   return (
     <div className={styles.container}>
       <div className={styles.controlGroup}>
@@ -154,6 +156,19 @@ export function SimpleControls({ params, onChange }: SimpleControlsProps) {
             onChange={(e) => onChange({ duration: Number(e.target.value) })}
           />
         </div>
+      </div>
+
+      <div className={styles.controlGroup}>
+        <label htmlFor="curve-type">Curve Type</label>
+        <select
+          id="curve-type"
+          value={curveType}
+          onChange={(e) => onCurveTypeChange(e.target.value as CurveType)}
+          className={styles.select}
+        >
+          <option value="hypotrochoid">Inside (Hypotrochoid)</option>
+          <option value="epitrochoid">Outside (Epitrochoid)</option>
+        </select>
       </div>
     </div>
   );

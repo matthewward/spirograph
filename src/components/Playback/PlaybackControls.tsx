@@ -9,6 +9,7 @@ interface PlaybackControlsProps {
   easing: EasingType;
   loopDirection: LoopDirection;
   showDot: boolean;
+  showRings: boolean;
   onPlay: () => void;
   onPause: () => void;
   onReset: () => void;
@@ -17,6 +18,7 @@ interface PlaybackControlsProps {
   onEasingChange: (easing: EasingType) => void;
   onLoopDirectionChange: (direction: LoopDirection) => void;
   onShowDotChange: (show: boolean) => void;
+  onShowRingsChange: (show: boolean) => void;
 }
 
 export function PlaybackControls({
@@ -26,6 +28,7 @@ export function PlaybackControls({
   easing,
   loopDirection,
   showDot,
+  showRings,
   onPlay,
   onPause,
   onReset,
@@ -34,6 +37,7 @@ export function PlaybackControls({
   onEasingChange,
   onLoopDirectionChange,
   onShowDotChange,
+  onShowRingsChange,
 }: PlaybackControlsProps) {
   const speedOptions = [0.25, 0.5, 1, 2, 4];
 
@@ -129,6 +133,19 @@ export function PlaybackControls({
               className={styles.dotCheckbox}
             />
             <span>Dot</span>
+          </label>
+        </div>
+
+        <div className={styles.ringToggle}>
+          <label htmlFor="show-rings">
+            <input
+              id="show-rings"
+              type="checkbox"
+              checked={showRings}
+              onChange={(e) => onShowRingsChange(e.target.checked)}
+              className={styles.ringCheckbox}
+            />
+            <span>Rings</span>
           </label>
         </div>
       </div>

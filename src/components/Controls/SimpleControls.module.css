@@ -37,3 +37,16 @@
 .colorInput {
   flex: 1;
 }
+
+.select {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.select:hover {
+  background: var(--bg-primary);
+}

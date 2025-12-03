@@ -11,6 +11,7 @@ export interface UseAnimationResult {
   easing: EasingType;
   loopDirection: LoopDirection;
   showDot: boolean;
+  showRings: boolean;
   play: () => void;
   pause: () => void;
   reset: () => void;
@@ -19,6 +20,7 @@ export interface UseAnimationResult {
   setEasing: (easing: EasingType) => void;
   setLoopDirection: (direction: LoopDirection) => void;
   setShowDot: (show: boolean) => void;
+  setShowRings: (show: boolean) => void;
 }
 
 /**
@@ -64,6 +66,7 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
   const [easing, setEasing] = useState<EasingType>('linear');
   const [loopDirection, setLoopDirection] = useState<LoopDirection>('none');
   const [showDot, setShowDot] = useState(false);
+  const [showRings, setShowRings] = useState(false);
 
   const startTimeRef = useRef<number | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -157,6 +160,7 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
     easing,
     loopDirection,
     showDot,
+    showRings,
     play,
     pause,
     reset,
@@ -165,5 +169,6 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
     setEasing,
     setLoopDirection,
     setShowDot,
+    setShowRings,
   };
 }

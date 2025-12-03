@@ -11,6 +11,8 @@ function App() {
   const {
     params,
     setParams,
+    curveType,
+    setCurveType,
     points,
     pathString,
     pathLength,
@@ -25,6 +27,7 @@ function App() {
     easing,
     loopDirection,
     showDot,
+    showRings,
     play,
     pause,
     reset,
@@ -33,6 +36,7 @@ function App() {
     setEasing,
     setLoopDirection,
     setShowDot,
+    setShowRings,
   } = useAnimation(params.duration * 1000); // Convert seconds to milliseconds
 
   const { exportStatic, exportAnimated } = useExport({
@@ -53,7 +57,12 @@ function App() {
       <div className={styles.layout}>
         <aside className={styles.sidebar}>
           <h3 className={styles.sectionTitle}>Controls</h3>
-          <SimpleControls params={params} onChange={setParams} />
+          <SimpleControls
+            params={params}
+            onChange={setParams}
+            curveType={curveType}
+            onCurveTypeChange={setCurveType}
+          />
 
           <h3 className={styles.sectionTitle}>Animation</h3>
           <PlaybackControls
@@ -63,6 +72,7 @@ function App() {
             easing={easing}
             loopDirection={loopDirection}
             showDot={showDot}
+            showRings={showRings}
             onPlay={play}
             onPause={pause}
             onReset={reset}
@@ -71,6 +81,7 @@ function App() {
             onEasingChange={setEasing}
             onLoopDirectionChange={setLoopDirection}
             onShowDotChange={setShowDot}
+            onShowRingsChange={setShowRings}
           />
 
           <h3 className={styles.sectionTitle}>Export</h3>
@@ -96,6 +107,11 @@ function App() {
             loopDirection={loopDirection}
             isErasing={isErasing}
             showDot={showDot}
+            showRings={showRings}
+            R={params.R}
+            r={params.r}
+            d={params.d}
+            curveType={curveType}
           />
         </main>
       </div>
