@@ -1,0 +1,173 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+}
+
+.controlsRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Playback Buttons */
+
+.playbackButtons {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.playbackButtons button {
+  flex: 1;
+}
+
+.button {
+  font-size: 1 rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.button:hover {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  opacity: 1;
+}
+
+.controlsGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-sm) var(--spacing-md);
+  align-items: center;
+}
+
+.controlRow {
+  display: contents;
+}
+
+.controlLabel {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.speedButtons {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.speedButton {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  transition: all var(--transition-fast);
+}
+
+.speedButton.active {
+  background: var(--accent-amber);
+  color: var(--bg-primary);
+  height: 28px;
+}
+
+.speedButton:hover {
+  background: var(--accent-amber);
+  color: var(--bg-primary);
+  opacity: 1;
+}
+
+.easingSelect {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.easingSelect:hover {
+  background: var(--bg-primary);
+}
+
+.loopSelect {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.loopSelect:hover {
+  background: var(--bg-primary);
+}
+
+.dotToggle {
+  display: flex;
+  align-items: center;
+}
+
+.dotToggle label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.dotCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+}
+
+.ringToggle {
+  display: flex;
+  align-items: center;
+}
+
+.ringToggle label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.ringCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+}
+
+.timelineSlider {
+  flex: 1;
+  pointer-events: none;
+}
+
+.progressLabel {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 0.7;
+}

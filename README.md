@@ -1,27 +1,61 @@
-# React + Vite Template for Claude Artifacts
+# Spirograph
 
-This template provides a setup for running Claude-generated UI artifacts in a React + Vite environment with Hot Module Reloading (HMR).
+A sophisticated web-based Spirograph application for creating beautiful mathematical curves with SVG export capabilities.
+
+## Features
+
+- **Real-time Interactive Creation**: Drag sliders and see instant updates to your spirograph
+- **Smart SVG Generation**: Uses bezier curve optimization instead of thousands of points
+- **Dual-Mode Controls**:
+  - Simple mode: Easy sliders for casual users
+  - Advanced mode: Full mathematical parameter control
+- **Animation Playback**: Watch your spirograph being drawn with speed controls and timeline scrubbing
+- **Preset Gallery**: 6 beautiful presets to get started
+- **SVG Export**:
+  - Static SVG export
+  - Animated SVG with configurable duration and looping (perfect for loading animations!)
 
 ## Getting Started
 
-1. Clone this repository
-2. Install dependencies:
-   bash
-   npm install
+```bash
+# Install dependencies
+npm install
 
-3. Run the development server:
-   bash
-   npm run dev
+# Start development server
+npm run dev
 
-## Using Claude Artifacts
+# Build for production
+npm run build
+```
 
-To use your Claude-generated UI code:
+## Usage
 
-1. Locate the `src/components/Artifact.jsx` file
-2. Replace the contents with your Claude-generated artifact code
+1. **Create**: Tweak the controls to create your spirograph pattern - changes update live!
+2. **Animate**: Hit play to watch the drawing animation
+3. **Export**: Download as static or animated SVG
 
-## Adding a Route
+## Tech Stack
 
-1. Create a new file in the `src/views` directory
-2. Add the file to the `src/App.jsx` file
-3. Add a link and meta info to the `src/Home.jsx` file to show it in the index
+- React 18
+- TypeScript
+- Vite
+- Pure CSS (no UI libraries)
+- Native SVG and SMIL animations
+
+## Design
+
+Features a distinctive technical/blueprint aesthetic with:
+- Dark theme with deep blue-black background
+- Vibrant cyan and warm amber accents
+- Typography: Crimson Pro, Space Grotesk, and JetBrains Mono
+- High contrast, sophisticated UI
+
+## Future Enhancements
+
+See the backlog for planned features:
+- Multiple simultaneous gears (layered patterns)
+- Color gradients along paths
+- Variable stroke width effects
+- Additional curve types
+- Post-generation filters and effects
+- And more!

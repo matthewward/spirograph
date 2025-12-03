@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.colorRow {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.colorInput {
+  flex: 1;
+}
+
+.select {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.select:hover {
+  background: var(--bg-primary);
+}
