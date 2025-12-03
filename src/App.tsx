@@ -70,9 +70,10 @@ function App() {
       setShowDot(urlState.animShowDot);
       setShowRings(urlState.animShowRings);
     }
-    setControlsVisible(isPreviewMode);
+    // Sync controls visibility with preview mode
+    setControlsVisible(!isPreviewMode);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isPreviewMode]);
 
   return (
     <div className={styles.app}>
@@ -87,7 +88,7 @@ function App() {
                 onClick={() => setControlsVisible(false)}
                 className={styles.hideControlsButton}
               >
-                Hide
+                ←
               </button>
             </div>
             <SimpleControls
@@ -95,8 +96,6 @@ function App() {
               onChange={setParams}
               curveType={curveType}
               onCurveTypeChange={setCurveType}
-              colorOscillation={colorOscillation}
-              onColorOscillationChange={setColorOscillation}
               parameterOscillations={parameterOscillations}
               onParameterOscillationsChange={setParameterOscillations}
             />
@@ -130,7 +129,6 @@ function App() {
               onExportAnimated={exportAnimated}
               params={params}
               curveType={curveType}
-              colorOscillation={colorOscillation}
               paramOscillations={parameterOscillations}
               animSpeed={speed}
               animEasing={easing}
@@ -142,7 +140,7 @@ function App() {
         )}
 
         <main className={styles.canvasArea}>
-          {isPreviewMode && !controlsVisible && (
+          {!controlsVisible && (
             <button
               onClick={() => setControlsVisible(true)}
               className={styles.showControlsButton}
@@ -167,7 +165,6 @@ function App() {
             r={params.r}
             d={params.d}
             curveType={curveType}
-            colorOscillation={colorOscillation}
             backgroundColor={params.backgroundColor}
           />
         </main>

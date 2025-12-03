@@ -64,9 +64,16 @@
 }
 
 .hideControlsButton {
-  font-size: 0.75rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
   cursor: pointer;
-  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: all 0.2s ease;
 }
 
 .showControlsButton {

@@ -10,8 +10,6 @@ interface SimpleControlsProps {
   onChange: (params: Partial<SpirographParams>) => void;
   curveType: CurveType;
   onCurveTypeChange: (type: CurveType) => void;
-  colorOscillation: ColorOscillation;
-  onColorOscillationChange: (update: Partial<ColorOscillation>) => void;
   parameterOscillations: SpirographOscillations;
   onParameterOscillationsChange: (
     update: Partial<SpirographOscillations>
@@ -23,8 +21,6 @@ export function SimpleControls({
   onChange,
   curveType,
   onCurveTypeChange,
-  colorOscillation,
-  onColorOscillationChange,
   parameterOscillations,
   onParameterOscillationsChange,
 }: SimpleControlsProps) {
@@ -182,13 +178,6 @@ export function SimpleControls({
           <option value="180">9 o'clock (180°)</option>
           <option value="270">6 o'clock (270°)</option>
         </select>
-      </div>
-
-      <div className={styles.controlGroup}>
-        <ColorOscillationControls
-          oscillation={colorOscillation}
-          onChange={onColorOscillationChange}
-        />
       </div>
     </div>
   );

@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
-import { serializeState, deserializeState, stateToHookParams } from '../lib/url/serialization';
-import { SpirographParams, CurveType } from '../lib/spirograph/types';
-import { ColorOscillation } from '../lib/animation/colorOscillation';
-import { SpirographOscillations } from '../lib/animation/parameterOscillation';
-import { EasingType } from '../lib/animation/easing';
-import { LoopDirection } from './useAnimation';
+import { useEffect, useState } from "react";
+import {
+  serializeState,
+  deserializeState,
+  stateToHookParams,
+} from "../lib/url/serialization";
+import { SpirographParams, CurveType } from "../lib/spirograph/types";
+import { ColorOscillation } from "../lib/animation/colorOscillation";
+import { SpirographOscillations } from "../lib/animation/parameterOscillation";
+import { EasingType } from "../lib/animation/easing";
+import { LoopDirection } from "./useAnimation";
 
 export function useURLState() {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -12,13 +16,18 @@ export function useURLState() {
   // Check for preview mode on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setIsPreviewMode(params.get('mode') === 'preview');
+    // If there are no query params at all, preview mode should be false
+    if (params.toString() === "" || params.get("mode") !== "preview") {
+      setIsPreviewMode(false);
+    } else {
+      setIsPreviewMode(true);
+    }
   }, []);
 
   // Load state from URL
   const loadStateFromURL = () => {
     const params = new URLSearchParams(window.location.search);
-    const stateParam = params.get('state');
+    const stateParam = params.get("state");
 
     if (!stateParam) return null;
 
@@ -54,10 +63,10 @@ export function useURLState() {
     );
 
     const url = new URL(window.location.href);
-    url.search = ''; // Clear existing params
-    url.searchParams.set('state', stateString);
+    url.search = ""; // Clear existing params
+    url.searchParams.set("state", stateString);
     if (preview) {
-      url.searchParams.set('mode', 'preview');
+      url.searchParams.set("mode", "preview");
     }
 
     return url.toString();
@@ -87,7 +96,7 @@ export function useURLState() {
       animShowRings,
       false // Don't set preview mode for normal updates
     );
-    window.history.replaceState({}, '', url);
+    window.history.replaceState({}, "", url);
   };
 
   return {
