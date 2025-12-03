@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { EasingType } from '../../lib/animation/easing';
 import styles from './ExportPanel.module.css';
 
 interface ExportPanelProps {
+  duration: number;
+  easing: EasingType;
+  loop: boolean;
   onExportStatic: () => void;
-  onExportAnimated: (duration: number, loop: boolean) => void;
+  onExportAnimated: (duration: number, loop: boolean, easing: EasingType) => void;
 }
 
-export function ExportPanel({ onExportStatic, onExportAnimated }: ExportPanelProps) {
-  const [duration, setDuration] = useState(5);
-  const [loop, setLoop] = useState(false);
+export function ExportPanel({
+  duration,
+  easing,
+  loop,
+  onExportStatic,
+  onExportAnimated
+}: ExportPanelProps) {
 
   return (
     <div className={styles.container}>
@@ -22,35 +29,18 @@ export function ExportPanel({ onExportStatic, onExportAnimated }: ExportPanelPro
 
       <div className={styles.animatedSection}>
         <div className={styles.options}>
-          <div className={styles.option}>
-            <label htmlFor="duration">Duration (seconds)</label>
-            <input
-              id="duration"
-              type="number"
-              min="1"
-              max="30"
-              step="1"
-              value={duration}
-              onChange={(e) => setDuration(Number(e.target.value))}
-            />
-          </div>
-
-          <div className={styles.option}>
-            <label htmlFor="loop">
-              <input
-                id="loop"
-                type="checkbox"
-                checked={loop}
-                onChange={(e) => setLoop(e.target.checked)}
-              />
-              <span>Loop infinitely</span>
-            </label>
+          <div className={styles.info}>
+            <p className={styles.infoText}>
+              Using current animation settings: <strong>{duration}s</strong> duration,
+              <strong> {easing}</strong> easing,
+              <strong> {loop ? 'bidirectional loop' : 'one-way'}</strong>
+            </p>
           </div>
         </div>
 
         <button
           className={styles.exportButton}
-          onClick={() => onExportAnimated(duration, loop)}
+          onClick={() => onExportAnimated(duration, loop, easing)}
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="9" cy="9" r="7" />

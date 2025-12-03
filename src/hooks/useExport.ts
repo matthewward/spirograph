@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { generateStaticSVG, generateAnimatedSVG } from '../lib/svg/animator';
 import { downloadFile } from '../lib/utils/download';
+import { EasingType } from '../lib/animation/easing';
 
 export interface UseExportOptions {
   pathString: string;
@@ -19,7 +20,7 @@ export function useExport(options: UseExportOptions) {
     downloadFile(svg, `spirograph-${timestamp}.svg`, 'image/svg+xml');
   }, [pathString, viewBox, strokeColor, strokeWidth]);
 
-  const exportAnimated = useCallback((duration: number = 5, loop: boolean = false) => {
+  const exportAnimated = useCallback((duration: number = 5, loop: boolean = false, easing: EasingType = 'linear') => {
     const svg = generateAnimatedSVG(
       pathString,
       viewBox,
@@ -27,7 +28,8 @@ export function useExport(options: UseExportOptions) {
       strokeWidth,
       pathLength,
       duration,
-      loop
+      loop,
+      easing
     );
     const timestamp = new Date().toISOString().split('T')[0];
     downloadFile(svg, `spirograph-animated-${timestamp}.svg`, 'image/svg+xml');

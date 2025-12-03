@@ -63,3 +63,22 @@
 .option input[type='number'] {
   width: 100%;
 }
+
+.info {
+  padding: var(--spacing-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius-sm);
+  border-left: 3px solid var(--accent-cyan);
+}
+
+.infoText {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.infoText strong {
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+}

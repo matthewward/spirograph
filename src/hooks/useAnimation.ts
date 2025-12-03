@@ -1,20 +1,48 @@
 import { useState, useEffect, useRef } from 'react';
+import { EasingType, applyEasing } from '../lib/animation/easing';
 
 export interface UseAnimationResult {
   isPlaying: boolean;
   progress: number; // 0 to 1
   speed: number; // 0.25 to 4
+  easing: EasingType;
+  loop: boolean;
   play: () => void;
   pause: () => void;
   reset: () => void;
   setProgress: (progress: number) => void;
   setSpeed: (speed: number) => void;
+  setEasing: (easing: EasingType) => void;
+  setLoop: (loop: boolean) => void;
+}
+
+/**
+ * Calculate bidirectional progress for looping animations
+ * 0 -> 1 (drawing) -> 0 (undrawing)
+ */
+function calculateBidirectionalProgress(elapsed: number, duration: number, loop: boolean): number {
+  if (!loop) {
+    return Math.min(elapsed / duration, 1);
+  }
+
+  const cycleDuration = duration * 2; // Full cycle = draw + undraw
+  const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
+
+  // First half: 0 -> 1 (drawing)
+  // Second half: 1 -> 0 (undrawing)
+  if (cycleProgress < 0.5) {
+    return cycleProgress * 2; // 0 to 1
+  } else {
+    return 2 - (cycleProgress * 2); // 1 to 0
+  }
 }
 
 export function useAnimation(duration: number = 5000): UseAnimationResult {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [speed, setSpeed] = useState(1);
+  const [easing, setEasing] = useState<EasingType>('linear');
+  const [loop, setLoop] = useState(false);
 
   const startTimeRef = useRef<number | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -36,16 +64,27 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
 
       const elapsed = timestamp - startTimeRef.current;
       const adjustedDuration = duration / speed;
-      const newProgress = Math.min((elapsed / adjustedDuration) + pausedProgressRef.current, 1);
 
-      setProgress(newProgress);
+      // Calculate raw progress with bidirectional support
+      const rawProgress = calculateBidirectionalProgress(
+        elapsed + (pausedProgressRef.current * adjustedDuration),
+        adjustedDuration,
+        loop
+      );
 
-      if (newProgress < 1) {
-        animationFrameRef.current = requestAnimationFrame(animate);
-      } else {
+      // Apply easing to the raw progress
+      const easedProgress = applyEasing(rawProgress, easing);
+
+      setProgress(easedProgress);
+
+      // For non-looping animations, stop at 1
+      // For looping animations, run indefinitely
+      if (!loop && rawProgress >= 1) {
         setIsPlaying(false);
         startTimeRef.current = null;
         pausedProgressRef.current = 0;
+      } else {
+        animationFrameRef.current = requestAnimationFrame(animate);
       }
     };
 
@@ -56,7 +95,7 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isPlaying, duration, speed]);
+  }, [isPlaying, duration, speed, easing, loop]);
 
   const play = () => {
     if (progress >= 1) {
@@ -92,10 +131,14 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
     isPlaying,
     progress,
     speed,
+    easing,
+    loop,
     play,
     pause,
     reset,
     setProgress: handleSetProgress,
     setSpeed,
+    setEasing,
+    setLoop,
   };
 }

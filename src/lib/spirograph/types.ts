@@ -5,6 +5,7 @@ export interface SpirographParams {
   strokeWidth: number;
   strokeColor: string;
   completion: number; // Percentage of pattern to draw (0-100)
+  duration: number; // Animation duration in seconds (1-30)
 }
 
 export interface Point {

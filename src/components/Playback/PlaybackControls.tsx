@@ -1,25 +1,34 @@
+import { EasingType, easingGroups, getEasingVariants } from '../../lib/animation/easing';
 import styles from './PlaybackControls.module.css';
 
 interface PlaybackControlsProps {
   isPlaying: boolean;
   progress: number;
   speed: number;
+  easing: EasingType;
+  loop: boolean;
   onPlay: () => void;
   onPause: () => void;
   onReset: () => void;
   onProgressChange: (progress: number) => void;
   onSpeedChange: (speed: number) => void;
+  onEasingChange: (easing: EasingType) => void;
+  onLoopChange: (loop: boolean) => void;
 }
 
 export function PlaybackControls({
   isPlaying,
   progress,
   speed,
+  easing,
+  loop,
   onPlay,
   onPause,
   onReset,
   onProgressChange,
   onSpeedChange,
+  onEasingChange,
+  onLoopChange,
 }: PlaybackControlsProps) {
   const speedOptions = [0.25, 0.5, 1, 2, 4];
 
@@ -67,6 +76,41 @@ export function PlaybackControls({
               </button>
             ))}
           </div>
+        </div>
+
+        <div className={styles.easingControl}>
+          <label htmlFor="easing">Easing</label>
+          <select
+            id="easing"
+            value={easing}
+            onChange={(e) => onEasingChange(e.target.value as EasingType)}
+            className={styles.easingSelect}
+          >
+            {Object.entries(easingGroups).map(([groupName, families]) => (
+              <optgroup key={groupName} label={groupName}>
+                {families.map((family) =>
+                  getEasingVariants(family).map((variant) => (
+                    <option key={variant} value={variant}>
+                      {variant}
+                    </option>
+                  ))
+                )}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.loopControl}>
+          <label htmlFor="loop">
+            <input
+              id="loop"
+              type="checkbox"
+              checked={loop}
+              onChange={(e) => onLoopChange(e.target.checked)}
+              className={styles.loopCheckbox}
+            />
+            <span>Loop</span>
+          </label>
         </div>
       </div>
 

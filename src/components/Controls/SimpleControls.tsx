@@ -132,6 +132,28 @@ export function SimpleControls({ params, onChange }: SimpleControlsProps) {
           />
         </div>
       </div>
+
+      <div className={styles.controlGroup}>
+        <label htmlFor="duration">Duration (seconds)</label>
+        <div className={styles.inputRow}>
+          <input
+            id="duration"
+            type="range"
+            min="1"
+            max="30"
+            step="0.5"
+            value={params.duration}
+            onChange={(e) => onChange({ duration: Number(e.target.value) })}
+          />
+          <input
+            type="number"
+            className={styles.numberInput}
+            value={params.duration}
+            step="0.5"
+            onChange={(e) => onChange({ duration: Number(e.target.value) })}
+          />
+        </div>
+      </div>
     </div>
   );
 }

@@ -67,6 +67,51 @@
   opacity: 1;
 }
 
+.easingControl {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.easingControl label {
+  font-size: 0.75rem;
+}
+
+.easingSelect {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  min-width: 140px;
+  transition: all var(--transition-fast);
+}
+
+.easingSelect:hover {
+  background: var(--bg-primary);
+}
+
+.loopControl {
+  display: flex;
+  align-items: center;
+}
+
+.loopControl label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.loopCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+}
+
 .timeline {
   display: flex;
   align-items: center;

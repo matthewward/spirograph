@@ -20,12 +20,16 @@ function App() {
     isPlaying,
     progress,
     speed,
+    easing,
+    loop,
     play,
     pause,
     reset,
     setProgress,
     setSpeed,
-  } = useAnimation(5000);
+    setEasing,
+    setLoop,
+  } = useAnimation(params.duration * 1000); // Convert seconds to milliseconds
 
   const { exportStatic, exportAnimated } = useExport({
     pathString,
@@ -52,15 +56,22 @@ function App() {
             isPlaying={isPlaying}
             progress={progress}
             speed={speed}
+            easing={easing}
+            loop={loop}
             onPlay={play}
             onPause={pause}
             onReset={reset}
             onProgressChange={setProgress}
             onSpeedChange={setSpeed}
+            onEasingChange={setEasing}
+            onLoopChange={setLoop}
           />
 
           <h3 className={styles.sectionTitle}>Export</h3>
           <ExportPanel
+            duration={params.duration}
+            easing={easing}
+            loop={loop}
             onExportStatic={exportStatic}
             onExportAnimated={exportAnimated}
           />
