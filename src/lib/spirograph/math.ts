@@ -93,6 +93,43 @@ export function sampleSpirograph(
 }
 
 /**
+ * Sample points with oscillating parameters
+ * @param params - Base parameters
+ * @param curveType - Type of curve
+ * @param getOscillatedParams - Function that returns params at given progress (0-1)
+ * @param samplesPerRotation - Samples per rotation
+ */
+export function sampleSpirographWithOscillation(
+  params: SpirographParams,
+  curveType: CurveType = 'hypotrochoid',
+  getOscillatedParams: (progress: number) => SpirographParams,
+  samplesPerRotation: number = 360
+): Point[] {
+  const { R, r, completion } = params;
+  const rotations = calculateRotations(R, r, curveType);
+
+  // Apply completion percentage
+  const effectiveRotations = rotations * (completion / 100);
+  const totalSamples = Math.ceil(effectiveRotations * samplesPerRotation);
+  const points: Point[] = [];
+
+  const pointFunction =
+    curveType === 'hypotrochoid' ? hypotrochoidPoint : epitrochoidPoint;
+
+  for (let i = 0; i <= totalSamples; i++) {
+    const t = (i / samplesPerRotation) * (2 * Math.PI);
+    const progress = totalSamples > 0 ? i / totalSamples : 0;
+
+    // Get oscillated parameters at this progress point
+    const oscillatedParams = getOscillatedParams(progress);
+
+    points.push(pointFunction(t, oscillatedParams));
+  }
+
+  return points;
+}
+
+/**
  * Get bounding box of points
  */
 export function getBoundingBox(points: Point[]): {

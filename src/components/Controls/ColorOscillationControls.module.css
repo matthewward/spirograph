@@ -1,0 +1,113 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.enableRow label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.colorsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.colorsSection > label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.colorsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.colorItem {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.colorItem input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+}
+
+.hexInput {
+  flex: 1;
+  padding: var(--spacing-xs);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.colorItem button {
+  width: 24px;
+  height: 24px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.colorItem button:hover {
+  background: var(--accent-amber);
+  color: var(--bg-primary);
+}
+
+.addButton {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.addButton:hover {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+}
+
+.controlRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controlRow label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.controlRow select,
+.controlRow input[type="number"] {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.85rem;
+  min-width: 140px;
+  transition: all var(--transition-fast);
+}
+
+.controlRow select:hover,
+.controlRow input[type="number"]:hover {
+  background: var(--bg-primary);
+}

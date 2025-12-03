@@ -1,0 +1,63 @@
+.container {
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-sm);
+  border-left: 2px solid var(--accent-cyan);
+}
+
+.enableRow label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.enableRow input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+}
+
+.settings {
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--bg-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.controlRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controlRow label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.input,
+.select {
+  padding: 2px 6px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  min-width: 60px;
+}
+
+.select {
+  min-width: 100px;
+}
+
+.input:hover,
+.select:hover {
+  background: var(--bg-secondary);
+}

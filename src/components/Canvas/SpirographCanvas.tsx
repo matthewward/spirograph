@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { LoopDirection } from '../../hooks/useAnimation';
 import { Point, CurveType } from '../../lib/spirograph/types';
 import { pointsToPath } from '../../lib/svg/generator';
+import { ColorOscillation } from '../../lib/animation/colorOscillation';
 import { RingVisualization } from './RingVisualization';
 import styles from './SpirographCanvas.module.css';
 
@@ -22,6 +23,7 @@ interface SpirographCanvasProps {
   r: number;
   d: number;
   curveType: CurveType;
+  colorOscillation: ColorOscillation;
 }
 
 export function SpirographCanvas({
@@ -41,7 +43,9 @@ export function SpirographCanvas({
   r,
   d,
   curveType,
+  colorOscillation,
 }: SpirographCanvasProps) {
+
   // For "continue" mode during erase, we need to slice the points array
   // and regenerate the path to remove points from the START
   const { actualPath, dashOffset, dashArray }: { actualPath: string; dashOffset: number; dashArray: number | string } = useMemo(() => {

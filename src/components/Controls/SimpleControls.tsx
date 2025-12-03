@@ -1,4 +1,8 @@
 import { SpirographParams, CurveType } from '../../lib/spirograph/types';
+import { ColorOscillation } from '../../lib/animation/colorOscillation';
+import { SpirographOscillations, ParameterOscillation } from '../../lib/animation/parameterOscillation';
+import { ColorOscillationControls } from './ColorOscillationControls';
+import { ParameterOscillationControl } from './ParameterOscillationControl';
 import styles from './SimpleControls.module.css';
 
 interface SimpleControlsProps {
@@ -6,9 +10,22 @@ interface SimpleControlsProps {
   onChange: (params: Partial<SpirographParams>) => void;
   curveType: CurveType;
   onCurveTypeChange: (type: CurveType) => void;
+  colorOscillation: ColorOscillation;
+  onColorOscillationChange: (update: Partial<ColorOscillation>) => void;
+  parameterOscillations: SpirographOscillations;
+  onParameterOscillationsChange: (update: Partial<SpirographOscillations>) => void;
 }
 
-export function SimpleControls({ params, onChange, curveType, onCurveTypeChange }: SimpleControlsProps) {
+export function SimpleControls({
+  params,
+  onChange,
+  curveType,
+  onCurveTypeChange,
+  colorOscillation,
+  onColorOscillationChange,
+  parameterOscillations,
+  onParameterOscillationsChange
+}: SimpleControlsProps) {
   return (
     <div className={styles.container}>
       <div className={styles.controlGroup}>
@@ -30,6 +47,11 @@ export function SimpleControls({ params, onChange, curveType, onCurveTypeChange 
             onChange={(e) => onChange({ R: Number(e.target.value) })}
           />
         </div>
+        <ParameterOscillationControl
+          label="Ring Size"
+          oscillation={parameterOscillations.R}
+          onChange={(update) => onParameterOscillationsChange({ R: { ...parameterOscillations.R, ...update } })}
+        />
       </div>
 
       <div className={styles.controlGroup}>
@@ -51,6 +73,11 @@ export function SimpleControls({ params, onChange, curveType, onCurveTypeChange 
             onChange={(e) => onChange({ r: Number(e.target.value) })}
           />
         </div>
+        <ParameterOscillationControl
+          label="Wheel Size"
+          oscillation={parameterOscillations.r}
+          onChange={(update) => onParameterOscillationsChange({ r: { ...parameterOscillations.r, ...update } })}
+        />
       </div>
 
       <div className={styles.controlGroup}>
@@ -72,6 +99,11 @@ export function SimpleControls({ params, onChange, curveType, onCurveTypeChange 
             onChange={(e) => onChange({ d: Number(e.target.value) })}
           />
         </div>
+        <ParameterOscillationControl
+          label="Pen Position"
+          oscillation={parameterOscillations.d}
+          onChange={(update) => onParameterOscillationsChange({ d: { ...parameterOscillations.d, ...update } })}
+        />
       </div>
 
       <div className={styles.controlGroup}>
@@ -169,6 +201,13 @@ export function SimpleControls({ params, onChange, curveType, onCurveTypeChange 
           <option value="hypotrochoid">Inside (Hypotrochoid)</option>
           <option value="epitrochoid">Outside (Epitrochoid)</option>
         </select>
+      </div>
+
+      <div className={styles.controlGroup}>
+        <ColorOscillationControls
+          oscillation={colorOscillation}
+          onChange={onColorOscillationChange}
+        />
       </div>
     </div>
   );

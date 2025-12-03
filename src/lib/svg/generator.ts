@@ -16,6 +16,49 @@ export function pointsToPath(points: Point[]): string {
 }
 
 /**
+ * Path segment with color information
+ */
+export interface ColoredSegment {
+  path: string;
+  color: string;
+}
+
+/**
+ * Split points into colored segments based on color function
+ * @param points - Array of points to segment
+ * @param getColorAtProgress - Function that returns color for a given progress (0-1)
+ * @param numSegments - Number of segments to create
+ */
+export function createColoredSegments(
+  points: Point[],
+  getColorAtProgress: (progress: number) => string,
+  numSegments: number = 100
+): ColoredSegment[] {
+  if (points.length === 0) return [];
+
+  const segments: ColoredSegment[] = [];
+  const pointsPerSegment = Math.max(1, Math.floor(points.length / numSegments));
+
+  for (let i = 0; i < numSegments; i++) {
+    const startIdx = i * pointsPerSegment;
+    const endIdx = i === numSegments - 1 ? points.length : (i + 1) * pointsPerSegment + 1;
+
+    if (startIdx >= points.length) break;
+
+    const segmentPoints = points.slice(startIdx, endIdx);
+    if (segmentPoints.length < 2) continue;
+
+    const progress = i / (numSegments - 1);
+    const color = getColorAtProgress(progress);
+    const path = pointsToPath(segmentPoints);
+
+    segments.push({ path, color });
+  }
+
+  return segments;
+}
+
+/**
  * Calculate the total length of a path (approximation)
  */
 export function calculatePathLength(points: Point[]): number {

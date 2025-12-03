@@ -13,6 +13,10 @@ function App() {
     setParams,
     curveType,
     setCurveType,
+    colorOscillation,
+    setColorOscillation,
+    parameterOscillations,
+    setParameterOscillations,
     points,
     pathString,
     pathLength,
@@ -62,6 +66,10 @@ function App() {
             onChange={setParams}
             curveType={curveType}
             onCurveTypeChange={setCurveType}
+            colorOscillation={colorOscillation}
+            onColorOscillationChange={setColorOscillation}
+            parameterOscillations={parameterOscillations}
+            onParameterOscillationsChange={setParameterOscillations}
           />
 
           <h3 className={styles.sectionTitle}>Animation</h3>
@@ -112,6 +120,7 @@ function App() {
             r={params.r}
             d={params.d}
             curveType={curveType}
+            colorOscillation={colorOscillation}
           />
         </main>
       </div>
