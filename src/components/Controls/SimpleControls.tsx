@@ -171,10 +171,10 @@ export function SimpleControls({
           onChange={(e) => onChange({ rotation: Number(e.target.value) })}
           className={styles.select}
         >
-          <option value="0">3 o'clock (0°)</option>
-          <option value="90">12 o'clock (90°)</option>
-          <option value="180">9 o'clock (180°)</option>
-          <option value="270">6 o'clock (270°)</option>
+          <option value="0">Right</option>
+          <option value="90">Down</option>
+          <option value="180">Left</option>
+          <option value="270">Up</option>
         </select>
       </div>
     </div>
