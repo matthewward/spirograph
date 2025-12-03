@@ -1,7 +1,6 @@
-import {
-  ParameterOscillation,
-  WaveType,
-} from "../../lib/animation/parameterOscillation";
+import { ParameterOscillation } from "../../lib/animation/parameterOscillation";
+import { WaveType } from "../../lib/animation/colorOscillation";
+import { NumberInput } from "./NumberInput";
 import styles from "./ParameterOscillationControl.module.css";
 
 interface ParameterOscillationControlProps {
@@ -32,26 +31,24 @@ export function ParameterOscillationControl({
         <div className={styles.settings}>
           <div className={styles.controlRow}>
             <label>AMP</label>
-            <input
-              type="number"
-              min="1"
-              max="100"
-              step="1"
+            <NumberInput
               value={Math.round(oscillation.amplitude)}
-              onChange={(e) => onChange({ amplitude: Number(e.target.value) })}
+              onChange={(value) => onChange({ amplitude: value })}
+              min={1}
+              max={100}
+              step={1}
               className={styles.input}
             />
           </div>
 
           <div className={styles.controlRow}>
             <label>FREQ</label>
-            <input
-              type="number"
-              min="-100"
-              max="100"
-              step="1"
+            <NumberInput
               value={oscillation.frequency}
-              onChange={(e) => onChange({ frequency: Number(e.target.value) })}
+              onChange={(value) => onChange({ frequency: value })}
+              min={-100}
+              max={100}
+              step={1}
               className={styles.input}
             />
           </div>

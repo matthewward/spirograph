@@ -1,4 +1,5 @@
 import { ColorOscillation, WaveType } from '../../lib/animation/colorOscillation';
+import { NumberInput } from './NumberInput';
 import styles from './ColorOscillationControls.module.css';
 
 interface ColorOscillationControlsProps {
@@ -82,13 +83,12 @@ export function ColorOscillationControls({ oscillation, onChange }: ColorOscilla
 
           <div className={styles.controlRow}>
             <label>Frequency (cycles)</label>
-            <input
-              type="number"
-              min="1"
-              max="20"
-              step="1"
+            <NumberInput
               value={oscillation.frequency}
-              onChange={(e) => onChange({ frequency: Number(e.target.value) })}
+              onChange={(value) => onChange({ frequency: value })}
+              min={1}
+              max={20}
+              step={1}
             />
           </div>
         </>

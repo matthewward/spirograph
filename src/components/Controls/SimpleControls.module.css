@@ -13,21 +13,6 @@
   gap: var(--spacing-sm);
 }
 
-.inputRow {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: center;
-}
-
-.inputRow input[type='range'] {
-  flex: 1;
-}
-
-.numberInput {
-  width: 70px;
-  text-align: center;
-}
-
 .colorRow {
   display: flex;
   gap: var(--spacing-md);
