@@ -72,7 +72,7 @@ export function getDefaultState(): SerializableState {
     oscd_waveType: 'sine',
     animSpeed: 1,
     animEasing: 'linear',
-    animLoopDirection: 'none',
+    animLoopDirection: 'continue',
     animShowDot: false,
     animShowRings: false,
   };

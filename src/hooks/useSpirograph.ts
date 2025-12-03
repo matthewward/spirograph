@@ -1,8 +1,20 @@
-import { useState, useMemo } from 'react';
-import { SpirographParams, Point, CurveType } from '../lib/spirograph/types';
-import { sampleSpirograph, sampleSpirographWithOscillation, getBoundingBox } from '../lib/spirograph/math';
-import { pointsToPath, simplifyPath, calculatePathLength } from '../lib/svg/generator';
-import { SpirographOscillations, createDefaultOscillation, getOscillatedValue } from '../lib/animation/parameterOscillation';
+import { useState, useMemo } from "react";
+import { SpirographParams, Point, CurveType } from "../lib/spirograph/types";
+import {
+  sampleSpirograph,
+  sampleSpirographWithOscillation,
+  getBoundingBox,
+} from "../lib/spirograph/math";
+import {
+  pointsToPath,
+  simplifyPath,
+  calculatePathLength,
+} from "../lib/svg/generator";
+import {
+  SpirographOscillations,
+  createDefaultOscillation,
+  getOscillatedValue,
+} from "../lib/animation/parameterOscillation";
 
 export interface UseSpirographResult {
   params: SpirographParams;
@@ -10,7 +22,9 @@ export interface UseSpirographResult {
   curveType: CurveType;
   setCurveType: (type: CurveType) => void;
   parameterOscillations: SpirographOscillations;
-  setParameterOscillations: (oscillations: Partial<SpirographOscillations>) => void;
+  setParameterOscillations: (
+    oscillations: Partial<SpirographOscillations>
+  ) => void;
   points: Point[];
   pathString: string;
   pathLength: number;
@@ -18,31 +32,32 @@ export interface UseSpirographResult {
 }
 
 const DEFAULT_PARAMS: SpirographParams = {
-  R: 120,
+  R: 110,
   r: 48,
   d: 84,
-  strokeWidth: 2,
-  strokeColor: '#00d9ff',
+  strokeWidth: 1,
+  strokeColor: "#ffffff",
   completion: 100,
-  duration: 5, // 5 seconds default
-  rotation: 0, // 0 = 3 o'clock (default)
-  backgroundColor: '#111529', // current bg-secondary value
+  duration: 3, // 5 seconds default
+  rotation: 90, // 0 = 3 o'clock (default)
+  backgroundColor: "#222222", // current bg-secondary value
 };
 
 export function useSpirograph(): UseSpirographResult {
   const [params, setParamsState] = useState<SpirographParams>(DEFAULT_PARAMS);
-  const [curveType, setCurveType] = useState<CurveType>('hypotrochoid');
-  const [parameterOscillations, setParameterOscillationsState] = useState<SpirographOscillations>({
-    R: createDefaultOscillation(DEFAULT_PARAMS.R),
-    r: createDefaultOscillation(DEFAULT_PARAMS.r),
-    d: createDefaultOscillation(DEFAULT_PARAMS.d),
-  });
+  const [curveType, setCurveType] = useState<CurveType>("hypotrochoid");
+  const [parameterOscillations, setParameterOscillationsState] =
+    useState<SpirographOscillations>({
+      R: createDefaultOscillation(DEFAULT_PARAMS.R),
+      r: createDefaultOscillation(DEFAULT_PARAMS.r),
+      d: createDefaultOscillation(DEFAULT_PARAMS.d),
+    });
 
   const setParams = (newParams: Partial<SpirographParams>) => {
     setParamsState((prev) => {
       const updated = { ...prev, ...newParams };
       // Update base values in oscillations when params change
-      setParameterOscillationsState(prevOsc => ({
+      setParameterOscillationsState((prevOsc) => ({
         R: { ...prevOsc.R, baseValue: updated.R },
         r: { ...prevOsc.r, baseValue: updated.r },
         d: { ...prevOsc.d, baseValue: updated.d },
@@ -51,7 +66,9 @@ export function useSpirograph(): UseSpirographResult {
     });
   };
 
-  const setParameterOscillations = (update: Partial<SpirographOscillations>) => {
+  const setParameterOscillations = (
+    update: Partial<SpirographOscillations>
+  ) => {
     setParameterOscillationsState((prev) => ({
       ...prev,
       ...update,
@@ -60,9 +77,11 @@ export function useSpirograph(): UseSpirographResult {
 
   // Check if any oscillation is enabled
   const hasOscillations = useMemo(() => {
-    return parameterOscillations.R.enabled ||
-           parameterOscillations.r.enabled ||
-           parameterOscillations.d.enabled;
+    return (
+      parameterOscillations.R.enabled ||
+      parameterOscillations.r.enabled ||
+      parameterOscillations.d.enabled
+    );
   }, [parameterOscillations]);
 
   // Memoize the expensive calculations
@@ -77,7 +96,12 @@ export function useSpirograph(): UseSpirographResult {
         r: getOscillatedValue(progress, parameterOscillations.r),
         d: getOscillatedValue(progress, parameterOscillations.d),
       });
-      rawPoints = sampleSpirographWithOscillation(params, curveType, getOscillatedParams, 720);
+      rawPoints = sampleSpirographWithOscillation(
+        params,
+        curveType,
+        getOscillatedParams,
+        720
+      );
     } else {
       // Normal sampling without oscillation
       rawPoints = sampleSpirograph(params, curveType, 720);

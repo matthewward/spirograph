@@ -21,4 +21,4 @@ export interface PathData {
   totalLength: number;
 }
 
-export type CurveType = 'hypotrochoid' | 'epitrochoid';
+export type CurveType = "hypotrochoid" | "epitrochoid";

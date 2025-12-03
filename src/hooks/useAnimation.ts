@@ -64,7 +64,7 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
   const [isErasing, setIsErasing] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [easing, setEasing] = useState<EasingType>('linear');
-  const [loopDirection, setLoopDirection] = useState<LoopDirection>('none');
+  const [loopDirection, setLoopDirection] = useState<LoopDirection>('continue');
   const [showDot, setShowDot] = useState(false);
   const [showRings, setShowRings] = useState(false);
 

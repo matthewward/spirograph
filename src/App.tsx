@@ -18,8 +18,6 @@ function App() {
     setParams,
     curveType,
     setCurveType,
-    colorOscillation,
-    setColorOscillation,
     parameterOscillations,
     setParameterOscillations,
     points,
@@ -62,7 +60,6 @@ function App() {
     if (urlState) {
       setParams(urlState.params);
       setCurveType(urlState.curveType);
-      setColorOscillation(urlState.colorOscillation);
       setParameterOscillations(urlState.paramOscillations);
       setSpeed(urlState.animSpeed);
       setEasing(urlState.animEasing);

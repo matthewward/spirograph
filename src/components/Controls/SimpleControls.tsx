@@ -1,7 +1,5 @@
 import { SpirographParams, CurveType } from "../../lib/spirograph/types";
-import { ColorOscillation } from "../../lib/animation/colorOscillation";
 import { SpirographOscillations } from "../../lib/animation/parameterOscillation";
-import { ColorOscillationControls } from "./ColorOscillationControls";
 import { RangeControl } from "./RangeControl";
 import styles from "./SimpleControls.module.css";
 
@@ -98,9 +96,9 @@ export function SimpleControls({
           label="Line Width"
           value={params.strokeWidth}
           onChange={(value) => onChange({ strokeWidth: value })}
-          min={0.5}
-          max={8}
-          step={0.5}
+          min={0.1}
+          max={10}
+          step={0.1}
         />
       </div>
 
