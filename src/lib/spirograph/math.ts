@@ -23,11 +23,17 @@ function lcm(a: number, b: number): number {
 
 /**
  * Calculate the number of rotations needed for pattern completion
+ * For hypotrochoid: based on r and (R-r)
+ * For epitrochoid: based on r and (R+r)
  */
-export function calculateRotations(R: number, r: number): number {
-  // Pattern completes when the smaller circle returns to start
-  // This happens after LCM(R, r) / r rotations of the fixed circle
-  const rotations = lcm(R, r) / r;
+export function calculateRotations(R: number, r: number, curveType: CurveType = 'hypotrochoid'): number {
+  // The complement depends on the curve type
+  const complement = curveType === 'hypotrochoid' ? R - r : R + r;
+
+  // Find GCD to get the minimal number of rotations
+  const divisor = gcd(Math.round(r), Math.round(complement));
+  const rotations = r / divisor;
+
   return rotations;
 }
 
@@ -67,9 +73,12 @@ export function sampleSpirograph(
   curveType: CurveType = 'hypotrochoid',
   samplesPerRotation: number = 360
 ): Point[] {
-  const { R, r } = params;
-  const rotations = calculateRotations(R, r);
-  const totalSamples = Math.ceil(rotations * samplesPerRotation);
+  const { R, r, completion } = params;
+  const rotations = calculateRotations(R, r, curveType);
+
+  // Apply completion percentage
+  const effectiveRotations = rotations * (completion / 100);
+  const totalSamples = Math.ceil(effectiveRotations * samplesPerRotation);
   const points: Point[] = [];
 
   const pointFunction =

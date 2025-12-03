@@ -3,7 +3,6 @@ import { useAnimation } from './hooks/useAnimation';
 import { useExport } from './hooks/useExport';
 import { SpirographCanvas } from './components/Canvas/SpirographCanvas';
 import { SimpleControls } from './components/Controls/SimpleControls';
-import { PresetGallery } from './components/Controls/PresetGallery';
 import { PlaybackControls } from './components/Playback/PlaybackControls';
 import { ExportPanel } from './components/Export/ExportPanel';
 import styles from './App.module.css';
@@ -45,9 +44,6 @@ function App() {
 
       <div className={styles.layout}>
         <aside className={styles.sidebar}>
-          <h3 className={styles.sectionTitle}>Presets</h3>
-          <PresetGallery onSelectPreset={setParams} />
-
           <h3 className={styles.sectionTitle}>Controls</h3>
           <SimpleControls params={params} onChange={setParams} />
 

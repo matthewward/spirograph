@@ -20,6 +20,7 @@ const DEFAULT_PARAMS: SpirographParams = {
   d: 84,
   strokeWidth: 2,
   strokeColor: '#00d9ff',
+  completion: 100,
 };
 
 export function useSpirograph(): UseSpirographResult {
@@ -32,11 +33,11 @@ export function useSpirograph(): UseSpirographResult {
 
   // Memoize the expensive calculations
   const { points, pathString, pathLength, viewBox } = useMemo(() => {
-    // Sample points from the parametric curve
-    const rawPoints = sampleSpirograph(params, curveType, 360);
+    // Sample points from the parametric curve with higher resolution for smoothness
+    const rawPoints = sampleSpirograph(params, curveType, 720);
 
-    // Simplify to reduce point count (adjust epsilon for quality vs performance)
-    const simplifiedPoints = simplifyPath(rawPoints, 0.5);
+    // Simplify to reduce point count (lower epsilon for smoother curves)
+    const simplifiedPoints = simplifyPath(rawPoints, 0.1);
 
     // Generate SVG path
     const path = pointsToPath(simplifiedPoints);

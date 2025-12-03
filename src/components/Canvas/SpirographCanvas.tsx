@@ -32,6 +32,7 @@ export function SpirographCanvas({
         className={styles.svg}
         viewBox={viewBox}
         preserveAspectRatio="xMidYMid meet"
+        shapeRendering="geometricPrecision"
       >
         {/* Background grid for technical aesthetic */}
         <defs>

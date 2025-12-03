@@ -4,6 +4,7 @@ export interface SpirographParams {
   d: number; // Pen distance from center
   strokeWidth: number;
   strokeColor: string;
+  completion: number; // Percentage of pattern to draw (0-100)
 }
 
 export interface Point {

@@ -73,6 +73,27 @@ export function SimpleControls({ params, onChange }: SimpleControlsProps) {
       </div>
 
       <div className={styles.controlGroup}>
+        <label htmlFor="completion">Completion</label>
+        <div className={styles.inputRow}>
+          <input
+            id="completion"
+            type="range"
+            min="1"
+            max="100"
+            step="1"
+            value={params.completion}
+            onChange={(e) => onChange({ completion: Number(e.target.value) })}
+          />
+          <input
+            type="number"
+            className={styles.numberInput}
+            value={params.completion}
+            onChange={(e) => onChange({ completion: Number(e.target.value) })}
+          />
+        </div>
+      </div>
+
+      <div className={styles.controlGroup}>
         <label htmlFor="stroke-width">Line Width</label>
         <div className={styles.inputRow}>
           <input
