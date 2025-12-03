@@ -168,6 +168,24 @@ export function SimpleControls({
       </div>
 
       <div className={styles.controlGroup}>
+        <label htmlFor="background-color">Background Color</label>
+        <div className={styles.colorRow}>
+          <input
+            id="background-color"
+            type="color"
+            value={params.backgroundColor}
+            onChange={(e) => onChange({ backgroundColor: e.target.value })}
+          />
+          <input
+            type="text"
+            className={styles.colorInput}
+            value={params.backgroundColor}
+            onChange={(e) => onChange({ backgroundColor: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className={styles.controlGroup}>
         <label htmlFor="duration">Duration (seconds)</label>
         <div className={styles.inputRow}>
           <input

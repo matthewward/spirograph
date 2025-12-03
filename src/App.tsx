@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useSpirograph } from './hooks/useSpirograph';
 import { useAnimation } from './hooks/useAnimation';
 import { useExport } from './hooks/useExport';
+import { useURLState } from './hooks/useURLState';
 import { SpirographCanvas } from './components/Canvas/SpirographCanvas';
 import { SimpleControls } from './components/Controls/SimpleControls';
 import { PlaybackControls } from './components/Playback/PlaybackControls';
@@ -8,6 +10,9 @@ import { ExportPanel } from './components/Export/ExportPanel';
 import styles from './App.module.css';
 
 function App() {
+  const { isPreviewMode, loadStateFromURL } = useURLState();
+  const [controlsVisible, setControlsVisible] = useState(!isPreviewMode);
+
   const {
     params,
     setParams,
@@ -51,6 +56,23 @@ function App() {
     pathLength,
   });
 
+  // Load state from URL on mount
+  useEffect(() => {
+    const urlState = loadStateFromURL();
+    if (urlState) {
+      setParams(urlState.params);
+      setCurveType(urlState.curveType);
+      setColorOscillation(urlState.colorOscillation);
+      setParameterOscillations(urlState.paramOscillations);
+      setSpeed(urlState.animSpeed);
+      setEasing(urlState.animEasing);
+      setLoopDirection(urlState.animLoopDirection);
+      setShowDot(urlState.animShowDot);
+      setShowRings(urlState.animShowRings);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className={styles.app}>
       <header className={styles.header}>
@@ -59,50 +81,69 @@ function App() {
       </header>
 
       <div className={styles.layout}>
-        <aside className={styles.sidebar}>
-          <h3 className={styles.sectionTitle}>Controls</h3>
-          <SimpleControls
-            params={params}
-            onChange={setParams}
-            curveType={curveType}
-            onCurveTypeChange={setCurveType}
-            colorOscillation={colorOscillation}
-            onColorOscillationChange={setColorOscillation}
-            parameterOscillations={parameterOscillations}
-            onParameterOscillationsChange={setParameterOscillations}
-          />
+        {controlsVisible && (
+          <aside className={styles.sidebar}>
+            <h3 className={styles.sectionTitle}>Controls</h3>
+            <SimpleControls
+              params={params}
+              onChange={setParams}
+              curveType={curveType}
+              onCurveTypeChange={setCurveType}
+              colorOscillation={colorOscillation}
+              onColorOscillationChange={setColorOscillation}
+              parameterOscillations={parameterOscillations}
+              onParameterOscillationsChange={setParameterOscillations}
+            />
 
-          <h3 className={styles.sectionTitle}>Animation</h3>
-          <PlaybackControls
-            isPlaying={isPlaying}
-            progress={progress}
-            speed={speed}
-            easing={easing}
-            loopDirection={loopDirection}
-            showDot={showDot}
-            showRings={showRings}
-            onPlay={play}
-            onPause={pause}
-            onReset={reset}
-            onProgressChange={setProgress}
-            onSpeedChange={setSpeed}
-            onEasingChange={setEasing}
-            onLoopDirectionChange={setLoopDirection}
-            onShowDotChange={setShowDot}
-            onShowRingsChange={setShowRings}
-          />
+            <h3 className={styles.sectionTitle}>Animation</h3>
+            <PlaybackControls
+              isPlaying={isPlaying}
+              progress={progress}
+              speed={speed}
+              easing={easing}
+              loopDirection={loopDirection}
+              showDot={showDot}
+              showRings={showRings}
+              onPlay={play}
+              onPause={pause}
+              onReset={reset}
+              onProgressChange={setProgress}
+              onSpeedChange={setSpeed}
+              onEasingChange={setEasing}
+              onLoopDirectionChange={setLoopDirection}
+              onShowDotChange={setShowDot}
+              onShowRingsChange={setShowRings}
+            />
 
-          <h3 className={styles.sectionTitle}>Export</h3>
-          <ExportPanel
-            duration={params.duration}
-            easing={easing}
-            loopDirection={loopDirection}
-            onExportStatic={exportStatic}
-            onExportAnimated={exportAnimated}
-          />
-        </aside>
+            <h3 className={styles.sectionTitle}>Export</h3>
+            <ExportPanel
+              duration={params.duration}
+              easing={easing}
+              loopDirection={loopDirection}
+              onExportStatic={exportStatic}
+              onExportAnimated={exportAnimated}
+              params={params}
+              curveType={curveType}
+              colorOscillation={colorOscillation}
+              paramOscillations={parameterOscillations}
+              animSpeed={speed}
+              animEasing={easing}
+              animLoopDirection={loopDirection}
+              animShowDot={showDot}
+              animShowRings={showRings}
+            />
+          </aside>
+        )}
 
         <main className={styles.canvasArea}>
+          {isPreviewMode && !controlsVisible && (
+            <button
+              onClick={() => setControlsVisible(true)}
+              className={styles.showControlsButton}
+            >
+              Show Controls
+            </button>
+          )}
           <SpirographCanvas
             points={points}
             pathString={pathString}
@@ -121,6 +162,7 @@ function App() {
             d={params.d}
             curveType={curveType}
             colorOscillation={colorOscillation}
+            backgroundColor={params.backgroundColor}
           />
         </main>
       </div>

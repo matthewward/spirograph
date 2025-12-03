@@ -53,6 +53,29 @@
   flex: 1;
   display: flex;
   min-width: 0;
+  position: relative;
+}
+
+.showControlsButton {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  right: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: all 0.2s ease;
+}
+
+.showControlsButton:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-cyan);
+  transform: translateY(-2px);
 }
 
 /* Responsive */

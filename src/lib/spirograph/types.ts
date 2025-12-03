@@ -7,6 +7,7 @@ export interface SpirographParams {
   completion: number; // Percentage of pattern to draw (0-100)
   duration: number; // Animation duration in seconds (1-30)
   rotation: number; // Starting rotation in degrees (0, 90, 180, 270)
+  backgroundColor: string; // Canvas background color
 }
 
 export interface Point {

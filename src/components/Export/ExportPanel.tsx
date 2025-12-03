@@ -1,5 +1,10 @@
+import { useState } from 'react';
 import { EasingType } from '../../lib/animation/easing';
 import { LoopDirection } from '../../hooks/useAnimation';
+import { SpirographParams, CurveType } from '../../lib/spirograph/types';
+import { ColorOscillation } from '../../lib/animation/colorOscillation';
+import { SpirographOscillations } from '../../lib/animation/parameterOscillation';
+import { useURLState } from '../../hooks/useURLState';
 import styles from './ExportPanel.module.css';
 
 interface ExportPanelProps {
@@ -8,6 +13,16 @@ interface ExportPanelProps {
   loopDirection: LoopDirection;
   onExportStatic: () => void;
   onExportAnimated: (duration: number, loopDirection: LoopDirection, easing: EasingType) => void;
+  // New props for sharing
+  params: SpirographParams;
+  curveType: CurveType;
+  colorOscillation: ColorOscillation;
+  paramOscillations: SpirographOscillations;
+  animSpeed: number;
+  animEasing: EasingType;
+  animLoopDirection: LoopDirection;
+  animShowDot: boolean;
+  animShowRings: boolean;
 }
 
 export function ExportPanel({
@@ -15,11 +30,46 @@ export function ExportPanel({
   easing,
   loopDirection,
   onExportStatic,
-  onExportAnimated
+  onExportAnimated,
+  params,
+  curveType,
+  colorOscillation,
+  paramOscillations,
+  animSpeed,
+  animEasing,
+  animLoopDirection,
+  animShowDot,
+  animShowRings,
 }: ExportPanelProps) {
+  const { generateShareURL } = useURLState();
+  const [copySuccess, setCopySuccess] = useState(false);
+
   const loopLabel = loopDirection === 'none' ? 'one-way'
     : loopDirection === 'continue' ? 'continue loop'
     : 'ping-pong loop';
+
+  const handleShare = async () => {
+    const shareURL = generateShareURL(
+      params,
+      curveType,
+      colorOscillation,
+      paramOscillations,
+      animSpeed,
+      animEasing,
+      animLoopDirection,
+      animShowDot,
+      animShowRings,
+      true // Preview mode
+    );
+
+    try {
+      await navigator.clipboard.writeText(shareURL);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -53,6 +103,19 @@ export function ExportPanel({
           Export Animated SVG
         </button>
       </div>
+
+      <button
+        className={styles.exportButton}
+        onClick={handleShare}
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="5" cy="9" r="2" />
+          <circle cx="13" cy="5" r="2" />
+          <circle cx="13" cy="13" r="2" />
+          <path d="M7 8 L11 6 M7 10 L11 12" />
+        </svg>
+        {copySuccess ? 'Copied!' : 'Share'}
+      </button>
     </div>
   );
 }

@@ -24,6 +24,7 @@ interface SpirographCanvasProps {
   d: number;
   curveType: CurveType;
   colorOscillation: ColorOscillation;
+  backgroundColor: string;
 }
 
 export function SpirographCanvas({
@@ -44,6 +45,7 @@ export function SpirographCanvas({
   d,
   curveType,
   colorOscillation,
+  backgroundColor,
 }: SpirographCanvasProps) {
 
   // For "continue" mode during erase, we need to slice the points array
@@ -77,7 +79,7 @@ export function SpirographCanvas({
   }, [isAnimating, progress, pathLength, loopDirection, isErasing, points, pathString]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ backgroundColor }}>
       <svg
         className={styles.svg}
         viewBox={viewBox}

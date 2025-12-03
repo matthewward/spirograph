@@ -29,6 +29,7 @@ const DEFAULT_PARAMS: SpirographParams = {
   completion: 100,
   duration: 5, // 5 seconds default
   rotation: 0, // 0 = 3 o'clock (default)
+  backgroundColor: '#111529', // current bg-secondary value
 };
 
 export function useSpirograph(): UseSpirographResult {
