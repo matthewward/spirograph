@@ -34,7 +34,7 @@ export function ParameterOscillationControl({
             <NumberInput
               value={Math.round(oscillation.amplitude)}
               onChange={(value) => onChange({ amplitude: value })}
-              min={1}
+              min={-100}
               max={100}
               step={1}
               className={styles.input}
