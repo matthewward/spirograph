@@ -61,6 +61,7 @@ function getRandomDefaultParams(): SpirographParams {
     backgroundColor: "#222222",
     sides: 1,
     arcness: 0,
+    arcnessEnabled: false,
   };
 }
 
@@ -87,6 +88,7 @@ function getInitialParams(): SpirographParams {
         backgroundColor: "#222222",
         sides: 1,
         arcness: 0,
+        arcnessEnabled: false,
       }
     : getRandomDefaultParams();
 }

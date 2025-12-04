@@ -1,6 +1,7 @@
 import { SpirographParams, CurveType } from "../../lib/spirograph/types";
 import { SpirographOscillations } from "../../lib/animation/parameterOscillation";
 import { RangeControl } from "./RangeControl";
+import { PolygonPreview } from "./PolygonPreview";
 import styles from "./SimpleControls.module.css";
 
 interface SimpleControlsProps {
@@ -78,28 +79,54 @@ export function SimpleControls({
         />
       </div>
 
-      <div className={styles.controlGroup}>
-        <RangeControl
-          id="wheel-sides"
-          label="Wheel Sides"
-          value={params.sides}
-          onChange={(value) => onChange({ sides: Math.round(value) })}
-          min={1}
-          max={12}
-          step={1}
-        />
-      </div>
+      <div className={styles.polygonSection}>
+        <div className={styles.polygonControls}>
+          <div className={styles.controlGroup}>
+            <RangeControl
+              id="wheel-sides"
+              label="Wheel Sides"
+              value={params.sides}
+              onChange={(value) => onChange({ sides: Math.round(value) })}
+              min={1}
+              max={12}
+              step={1}
+            />
+          </div>
 
-      <div className={styles.controlGroup}>
-        <RangeControl
-          id="edge-curvature"
-          label="Edge Curvature"
-          value={params.arcness}
-          onChange={(value) => onChange({ arcness: value })}
-          min={0}
-          max={1}
-          step={0.01}
-        />
+          <div className={styles.controlGroup}>
+            <label htmlFor="arcness-enabled" className={styles.checkboxLabel}>
+              <input
+                id="arcness-enabled"
+                type="checkbox"
+                checked={params.arcnessEnabled}
+                onChange={(e) => onChange({ arcnessEnabled: e.target.checked })}
+              />
+              Enable Edge Curvature
+            </label>
+          </div>
+
+          {params.arcnessEnabled && (
+            <div className={styles.controlGroup}>
+              <RangeControl
+                id="edge-curvature"
+                label="Edge Curvature"
+                value={params.arcness}
+                onChange={(value) => onChange({ arcness: value })}
+                min={-0.5}
+                max={2}
+                step={0.01}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className={styles.polygonPreviewWrapper}>
+          <PolygonPreview
+            sides={params.sides}
+            arcness={params.arcness}
+            arcnessEnabled={params.arcnessEnabled}
+          />
+        </div>
       </div>
 
       <div className={styles.controlGroup}>

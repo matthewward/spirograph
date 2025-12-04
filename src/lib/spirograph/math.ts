@@ -27,12 +27,14 @@ function gcd(a: number, b: number): number {
  * @param baseRadius - Base radius of the wheel (circumradius)
  * @param sides - Number of polygon sides (1 = circle)
  * @param arcness - Edge curvature (0 = straight, 1 = max bulge)
+ * @param arcnessEnabled - Whether to use curved edges (true) or straight edges (false)
  */
 export function calculatePolygonRadius(
   angle: number,
   baseRadius: number,
   sides: number,
-  arcness: number
+  arcness: number,
+  arcnessEnabled: boolean = false
 ): number {
   // Special case: circle (sides = 1)
   if (sides === 1) {
@@ -44,7 +46,8 @@ export function calculatePolygonRadius(
   const halfSegment = segmentAngle / 2;
 
   // Normalize angle to [0, segmentAngle) for one segment
-  const normalizedAngle = ((angle % segmentAngle) + segmentAngle) % segmentAngle;
+  const normalizedAngle =
+    ((angle % segmentAngle) + segmentAngle) % segmentAngle;
 
   // Angle within segment, centered at 0 for vertex
   const angleInSegment = normalizedAngle - halfSegment;
@@ -53,7 +56,7 @@ export function calculatePolygonRadius(
   const inradius = baseRadius * Math.cos(Math.PI / sides);
   const circumradius = baseRadius;
 
-  if (arcness === 0) {
+  if (!arcnessEnabled) {
     // Straight edges: linear interpolation
     const t = Math.abs(angleInSegment) / halfSegment; // 0 at vertex, 1 at edge midpoint
     return circumradius * (1 - t) + inradius * t;
@@ -103,13 +106,13 @@ export function calculateRotations(
  * Hypotrochoid: wheel rolling inside a fixed circle
  */
 export function hypotrochoidPoint(t: number, params: SpirographParams): Point {
-  const { R, r, d, rotation = 0, sides = 1, arcness = 0 } = params;
+  const { R, r, d, rotation = 0, sides = 1, arcness = 0, arcnessEnabled = false } = params;
 
   // Calculate wheel rotation angle
   const theta = ((R - r) / r) * t;
 
   // Get effective radius at this rotation angle
-  const r_eff = calculatePolygonRadius(theta, r, sides, arcness);
+  const r_eff = calculatePolygonRadius(theta, r, sides, arcness, arcnessEnabled);
 
   // Calculate point with variable radius
   const x = (R - r_eff) * Math.cos(t) + d * Math.cos(theta);
@@ -134,13 +137,13 @@ export function hypotrochoidPoint(t: number, params: SpirographParams): Point {
  * Epitrochoid: wheel rolling outside a fixed circle
  */
 export function epitrochoidPoint(t: number, params: SpirographParams): Point {
-  const { R, r, d, rotation = 0, sides = 1, arcness = 0 } = params;
+  const { R, r, d, rotation = 0, sides = 1, arcness = 0, arcnessEnabled = false } = params;
 
   // Calculate wheel rotation angle
   const theta = ((R + r) / r) * t;
 
   // Get effective radius at this rotation angle
-  const r_eff = calculatePolygonRadius(theta, r, sides, arcness);
+  const r_eff = calculatePolygonRadius(theta, r, sides, arcness, arcnessEnabled);
 
   // Calculate point with variable radius
   const x = (R + r_eff) * Math.cos(t) - d * Math.cos(theta);

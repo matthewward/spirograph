@@ -10,6 +10,7 @@ export interface SpirographParams {
   backgroundColor: string; // Canvas background color
   sides: number; // Number of polygon sides (1 = circle, 2+ = polygon)
   arcness: number; // Edge curvature (0 = straight, 1 = max bulge)
+  arcnessEnabled: boolean; // Whether to use curved edges (true) or straight edges (false)
 }
 
 export interface Point {

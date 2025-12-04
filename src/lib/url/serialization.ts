@@ -29,6 +29,9 @@ export interface SerializableState {
   duration: number;
   rotation: number;
   backgroundColor: string;
+  sides: number;
+  arcness: number;
+  arcnessEnabled: boolean;
 
   // CurveType
   curveType: CurveType;
@@ -72,6 +75,9 @@ function getFixedDefaultState(): SerializableState {
     duration: 5,
     rotation: 90,
     backgroundColor: "#111529",
+    sides: 1,
+    arcness: 0,
+    arcnessEnabled: false,
     curveType: "hypotrochoid",
     oscR_enabled: false,
     oscR_amplitude: 20,
@@ -141,6 +147,9 @@ export function getDefaultState(): SerializableState {
     duration: randomFloat(2, 10, 1),
     rotation: 90,
     backgroundColor: "#111529",
+    sides: 1,
+    arcness: 0,
+    arcnessEnabled: false,
     curveType: randomItem(curveTypes),
     oscR_enabled: Math.random() < 0.3, // 30% chance
     oscR_amplitude: randomInt(5, 30),
@@ -185,6 +194,9 @@ export function serializeState(
     duration: params.duration,
     rotation: params.rotation,
     backgroundColor: params.backgroundColor,
+    sides: params.sides,
+    arcness: params.arcness,
+    arcnessEnabled: params.arcnessEnabled,
     curveType,
     oscR_enabled: paramOscillations.R.enabled,
     oscR_amplitude: paramOscillations.R.amplitude,
@@ -306,6 +318,9 @@ export function deserializeState(base64: string): SerializableState | null {
         parsed.backgroundColor,
         defaults.backgroundColor
       ),
+      sides: validateNumber(parsed.sides, defaults.sides),
+      arcness: validateNumber(parsed.arcness, defaults.arcness),
+      arcnessEnabled: validateBoolean(parsed.arcnessEnabled, defaults.arcnessEnabled),
       curveType: validateCurveType(parsed.curveType, defaults.curveType),
       oscR_enabled: validateBoolean(parsed.oscR_enabled, defaults.oscR_enabled),
       oscR_amplitude: validateNumber(
@@ -379,6 +394,9 @@ export function stateToHookParams(state: SerializableState) {
     duration: state.duration,
     rotation: state.rotation,
     backgroundColor: state.backgroundColor,
+    sides: state.sides,
+    arcness: state.arcness,
+    arcnessEnabled: state.arcnessEnabled,
   };
 
   const paramOscillations: SpirographOscillations = {
