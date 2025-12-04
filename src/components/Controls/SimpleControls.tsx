@@ -15,6 +15,8 @@ interface SimpleControlsProps {
   onParameterOscillationsChange: (
     update: Partial<SpirographOscillations>
   ) => void;
+  showGradientOverlay?: boolean;
+  onShowGradientOverlayChange?: (show: boolean) => void;
 }
 
 export function SimpleControls({
@@ -24,6 +26,8 @@ export function SimpleControls({
   onCurveTypeChange,
   parameterOscillations,
   onParameterOscillationsChange,
+  showGradientOverlay,
+  onShowGradientOverlayChange,
 }: SimpleControlsProps) {
   return (
     <div className={styles.container}>
@@ -349,6 +353,24 @@ export function SimpleControls({
                   </label>
                 </div>
               </div>
+
+              {onShowGradientOverlayChange && (
+                <div className={styles.controlGroup}>
+                  <div className={styles.animateRow}>
+                    <label htmlFor="show-gradient-overlay">Show Gradient Overlay</label>
+                    <label htmlFor="show-gradient-overlay" className={styles.checkboxLabel}>
+                      <input
+                        id="show-gradient-overlay"
+                        type="checkbox"
+                        checked={showGradientOverlay || false}
+                        onChange={(e) =>
+                          onShowGradientOverlayChange(e.target.checked)
+                        }
+                      />
+                    </label>
+                  </div>
+                </div>
+              )}
 
               {params.waveEffect.animate && (
                 <div className={styles.controlGroup}>

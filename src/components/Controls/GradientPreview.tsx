@@ -60,28 +60,36 @@ export function GradientPreview({
   const generateGradient = (): string => {
     const stops: Array<{ position: number; color: string }> = [];
 
-    // Create seamless repeating gradient pattern
-    // For frequency N, we need 2*N color bands (N white, N black)
-    const numBands = frequency * 2;
+    // Sample the gradient at many points to create a smooth visualization
+    // This matches the continuous mathematical gradient used in waveEffect.ts
+    const numSamples = 100; // High resolution for smooth gradients
 
-    for (let i = 0; i < numBands; i++) {
-      // Calculate position with offset applied
-      const basePosition = i / numBands;
-      const position = ((basePosition - currentOffset + 1) % 1) * 100;
+    for (let i = 0; i <= numSamples; i++) {
+      const normalizedPosition = i / numSamples;
 
-      // Alternate between white and black
-      const isWhite = i % 2 === 0;
-      const color = isWhite ? "#ffffff" : "#000000";
+      // Apply offset (same formula as in waveEffect.ts)
+      const cyclicValue = (normalizedPosition * frequency + currentOffset) % 1;
 
-      stops.push({ position, color });
+      // Apply easing (same formula as in waveEffect.ts)
+      let gradientValue;
+      if (easing === 0) {
+        gradientValue = cyclicValue; // Linear
+      } else {
+        // Smoothstep-style easing
+        const smooth = cyclicValue * cyclicValue * (3 - 2 * cyclicValue);
+        gradientValue = cyclicValue * (1 - easing) + smooth * easing;
+      }
+
+      // Convert gradient value (0-1) to wave displacement value (-1 to 1)
+      // This matches the sine wave conversion in waveEffect.ts line 139
+      const waveValue = Math.sin(gradientValue * Math.PI * 2);
+
+      // Map wave value from [-1, 1] to [0, 255] for visualization
+      const grayValue = Math.round((waveValue + 1) * 127.5);
+      const color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+
+      stops.push({ position: normalizedPosition * 100, color });
     }
-
-    // Add wrapping stop at the end to ensure seamless loop
-    const firstStop = stops[0];
-    stops.push({ position: ((1 - currentOffset + 1) % 1) * 100, color: firstStop.color });
-
-    // Sort stops by position
-    stops.sort((a, b) => a.position - b.position);
 
     const gradientStops = stops.map(s => `${s.color} ${s.position}%`).join(", ");
 

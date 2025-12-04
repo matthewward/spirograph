@@ -12,6 +12,7 @@ import styles from "./App.module.css";
 function App() {
   const { loadStateFromURL, hasURLState } = useURLState();
   const [controlsVisible, setControlsVisible] = useState(() => !hasURLState());
+  const [showGradientOverlay, setShowGradientOverlay] = useState(false);
 
   const {
     params,
@@ -115,6 +116,8 @@ function App() {
             d={params.d}
             curveType={curveType}
             backgroundColor={params.backgroundColor}
+            waveEffect={params.waveEffect}
+            showGradientOverlay={showGradientOverlay}
           />
         </main>
         {controlsVisible && (
@@ -137,6 +140,8 @@ function App() {
               onCurveTypeChange={setCurveType}
               parameterOscillations={parameterOscillations}
               onParameterOscillationsChange={setParameterOscillations}
+              showGradientOverlay={showGradientOverlay}
+              onShowGradientOverlayChange={setShowGradientOverlay}
             />
 
             <h3 className={styles.sectionTitle}>Animation</h3>

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { LoopDirection } from "../../hooks/useAnimation";
 import { Point, CurveType } from "../../lib/spirograph/types";
 import { pointsToPath } from "../../lib/svg/generator";
+import { WaveEffectParams } from "../../lib/animation/waveEffect";
 import styles from "./SpirographCanvas.module.css";
 
 interface SpirographCanvasProps {
@@ -22,6 +23,8 @@ interface SpirographCanvasProps {
   d: number;
   curveType: CurveType;
   backgroundColor: string;
+  waveEffect: WaveEffectParams;
+  showGradientOverlay?: boolean;
 }
 
 export function SpirographCanvas({
@@ -42,6 +45,8 @@ export function SpirographCanvas({
   d: _d,
   curveType: _curveType,
   backgroundColor,
+  waveEffect,
+  showGradientOverlay = false,
 }: SpirographCanvasProps) {
   // For "continue" mode during erase, we need to slice the points array
   // and regenerate the path to remove points from the START
@@ -86,6 +91,55 @@ export function SpirographCanvas({
       pathString,
     ]);
 
+  // Generate gradient overlay CSS
+  const gradientOverlayStyle = useMemo(() => {
+    if (!showGradientOverlay || !waveEffect.enabled) return undefined;
+
+    const stops: Array<{ position: number; color: string }> = [];
+
+    // Sample the gradient at many points to create a smooth visualization
+    // This matches the continuous mathematical gradient used in waveEffect.ts
+    const numSamples = 100; // High resolution for smooth gradients
+
+    for (let i = 0; i <= numSamples; i++) {
+      const normalizedPosition = i / numSamples;
+
+      // Apply offset (same formula as in waveEffect.ts)
+      const cyclicValue = (normalizedPosition * waveEffect.frequency + waveEffect.animationOffset) % 1;
+
+      // Apply easing (same formula as in waveEffect.ts)
+      let gradientValue;
+      if (waveEffect.easing === 0) {
+        gradientValue = cyclicValue; // Linear
+      } else {
+        // Smoothstep-style easing
+        const smooth = cyclicValue * cyclicValue * (3 - 2 * cyclicValue);
+        gradientValue = cyclicValue * (1 - waveEffect.easing) + smooth * waveEffect.easing;
+      }
+
+      // Convert gradient value (0-1) to wave displacement value (-1 to 1)
+      // This matches the sine wave conversion in waveEffect.ts line 139
+      const waveValue = Math.sin(gradientValue * Math.PI * 2);
+
+      // Map wave value from [-1, 1] to [0, 255] for visualization
+      const grayValue = Math.round((waveValue + 1) * 127.5);
+      const color = `rgba(${grayValue}, ${grayValue}, ${grayValue}, 0.5)`;
+
+      stops.push({ position: normalizedPosition * 100, color });
+    }
+
+    const gradientStops = stops.map((s) => `${s.color} ${s.position}%`).join(", ");
+
+    switch (waveEffect.gradientType) {
+      case "horizontal":
+        return `linear-gradient(to right, ${gradientStops})`;
+      case "vertical":
+        return `linear-gradient(to bottom, ${gradientStops})`;
+      case "radial":
+        return `radial-gradient(circle, ${gradientStops})`;
+    }
+  }, [showGradientOverlay, waveEffect]);
+
   return (
     <div className={styles.container} style={{ backgroundColor }}>
       <svg
@@ -128,6 +182,21 @@ export function SpirographCanvas({
           />
         )} */}
       </svg>
+
+      {/* Gradient overlay for debugging */}
+      {showGradientOverlay && gradientOverlayStyle && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: gradientOverlayStyle,
+            pointerEvents: "none",
+          }}
+        />
+      )}
     </div>
   );
 }
