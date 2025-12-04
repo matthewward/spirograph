@@ -16,21 +16,35 @@ export function PolygonPreview({
   size = 80,
 }: PolygonPreviewProps) {
   const pathData = useMemo(() => {
-    const radius = size * 0.35; // Use 35% of size for the polygon radius
-    const centerX = size / 2;
-    const centerY = size / 2;
     const numPoints = 360; // Sample 360 points around the polygon
 
-    const points: { x: number; y: number }[] = [];
+    // First pass: calculate points at unit radius to find actual bounds
+    const tempPoints: { x: number; y: number }[] = [];
+    let maxRadius = 0;
 
     for (let i = 0; i <= numPoints; i++) {
       const angle = (i / numPoints) * 2 * Math.PI;
-      const r = calculatePolygonRadius(angle, radius, sides, arcness, arcnessEnabled);
+      const r = calculatePolygonRadius(angle, 1, sides, arcness, arcnessEnabled);
+      maxRadius = Math.max(maxRadius, r);
 
-      const x = centerX + r * Math.cos(angle);
-      const y = centerY + r * Math.sin(angle);
-      points.push({ x, y });
+      const x = r * Math.cos(angle);
+      const y = r * Math.sin(angle);
+      tempPoints.push({ x, y });
     }
+
+    // Calculate scale to fit within container with padding
+    const padding = size * 0.1; // 10% padding
+    const availableSize = size - (padding * 2);
+    const scale = availableSize / (maxRadius * 2);
+
+    // Second pass: scale and center the points
+    const centerX = size / 2;
+    const centerY = size / 2;
+
+    const points = tempPoints.map(p => ({
+      x: centerX + p.x * scale,
+      y: centerY + p.y * scale,
+    }));
 
     // Create SVG path string
     if (points.length === 0) return "";

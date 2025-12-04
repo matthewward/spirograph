@@ -16,6 +16,7 @@ interface ExportPanelProps {
     loopDirection: LoopDirection,
     easing: EasingType
   ) => void;
+  onExportPNG: () => void;
   // New props for sharing
   params: SpirographParams;
   curveType: CurveType;
@@ -33,6 +34,7 @@ export function ExportPanel({
   loopDirection,
   onExportStatic,
   onExportAnimated,
+  onExportPNG,
   params,
   curveType,
   paramOscillations,
@@ -71,18 +73,7 @@ export function ExportPanel({
   return (
     <div className={styles.container}>
       <button className={styles.exportButton} onClick={onExportStatic}>
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M9 2 L9 12 M5 8 L9 12 L13 8" />
-          <path d="M2 16 L16 16" />
-        </svg>
-        Export Static SVG
+        Static SVG
       </button>
 
       {/* <div className={styles.animatedSection}> */}
@@ -100,37 +91,17 @@ export function ExportPanel({
         className={styles.exportButton}
         onClick={() => onExportAnimated(duration, loopDirection, easing)}
       >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <circle cx="9" cy="9" r="7" />
-          <path d="M9 5 L9 9 L12 9" />
-        </svg>
-        Export Animated SVG
+        Animated SVG
+      </button>
+
+      <button className={styles.exportButton} onClick={() => onExportPNG()}>
+        PNG
       </button>
       {/* </div> */}
 
       <div className={styles.shareSection}>
         <button className={styles.exportButton} onClick={handleShare}>
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="5" cy="9" r="2" />
-            <circle cx="13" cy="5" r="2" />
-            <circle cx="13" cy="13" r="2" />
-            <path d="M7 8 L11 6 M7 10 L11 12" />
-          </svg>
-          {copySuccess ? "Copied!" : "Share"}
+          {copySuccess ? "Copied" : "Share"}
         </button>
       </div>
       <label className={styles.checkboxLabel}>

@@ -10,10 +10,11 @@ export interface UseExportOptions {
   strokeColor: string;
   strokeWidth: number;
   pathLength: number;
+  backgroundColor: string;
 }
 
 export function useExport(options: UseExportOptions) {
-  const { pathString, viewBox, strokeColor, strokeWidth, pathLength } = options;
+  const { pathString, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor } = options;
 
   const exportStatic = useCallback(() => {
     const svg = generateStaticSVG(pathString, viewBox, strokeColor, strokeWidth);
@@ -38,8 +39,75 @@ export function useExport(options: UseExportOptions) {
     downloadFile(svg, `spirograph-animated-${timestamp}.svg`, 'image/svg+xml');
   }, [pathString, viewBox, strokeColor, strokeWidth, pathLength]);
 
+  const exportPNG = useCallback((size: number = 2048) => {
+    console.log('exportPNG called', { size, pathString: pathString.substring(0, 50), viewBox, strokeColor, strokeWidth, backgroundColor });
+
+    // Generate static SVG
+    const svgString = generateStaticSVG(pathString, viewBox, strokeColor, strokeWidth);
+    console.log('Generated SVG string:', svgString.substring(0, 200));
+
+    // Create a blob and object URL from the SVG
+    const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(svgBlob);
+    console.log('Created blob URL:', url);
+
+    // Create an image element to load the SVG
+    const img = new Image();
+    img.onload = () => {
+      console.log('Image loaded successfully');
+
+      // Create a canvas with square dimensions
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Could not get canvas context');
+        URL.revokeObjectURL(url);
+        return;
+      }
+
+      console.log('Canvas created, filling background with', backgroundColor);
+
+      // Fill background
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, size, size);
+
+      // Draw the SVG image
+      ctx.drawImage(img, 0, 0, size, size);
+      console.log('Drew image on canvas');
+
+      // Convert canvas to blob and download
+      canvas.toBlob((blob) => {
+        if (blob) {
+          console.log('Canvas converted to blob, initiating download');
+          const now = new Date();
+          const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+          const pngUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = pngUrl;
+          link.download = `spirograph-${timestamp}.png`;
+          link.click();
+          URL.revokeObjectURL(pngUrl);
+          console.log('Download initiated');
+        }
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    };
+
+    img.onerror = (error) => {
+      console.error('Failed to load SVG image', error);
+      URL.revokeObjectURL(url);
+    };
+
+    console.log('Setting image src');
+    img.src = url;
+  }, [pathString, viewBox, strokeColor, strokeWidth, backgroundColor]);
+
   return {
     exportStatic,
     exportAnimated,
+    exportPNG,
   };
 }

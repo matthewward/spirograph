@@ -46,12 +46,13 @@ function App() {
     setShowRings,
   } = useAnimation(params.duration * 1000); // Convert seconds to milliseconds
 
-  const { exportStatic, exportAnimated } = useExport({
+  const { exportStatic, exportAnimated, exportPNG } = useExport({
     pathString,
     viewBox,
     strokeColor: params.strokeColor,
     strokeWidth: params.strokeWidth,
     pathLength,
+    backgroundColor: params.backgroundColor,
   });
 
   // Load state from URL on mount
@@ -168,6 +169,7 @@ function App() {
               loopDirection={loopDirection}
               onExportStatic={exportStatic}
               onExportAnimated={exportAnimated}
+              onExportPNG={exportPNG}
               params={params}
               curveType={curveType}
               paramOscillations={parameterOscillations}
