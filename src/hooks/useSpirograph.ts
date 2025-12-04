@@ -58,7 +58,7 @@ function getRandomDefaultParams(): SpirographParams {
     completion: 100,
     duration: randomFloat(2, 10, 1),
     rotation: 90,
-    backgroundColor: "var(--bg-secondary)",
+    backgroundColor: "#222222",
   };
 }
 

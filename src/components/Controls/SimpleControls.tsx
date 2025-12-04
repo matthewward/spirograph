@@ -80,18 +80,6 @@ export function SimpleControls({
 
       <div className={styles.controlGroup}>
         <RangeControl
-          id="completion"
-          label="Completion"
-          value={params.completion}
-          onChange={(value) => onChange({ completion: value })}
-          min={1}
-          max={100}
-          step={1}
-        />
-      </div>
-
-      <div className={styles.controlGroup}>
-        <RangeControl
           id="stroke-width"
           label="Line Width"
           value={params.strokeWidth}
@@ -151,15 +139,15 @@ export function SimpleControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="curve-type">Curve Type</label>
+        <label htmlFor="curve-type">Inside or outside?</label>
         <select
           id="curve-type"
           value={curveType}
           onChange={(e) => onCurveTypeChange(e.target.value as CurveType)}
           className={styles.select}
         >
-          <option value="hypotrochoid">Inside (Hypotrochoid)</option>
-          <option value="epitrochoid">Outside (Epitrochoid)</option>
+          <option value="hypotrochoid">In</option>
+          <option value="epitrochoid">Out</option>
         </select>
       </div>
 
@@ -176,6 +164,18 @@ export function SimpleControls({
           <option value="180">Left</option>
           <option value="270">Up</option>
         </select>
+      </div>
+
+      <div className={styles.controlGroup}>
+        <RangeControl
+          id="completion"
+          label="Completion"
+          value={params.completion}
+          onChange={(value) => onChange({ completion: value })}
+          min={1}
+          max={100}
+          step={1}
+        />
       </div>
     </div>
   );
