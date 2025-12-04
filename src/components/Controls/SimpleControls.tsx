@@ -2,6 +2,7 @@ import { SpirographParams, CurveType } from "../../lib/spirograph/types";
 import { SpirographOscillations } from "../../lib/animation/parameterOscillation";
 import { RangeControl } from "./RangeControl";
 import { PolygonPreview } from "./PolygonPreview";
+import { NumberInput } from "./NumberInput";
 import styles from "./SimpleControls.module.css";
 
 interface SimpleControlsProps {
@@ -87,37 +88,48 @@ export function SimpleControls({
               label="Wheel Sides"
               value={params.sides}
               onChange={(value) => onChange({ sides: Math.round(value) })}
-              min={1}
-              max={12}
+              min={-6}
+              max={6}
               step={1}
             />
           </div>
 
           <div className={styles.controlGroup}>
-            <label htmlFor="arcness-enabled" className={styles.checkboxLabel}>
-              <input
-                id="arcness-enabled"
-                type="checkbox"
-                checked={params.arcnessEnabled}
-                onChange={(e) => onChange({ arcnessEnabled: e.target.checked })}
-              />
-              Enable Edge Curvature
-            </label>
-          </div>
-
-          {params.arcnessEnabled && (
-            <div className={styles.controlGroup}>
-              <RangeControl
-                id="edge-curvature"
-                label="Edge Curvature"
+            <div className={styles.arcnessLabelRow}>
+              <label htmlFor="edge-curvature-slider">Edge Curvature</label>
+              <label
+                htmlFor="arcness-enabled"
+                className={styles.checkboxLabel}
+              >
+                <input
+                  id="arcness-enabled"
+                  type="checkbox"
+                  checked={params.arcnessEnabled}
+                  onChange={(e) =>
+                    onChange({ arcnessEnabled: e.target.checked })
+                  }
+                />
+              </label>
+              <NumberInput
                 value={params.arcness}
                 onChange={(value) => onChange({ arcness: value })}
                 min={-0.5}
                 max={2}
                 step={0.01}
+                className={`${styles.numberInput} ${!params.arcnessEnabled ? styles.disabled : ""}`}
               />
             </div>
-          )}
+            <input
+              id="edge-curvature-slider"
+              type="range"
+              min={-0.5}
+              max={2}
+              step={0.01}
+              value={params.arcness}
+              onChange={(e) => onChange({ arcness: Number(e.target.value) })}
+              className={`${styles.rangeInput} ${!params.arcnessEnabled ? styles.disabled : ""}`}
+            />
+          </div>
         </div>
 
         <div className={styles.polygonPreviewWrapper}>

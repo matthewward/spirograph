@@ -57,17 +57,48 @@
   min-width: 80px;
 }
 
+.arcnessLabelRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.arcnessLabelRow > label:first-child {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 0 0 auto;
+}
+
 .checkboxLabel {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
   cursor: pointer;
-  font-size: 0.9rem;
-  color: var(--text-primary);
+  flex: 0 0 auto;
 }
 
 .checkboxLabel input[type="checkbox"] {
   cursor: pointer;
   width: 16px;
   height: 16px;
+  margin: 0;
+}
+
+.numberInput {
+  width: 70px;
+  margin-left: auto;
+}
+
+.rangeInput {
+  width: 100%;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
 }
