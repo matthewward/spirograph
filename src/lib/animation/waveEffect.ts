@@ -11,6 +11,8 @@ export interface WaveEffectParams {
   displacementMode: DisplacementMode;
   animationOffset: number; // 0-1, cycles the gradient
   easing: number; // 0-1, controls gradient interpolation curve (0 = linear, 1 = smooth)
+  animate: boolean; // Whether to automatically animate the offset
+  animationSpeed: number; // Animation duration in seconds (0.1-30)
 }
 
 /**

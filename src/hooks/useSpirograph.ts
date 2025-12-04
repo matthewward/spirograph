@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { SpirographParams, Point, CurveType } from "../lib/spirograph/types";
 import {
   sampleSpirograph,
@@ -71,6 +71,8 @@ function getRandomDefaultParams(): SpirographParams {
       displacementMode: "perpendicular",
       animationOffset: 0,
       easing: 0.5,
+      animate: false,
+      animationSpeed: 5,
     },
   };
 }
@@ -107,6 +109,8 @@ function getInitialParams(): SpirographParams {
           displacementMode: "perpendicular",
           animationOffset: 0,
           easing: 0.5,
+          animate: false,
+          animationSpeed: 5,
         },
       }
     : getRandomDefaultParams();
@@ -135,6 +139,49 @@ export function useSpirograph(): UseSpirographResult {
   const [curveType, setCurveType] = useState<CurveType>(getInitialCurveType());
   const [parameterOscillations, setParameterOscillationsState] =
     useState<SpirographOscillations>(getInitialOscillations(INITIAL_PARAMS));
+
+  const animationFrameRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  // Animate wave effect offset when animate is enabled
+  useEffect(() => {
+    if (!params.waveEffect.enabled || !params.waveEffect.animate) {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+        startTimeRef.current = null;
+      }
+      return;
+    }
+
+    const animateWave = (timestamp: number) => {
+      if (startTimeRef.current === null) {
+        startTimeRef.current = timestamp;
+      }
+
+      const elapsed = timestamp - startTimeRef.current;
+      const duration = params.waveEffect.animationSpeed * 1000; // Convert seconds to milliseconds
+      const newOffset = (elapsed / duration) % 1;
+
+      setParamsState((prev) => ({
+        ...prev,
+        waveEffect: {
+          ...prev.waveEffect,
+          animationOffset: newOffset,
+        },
+      }));
+
+      animationFrameRef.current = requestAnimationFrame(animateWave);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animateWave);
+
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [params.waveEffect.enabled, params.waveEffect.animate, params.waveEffect.animationSpeed]);
 
   const setParams = (newParams: Partial<SpirographParams>) => {
     setParamsState((prev) => {

@@ -42,6 +42,8 @@ export interface SerializableState {
   waveEffect_displacementMode: DisplacementMode;
   waveEffect_animationOffset: number;
   waveEffect_easing: number;
+  waveEffect_animate: boolean;
+  waveEffect_animationSpeed: number;
 
   // CurveType
   curveType: CurveType;
@@ -94,6 +96,8 @@ function getFixedDefaultState(): SerializableState {
     waveEffect_displacementMode: "perpendicular",
     waveEffect_animationOffset: 0,
     waveEffect_easing: 0.5,
+    waveEffect_animate: false,
+    waveEffect_animationSpeed: 5,
     curveType: "hypotrochoid",
     oscR_enabled: false,
     oscR_amplitude: 20,
@@ -172,6 +176,8 @@ export function getDefaultState(): SerializableState {
     waveEffect_displacementMode: "perpendicular",
     waveEffect_animationOffset: 0,
     waveEffect_easing: 0.5,
+    waveEffect_animate: false,
+    waveEffect_animationSpeed: 5,
     curveType: randomItem(curveTypes),
     oscR_enabled: Math.random() < 0.3, // 30% chance
     oscR_amplitude: randomInt(5, 30),
@@ -224,6 +230,8 @@ export function serializeState(
     waveEffect_displacementMode: params.waveEffect.displacementMode,
     waveEffect_animationOffset: params.waveEffect.animationOffset,
     waveEffect_easing: params.waveEffect.easing,
+    waveEffect_animate: params.waveEffect.animate,
+    waveEffect_animationSpeed: params.waveEffect.animationSpeed,
     curveType,
     oscR_enabled: paramOscillations.R.enabled,
     oscR_amplitude: paramOscillations.R.amplitude,
@@ -364,6 +372,8 @@ export function deserializeState(base64: string): SerializableState | null {
       waveEffect_displacementMode: validateDisplacementMode(parsed.waveEffect_displacementMode, defaults.waveEffect_displacementMode),
       waveEffect_animationOffset: validateNumber(parsed.waveEffect_animationOffset, defaults.waveEffect_animationOffset),
       waveEffect_easing: validateNumber(parsed.waveEffect_easing, defaults.waveEffect_easing),
+      waveEffect_animate: validateBoolean(parsed.waveEffect_animate, defaults.waveEffect_animate),
+      waveEffect_animationSpeed: validateNumber(parsed.waveEffect_animationSpeed, defaults.waveEffect_animationSpeed),
       curveType: validateCurveType(parsed.curveType, defaults.curveType),
       oscR_enabled: validateBoolean(parsed.oscR_enabled, defaults.oscR_enabled),
       oscR_amplitude: validateNumber(
@@ -447,6 +457,8 @@ export function stateToHookParams(state: SerializableState) {
       displacementMode: state.waveEffect_displacementMode,
       animationOffset: state.waveEffect_animationOffset,
       easing: state.waveEffect_easing,
+      animate: state.waveEffect_animate,
+      animationSpeed: state.waveEffect_animationSpeed,
     },
   };
 

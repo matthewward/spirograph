@@ -330,23 +330,67 @@ export function SimpleControls({
               </div>
 
               <div className={styles.controlGroup}>
-                <RangeControl
-                  id="wave-offset"
-                  label="Animation Offset"
-                  value={params.waveEffect.animationOffset}
-                  onChange={(value) =>
-                    onChange({
-                      waveEffect: {
-                        ...params.waveEffect,
-                        animationOffset: value,
-                      },
-                    })
-                  }
-                  min={0}
-                  max={1}
-                  step={0.01}
-                />
+                <div className={styles.animateRow}>
+                  <label htmlFor="wave-animate">Animate Gradient</label>
+                  <label htmlFor="wave-animate" className={styles.checkboxLabel}>
+                    <input
+                      id="wave-animate"
+                      type="checkbox"
+                      checked={params.waveEffect.animate}
+                      onChange={(e) =>
+                        onChange({
+                          waveEffect: {
+                            ...params.waveEffect,
+                            animate: e.target.checked,
+                          },
+                        })
+                      }
+                    />
+                  </label>
+                </div>
               </div>
+
+              {params.waveEffect.animate && (
+                <div className={styles.controlGroup}>
+                  <RangeControl
+                    id="wave-animation-speed"
+                    label="Animation Speed"
+                    value={params.waveEffect.animationSpeed}
+                    onChange={(value) =>
+                      onChange({
+                        waveEffect: {
+                          ...params.waveEffect,
+                          animationSpeed: value,
+                        },
+                      })
+                    }
+                    min={0.1}
+                    max={30}
+                    step={0.1}
+                  />
+                </div>
+              )}
+
+              {!params.waveEffect.animate && (
+                <div className={styles.controlGroup}>
+                  <RangeControl
+                    id="wave-offset"
+                    label="Animation Offset"
+                    value={params.waveEffect.animationOffset}
+                    onChange={(value) =>
+                      onChange({
+                        waveEffect: {
+                          ...params.waveEffect,
+                          animationOffset: value,
+                        },
+                      })
+                    }
+                    min={0}
+                    max={1}
+                    step={0.01}
+                  />
+                </div>
+              )}
             </div>
 
             <div className={styles.gradientPreviewWrapper}>
@@ -354,6 +398,9 @@ export function SimpleControls({
                 gradientType={params.waveEffect.gradientType}
                 frequency={params.waveEffect.frequency}
                 easing={params.waveEffect.easing}
+                animationOffset={params.waveEffect.animationOffset}
+                animate={params.waveEffect.animate}
+                animationSpeed={params.waveEffect.animationSpeed}
               />
             </div>
           </div>
