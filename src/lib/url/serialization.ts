@@ -14,20 +14,6 @@ function randomFloat(min: number, max: number, decimals: number = 1): number {
   return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }
 
-function randomColor(): string {
-  const hue = randomInt(0, 360);
-  const saturation = randomInt(30, 100);
-  const lightness = randomInt(40, 80);
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
-
-function randomDarkColor(): string {
-  const hue = randomInt(0, 360);
-  const saturation = randomInt(20, 60);
-  const lightness = randomInt(10, 30);
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
-
 function randomItem<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];
 }

@@ -45,13 +45,6 @@ export function ExportPanel({
   const { generateShareURL } = useURLState();
   const [copySuccess, setCopySuccess] = useState(false);
 
-  const loopLabel =
-    loopDirection === "none"
-      ? "one-way"
-      : loopDirection === "continue"
-        ? "continue loop"
-        : "ping-pong loop";
-
   const handleShare = async () => {
     const shareURL = generateShareURL(
       params,

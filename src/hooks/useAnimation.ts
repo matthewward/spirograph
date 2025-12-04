@@ -37,7 +37,6 @@ function calculateProgress(elapsed: number, duration: number, loopDirection: Loo
 
   const cycleDuration = duration * 2; // Full cycle = draw + undraw
   const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
-  const isInSecondHalf = cycleProgress >= 0.5;
 
   if (loopDirection === 'pingpong') {
     // Pingpong: 0 -> 1 -> 0 (reverses direction, erases backwards)

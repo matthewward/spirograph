@@ -31,17 +31,17 @@ export function PlaybackControls({
   speed,
   easing,
   loopDirection,
-  showDot,
-  showRings,
+  showDot: _showDot,
+  showRings: _showRings,
   onPlay,
-  onPause,
+  onPause: _onPause,
   onReset,
   onProgressChange,
   onSpeedChange,
   onEasingChange,
   onLoopDirectionChange,
-  onShowDotChange,
-  onShowRingsChange,
+  onShowDotChange: _onShowDotChange,
+  onShowRingsChange: _onShowRingsChange,
 }: PlaybackControlsProps) {
   const speedOptions = [0.25, 0.5, 1, 2, 4];
 

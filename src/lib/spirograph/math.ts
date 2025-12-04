@@ -1,4 +1,4 @@
-import { Point, SpirographParams, CurveType } from './types';
+import { Point, SpirographParams, CurveType } from "./types";
 
 /**
  * Calculate GCD (Greatest Common Divisor) using Euclidean algorithm
@@ -17,18 +17,22 @@ function gcd(a: number, b: number): number {
 /**
  * Calculate LCM (Least Common Multiple)
  */
-function lcm(a: number, b: number): number {
-  return Math.abs(a * b) / gcd(a, b);
-}
+// function _lcm(a: number, b: number): number {
+//   return Math.abs(a * b) / gcd(a, b);
+// }
 
 /**
  * Calculate the number of rotations needed for pattern completion
  * For hypotrochoid: based on r and (R-r)
  * For epitrochoid: based on r and (R+r)
  */
-export function calculateRotations(R: number, r: number, curveType: CurveType = 'hypotrochoid'): number {
+export function calculateRotations(
+  R: number,
+  r: number,
+  curveType: CurveType = "hypotrochoid"
+): number {
   // The complement depends on the curve type
-  const complement = curveType === 'hypotrochoid' ? R - r : R + r;
+  const complement = curveType === "hypotrochoid" ? R - r : R + r;
 
   // Find GCD to get the minimal number of rotations
   const divisor = gcd(Math.round(r), Math.round(complement));
@@ -41,10 +45,7 @@ export function calculateRotations(R: number, r: number, curveType: CurveType = 
  * Generate a point on a hypotrochoid curve at parameter t
  * Hypotrochoid: wheel rolling inside a fixed circle
  */
-export function hypotrochoidPoint(
-  t: number,
-  params: SpirographParams
-): Point {
+export function hypotrochoidPoint(t: number, params: SpirographParams): Point {
   const { R, r, d, rotation = 0 } = params;
 
   // Calculate point
@@ -58,7 +59,7 @@ export function hypotrochoidPoint(
     const sin = Math.sin(rad);
     return {
       x: x * cos - y * sin,
-      y: x * sin + y * cos
+      y: x * sin + y * cos,
     };
   }
 
@@ -69,10 +70,7 @@ export function hypotrochoidPoint(
  * Generate a point on an epitrochoid curve at parameter t
  * Epitrochoid: wheel rolling outside a fixed circle
  */
-export function epitrochoidPoint(
-  t: number,
-  params: SpirographParams
-): Point {
+export function epitrochoidPoint(t: number, params: SpirographParams): Point {
   const { R, r, d, rotation = 0 } = params;
 
   // Calculate point
@@ -86,7 +84,7 @@ export function epitrochoidPoint(
     const sin = Math.sin(rad);
     return {
       x: x * cos - y * sin,
-      y: x * sin + y * cos
+      y: x * sin + y * cos,
     };
   }
 
@@ -98,7 +96,7 @@ export function epitrochoidPoint(
  */
 export function sampleSpirograph(
   params: SpirographParams,
-  curveType: CurveType = 'hypotrochoid',
+  curveType: CurveType = "hypotrochoid",
   samplesPerRotation: number = 360
 ): Point[] {
   const { R, r, completion } = params;
@@ -110,7 +108,7 @@ export function sampleSpirograph(
   const points: Point[] = [];
 
   const pointFunction =
-    curveType === 'hypotrochoid' ? hypotrochoidPoint : epitrochoidPoint;
+    curveType === "hypotrochoid" ? hypotrochoidPoint : epitrochoidPoint;
 
   for (let i = 0; i <= totalSamples; i++) {
     const t = (i / samplesPerRotation) * (2 * Math.PI);
@@ -129,7 +127,7 @@ export function sampleSpirograph(
  */
 export function sampleSpirographWithOscillation(
   params: SpirographParams,
-  curveType: CurveType = 'hypotrochoid',
+  curveType: CurveType = "hypotrochoid",
   getOscillatedParams: (progress: number) => SpirographParams,
   samplesPerRotation: number = 360
 ): Point[] {
@@ -142,7 +140,7 @@ export function sampleSpirographWithOscillation(
   const points: Point[] = [];
 
   const pointFunction =
-    curveType === 'hypotrochoid' ? hypotrochoidPoint : epitrochoidPoint;
+    curveType === "hypotrochoid" ? hypotrochoidPoint : epitrochoidPoint;
 
   for (let i = 0; i <= totalSamples; i++) {
     const t = (i / samplesPerRotation) * (2 * Math.PI);

@@ -75,6 +75,35 @@ function App() {
   return (
     <div className={styles.app}>
       <div className={styles.layout}>
+        <main className={styles.canvasArea}>
+          {!controlsVisible && (
+            <button
+              onClick={() => setControlsVisible(true)}
+              className={styles.showControlsButton}
+            >
+              →
+            </button>
+          )}
+          <SpirographCanvas
+            points={points}
+            pathString={pathString}
+            viewBox={viewBox}
+            strokeColor={params.strokeColor}
+            strokeWidth={params.strokeWidth}
+            pathLength={pathLength}
+            isAnimating={isPlaying}
+            progress={progress}
+            loopDirection={loopDirection}
+            isErasing={isErasing}
+            showDot={showDot}
+            showRings={showRings}
+            R={params.R}
+            r={params.r}
+            d={params.d}
+            curveType={curveType}
+            backgroundColor={params.backgroundColor}
+          />
+        </main>
         {controlsVisible && (
           <aside className={styles.sidebar}>
             <div className={styles.headerContainer}>
@@ -135,36 +164,6 @@ function App() {
             />
           </aside>
         )}
-
-        <main className={styles.canvasArea}>
-          {!controlsVisible && (
-            <button
-              onClick={() => setControlsVisible(true)}
-              className={styles.showControlsButton}
-            >
-              →
-            </button>
-          )}
-          <SpirographCanvas
-            points={points}
-            pathString={pathString}
-            viewBox={viewBox}
-            strokeColor={params.strokeColor}
-            strokeWidth={params.strokeWidth}
-            pathLength={pathLength}
-            isAnimating={isPlaying}
-            progress={progress}
-            loopDirection={loopDirection}
-            isErasing={isErasing}
-            showDot={showDot}
-            showRings={showRings}
-            R={params.R}
-            r={params.r}
-            d={params.d}
-            curveType={curveType}
-            backgroundColor={params.backgroundColor}
-          />
-        </main>
       </div>
     </div>
   );

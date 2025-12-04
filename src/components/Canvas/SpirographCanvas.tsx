@@ -1,10 +1,8 @@
-import { useMemo } from 'react';
-import { LoopDirection } from '../../hooks/useAnimation';
-import { Point, CurveType } from '../../lib/spirograph/types';
-import { pointsToPath } from '../../lib/svg/generator';
-import { ColorOscillation } from '../../lib/animation/colorOscillation';
-import { RingVisualization } from './RingVisualization';
-import styles from './SpirographCanvas.module.css';
+import { useMemo } from "react";
+import { LoopDirection } from "../../hooks/useAnimation";
+import { Point, CurveType } from "../../lib/spirograph/types";
+import { pointsToPath } from "../../lib/svg/generator";
+import styles from "./SpirographCanvas.module.css";
 
 interface SpirographCanvasProps {
   points: Point[];
@@ -23,7 +21,6 @@ interface SpirographCanvasProps {
   r: number;
   d: number;
   curveType: CurveType;
-  colorOscillation: ColorOscillation;
   backgroundColor: string;
 }
 
@@ -38,45 +35,56 @@ export function SpirographCanvas({
   progress,
   loopDirection,
   isErasing = false,
-  showDot = false,
-  showRings = false,
-  R,
-  r,
-  d,
-  curveType,
-  colorOscillation,
+  showDot: _showDot = false,
+  showRings: _showRings = false,
+  R: _R,
+  r: _r,
+  d: _d,
+  curveType: _curveType,
   backgroundColor,
 }: SpirographCanvasProps) {
-
   // For "continue" mode during erase, we need to slice the points array
   // and regenerate the path to remove points from the START
-  const { actualPath, dashOffset, dashArray }: { actualPath: string; dashOffset: number; dashArray: number | string } = useMemo(() => {
-    if (!isAnimating) {
-      return { actualPath: pathString, dashOffset: 0, dashArray: pathLength };
-    }
+  const {
+    actualPath,
+    dashOffset,
+    dashArray,
+  }: { actualPath: string; dashOffset: number; dashArray: number | string } =
+    useMemo(() => {
+      if (!isAnimating) {
+        return { actualPath: pathString, dashOffset: 0, dashArray: pathLength };
+      }
 
-    // For "continue" mode during erase phase:
-    // Slice points from the end (remove from start) and regenerate path
-    if (loopDirection === 'continue' && isErasing) {
-      const startIndex = Math.floor((1 - progress) * points.length);
-      const slicedPoints = points.slice(startIndex);
-      const newPath = pointsToPath(slicedPoints);
+      // For "continue" mode during erase phase:
+      // Slice points from the end (remove from start) and regenerate path
+      if (loopDirection === "continue" && isErasing) {
+        const startIndex = Math.floor((1 - progress) * points.length);
+        const slicedPoints = points.slice(startIndex);
+        const newPath = pointsToPath(slicedPoints);
 
+        return {
+          actualPath: newPath,
+          dashOffset: 0,
+          dashArray: pathLength, // No dash tricks needed!
+        };
+      }
+
+      // Default behavior (none, pingpong, and continue during draw phase):
+      // Normal stroke-dashoffset animation
       return {
-        actualPath: newPath,
-        dashOffset: 0,
-        dashArray: pathLength // No dash tricks needed!
+        actualPath: pathString,
+        dashOffset: pathLength * (1 - progress),
+        dashArray: pathLength,
       };
-    }
-
-    // Default behavior (none, pingpong, and continue during draw phase):
-    // Normal stroke-dashoffset animation
-    return {
-      actualPath: pathString,
-      dashOffset: pathLength * (1 - progress),
-      dashArray: pathLength
-    };
-  }, [isAnimating, progress, pathLength, loopDirection, isErasing, points, pathString]);
+    }, [
+      isAnimating,
+      progress,
+      pathLength,
+      loopDirection,
+      isErasing,
+      points,
+      pathString,
+    ]);
 
   return (
     <div className={styles.container} style={{ backgroundColor }}>
@@ -122,32 +130,21 @@ export function SpirographCanvas({
           }
         />
 
-        {/* Ring visualization */}
-        {showRings && (
-          <RingVisualization
-            R={R}
-            r={r}
-            d={d}
-            progress={progress}
-            isAnimating={isAnimating}
-            curveType={curveType}
-          />
-        )}
-
         {/* Preview dot during animation */}
-        {isAnimating && showDot && progress > 0 && progress < 1 && (
+        {/* {isAnimating && showDot && progress > 0 && progress < 1 && (
           <circle
             className={styles.previewDot}
             r={strokeWidth * 2}
             fill={strokeColor}
             style={{
               offsetPath: `path('${actualPath}')`,
-              offsetDistance: loopDirection === 'continue' && isErasing
-                ? '100%'  // Always at the end of the visible path during continue erase
-                : `${progress * 100}%`,
+              offsetDistance:
+                loopDirection === "continue" && isErasing
+                  ? "100%" // Always at the end of the visible path during continue erase
+                  : `${progress * 100}%`,
             }}
           />
-        )}
+        )} */}
       </svg>
     </div>
   );
