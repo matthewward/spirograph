@@ -80,6 +80,30 @@ export function SimpleControls({
 
       <div className={styles.controlGroup}>
         <RangeControl
+          id="wheel-sides"
+          label="Wheel Sides"
+          value={params.sides}
+          onChange={(value) => onChange({ sides: Math.round(value) })}
+          min={1}
+          max={12}
+          step={1}
+        />
+      </div>
+
+      <div className={styles.controlGroup}>
+        <RangeControl
+          id="edge-curvature"
+          label="Edge Curvature"
+          value={params.arcness}
+          onChange={(value) => onChange({ arcness: value })}
+          min={0}
+          max={1}
+          step={0.01}
+        />
+      </div>
+
+      <div className={styles.controlGroup}>
+        <RangeControl
           id="stroke-width"
           label="Line Width"
           value={params.strokeWidth}

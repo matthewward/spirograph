@@ -59,6 +59,8 @@ function getRandomDefaultParams(): SpirographParams {
     duration: randomFloat(2, 10, 1),
     rotation: 90,
     backgroundColor: "#222222",
+    sides: 1,
+    arcness: 0,
   };
 }
 
@@ -83,6 +85,8 @@ function getInitialParams(): SpirographParams {
         duration: 5,
         rotation: 90,
         backgroundColor: "#222222",
+        sides: 1,
+        arcness: 0,
       }
     : getRandomDefaultParams();
 }
