@@ -1,3 +1,5 @@
+import { WaveEffectParams } from "../animation/waveEffect";
+
 export interface SpirographParams {
   R: number; // Fixed circle radius
   r: number; // Moving circle radius
@@ -11,6 +13,7 @@ export interface SpirographParams {
   sides: number; // Number of polygon sides (1 = circle, 2+ = polygon)
   arcness: number; // Edge curvature (0 = straight, 1 = max bulge)
   arcnessEnabled: boolean; // Whether to use curved edges (true) or straight edges (false)
+  waveEffect: WaveEffectParams; // Wave displacement effect
 }
 
 export interface Point {

@@ -102,3 +102,49 @@
   pointer-events: none;
   user-select: none;
 }
+
+.waveEffectSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius-sm);
+}
+
+.waveEffectHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionSubtitle {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.waveEffectContent {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-md);
+  align-items: start;
+}
+
+.waveEffectControls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  flex: 1;
+}
+
+.gradientPreviewWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  padding-top: var(--spacing-lg);
+}

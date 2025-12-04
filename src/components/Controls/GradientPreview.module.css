@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.preview {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--text-tertiary);
+}
+
+.label {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  text-align: center;
+}

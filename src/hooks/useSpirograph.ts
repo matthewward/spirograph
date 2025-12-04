@@ -15,6 +15,7 @@ import {
   createDefaultOscillation,
   getOscillatedValue,
 } from "../lib/animation/parameterOscillation";
+import { applyWaveEffect } from "../lib/animation/waveEffect";
 
 export interface UseSpirographResult {
   params: SpirographParams;
@@ -62,6 +63,15 @@ function getRandomDefaultParams(): SpirographParams {
     sides: 1,
     arcness: 0,
     arcnessEnabled: false,
+    waveEffect: {
+      enabled: false,
+      gradientType: "horizontal",
+      frequency: 1,
+      amplitude: 10,
+      displacementMode: "perpendicular",
+      animationOffset: 0,
+      easing: 0.5,
+    },
   };
 }
 
@@ -89,6 +99,15 @@ function getInitialParams(): SpirographParams {
         sides: 1,
         arcness: 0,
         arcnessEnabled: false,
+        waveEffect: {
+          enabled: false,
+          gradientType: "horizontal",
+          frequency: 1,
+          amplitude: 10,
+          displacementMode: "perpendicular",
+          animationOffset: 0,
+          easing: 0.5,
+        },
       }
     : getRandomDefaultParams();
 }
@@ -172,7 +191,22 @@ export function useSpirograph(): UseSpirographResult {
     }
 
     // Simplify to reduce point count (lower epsilon for smoother curves)
-    const simplifiedPoints = simplifyPath(rawPoints, 0.1);
+    let simplifiedPoints = simplifyPath(rawPoints, 0.1);
+
+    // Apply wave effect if enabled
+    if (params.waveEffect.enabled) {
+      const bbox = getBoundingBox(simplifiedPoints);
+      const bounds = {
+        minX: bbox.minX,
+        maxX: bbox.maxX,
+        minY: bbox.minY,
+        maxY: bbox.maxY,
+      };
+
+      simplifiedPoints = simplifiedPoints.map((point) =>
+        applyWaveEffect(point, params.waveEffect, bounds)
+      );
+    }
 
     // Generate SVG path
     const path = pointsToPath(simplifiedPoints);
