@@ -10,8 +10,8 @@ import { ExportPanel } from "./components/Export/ExportPanel";
 import styles from "./App.module.css";
 
 function App() {
-  const { isPreviewMode, loadStateFromURL } = useURLState();
-  const [controlsVisible, setControlsVisible] = useState(!isPreviewMode);
+  const { loadStateFromURL, hasURLState } = useURLState();
+  const [controlsVisible, setControlsVisible] = useState(() => !hasURLState());
 
   const {
     params,
@@ -66,23 +66,38 @@ function App() {
       setLoopDirection(urlState.animLoopDirection);
       setShowDot(urlState.animShowDot);
       setShowRings(urlState.animShowRings);
+      // Auto-play if URL state has autoPlay enabled
+      if (urlState.autoPlay) {
+        // Use setTimeout to ensure state is set before playing
+        setTimeout(() => play(), 100);
+      }
     }
-    // Sync controls visibility with preview mode
-    setControlsVisible(!isPreviewMode);
+    // Hide controls if URL state exists
+    if (urlState) {
+      setControlsVisible(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPreviewMode]);
+  }, []);
 
   return (
     <div className={styles.app}>
       <div className={styles.layout}>
         <main className={styles.canvasArea}>
           {!controlsVisible && (
-            <button
-              onClick={() => setControlsVisible(true)}
-              className={styles.showControlsButton}
-            >
-              Show
-            </button>
+            <>
+              <button
+                onClick={() => setControlsVisible(true)}
+                className={styles.showControlsButton}
+              >
+                Show
+              </button>
+              <button
+                onClick={isPlaying ? pause : play}
+                className={styles.playButton}
+              >
+                {isPlaying ? "Stop" : "Play"}
+              </button>
+            </>
           )}
           <SpirographCanvas
             points={points}

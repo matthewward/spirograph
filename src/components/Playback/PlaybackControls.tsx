@@ -52,7 +52,6 @@ export function PlaybackControls({
           <button
             className={styles.button}
             onClick={isPlaying ? onReset : onPlay}
-            title={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? "Reset" : "Play"}
           </button>

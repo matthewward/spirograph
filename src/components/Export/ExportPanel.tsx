@@ -44,6 +44,7 @@ export function ExportPanel({
 }: ExportPanelProps) {
   const { generateShareURL } = useURLState();
   const [copySuccess, setCopySuccess] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
 
   const handleShare = async () => {
     const shareURL = generateShareURL(
@@ -55,7 +56,7 @@ export function ExportPanel({
       animLoopDirection,
       animShowDot,
       animShowRings,
-      true // Preview mode
+      autoPlay
     );
 
     try {
@@ -114,22 +115,32 @@ export function ExportPanel({
       </button>
       {/* </div> */}
 
-      <button className={styles.exportButton} onClick={handleShare}>
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <circle cx="5" cy="9" r="2" />
-          <circle cx="13" cy="5" r="2" />
-          <circle cx="13" cy="13" r="2" />
-          <path d="M7 8 L11 6 M7 10 L11 12" />
-        </svg>
-        {copySuccess ? "Copied!" : "Share"}
-      </button>
+      <div className={styles.shareSection}>
+        <label className={styles.checkboxLabel}>
+          <input
+            type="checkbox"
+            checked={autoPlay}
+            onChange={(e) => setAutoPlay(e.target.checked)}
+          />
+          <span>Start animated</span>
+        </label>
+        <button className={styles.exportButton} onClick={handleShare}>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <circle cx="5" cy="9" r="2" />
+            <circle cx="13" cy="5" r="2" />
+            <circle cx="13" cy="13" r="2" />
+            <path d="M7 8 L11 6 M7 10 L11 12" />
+          </svg>
+          {copySuccess ? "Copied!" : "Share"}
+        </button>
+      </div>
     </div>
   );
 }

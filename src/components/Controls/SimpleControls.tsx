@@ -30,7 +30,7 @@ export function SimpleControls({
           label="Ring Size"
           value={params.R}
           onChange={(value) => onChange({ R: value })}
-          min={50}
+          min={1}
           max={200}
           step={1}
           oscillation={parameterOscillations.R}
@@ -48,7 +48,7 @@ export function SimpleControls({
           label="Wheel Size"
           value={params.r}
           onChange={(value) => onChange({ r: value })}
-          min={10}
+          min={1}
           max={150}
           step={1}
           oscillation={parameterOscillations.r}
@@ -66,7 +66,7 @@ export function SimpleControls({
           label="Pen Position"
           value={params.d}
           onChange={(value) => onChange({ d: value })}
-          min={10}
+          min={1}
           max={150}
           step={1}
           oscillation={parameterOscillations.d}

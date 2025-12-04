@@ -1,8 +1,8 @@
-import { SpirographParams, CurveType } from '../spirograph/types';
-import { WaveType } from '../animation/oscillationWaves';
-import { SpirographOscillations } from '../animation/parameterOscillation';
-import { EasingType } from '../animation/easing';
-import { LoopDirection } from '../../hooks/useAnimation';
+import { SpirographParams, CurveType } from "../spirograph/types";
+import { WaveType } from "../animation/oscillationWaves";
+import { SpirographOscillations } from "../animation/parameterOscillation";
+import { EasingType } from "../animation/easing";
+import { LoopDirection } from "../../hooks/useAnimation";
 
 // Randomization utilities
 function randomInt(min: number, max: number): number {
@@ -57,6 +57,7 @@ export interface SerializableState {
   animLoopDirection: LoopDirection;
   animShowDot: boolean;
   animShowRings: boolean;
+  autoPlay: boolean;
 }
 
 // Fixed defaults for validation fallbacks (non-random, stable values)
@@ -66,29 +67,30 @@ function getFixedDefaultState(): SerializableState {
     r: 48,
     d: 84,
     strokeWidth: 0.5,
-    strokeColor: '#ffffff',
+    strokeColor: "#ffffff",
     completion: 100,
     duration: 5,
     rotation: 90,
-    backgroundColor: '#111529',
-    curveType: 'hypotrochoid',
+    backgroundColor: "#111529",
+    curveType: "hypotrochoid",
     oscR_enabled: false,
     oscR_amplitude: 20,
     oscR_frequency: 2,
-    oscR_waveType: 'sine',
+    oscR_waveType: "sine",
     oscr_enabled: false,
     oscr_amplitude: 10,
     oscr_frequency: 2,
-    oscr_waveType: 'sine',
+    oscr_waveType: "sine",
     oscd_enabled: false,
     oscd_amplitude: 20,
     oscd_frequency: 2,
-    oscd_waveType: 'sine',
+    oscd_waveType: "sine",
     animSpeed: 1,
-    animEasing: 'linear',
-    animLoopDirection: 'continue',
+    animEasing: "linear",
+    animLoopDirection: "continue",
     animShowDot: false,
     animShowRings: false,
+    autoPlay: false,
   };
 }
 
@@ -97,29 +99,48 @@ export function getDefaultState(): SerializableState {
   const R = randomInt(50, 200);
   const r = randomInt(10, Math.min(150, R - 10)); // Ensure r < R
   const d = randomInt(10, 150);
-  
+
   const easingOptions: EasingType[] = [
-    'linear', 'power1.in', 'power1.out', 'power1.inOut',
-    'power2.in', 'power2.out', 'power2.inOut',
-    'power3.in', 'power3.out', 'power3.inOut',
-    'sine.in', 'sine.out', 'sine.inOut',
-    'circ.in', 'circ.out', 'circ.inOut',
-    'expo.in', 'expo.out', 'expo.inOut',
+    "linear",
+    "power1.in",
+    "power1.out",
+    "power1.inOut",
+    "power2.in",
+    "power2.out",
+    "power2.inOut",
+    "power3.in",
+    "power3.out",
+    "power3.inOut",
+    "sine.in",
+    "sine.out",
+    "sine.inOut",
+    "circ.in",
+    "circ.out",
+    "circ.inOut",
+    "expo.in",
+    "expo.out",
+    "expo.inOut",
   ];
-  
-  const waveTypes: WaveType[] = ['sine', 'triangle', 'square', 'sawtooth', 'reverseSawtooth'];
-  const curveTypes: CurveType[] = ['hypotrochoid', 'epitrochoid'];
-  
+
+  const waveTypes: WaveType[] = [
+    "sine",
+    "triangle",
+    "square",
+    "sawtooth",
+    "reverseSawtooth",
+  ];
+  const curveTypes: CurveType[] = ["hypotrochoid", "epitrochoid"];
+
   return {
     R,
     r,
     d,
     strokeWidth: 0.5,
-    strokeColor: '#ffffff',
+    strokeColor: "#ffffff",
     completion: 100,
     duration: randomFloat(2, 10, 1),
     rotation: 90,
-    backgroundColor: '#111529',
+    backgroundColor: "#111529",
     curveType: randomItem(curveTypes),
     oscR_enabled: Math.random() < 0.3, // 30% chance
     oscR_amplitude: randomInt(5, 30),
@@ -135,9 +156,10 @@ export function getDefaultState(): SerializableState {
     oscd_waveType: randomItem(waveTypes),
     animSpeed: randomFloat(0.5, 2, 1),
     animEasing: randomItem(easingOptions),
-    animLoopDirection: 'continue',
+    animLoopDirection: "continue",
     animShowDot: false,
     animShowRings: false,
+    autoPlay: false,
   };
 }
 
@@ -150,7 +172,8 @@ export function serializeState(
   animEasing: EasingType,
   animLoopDirection: LoopDirection,
   animShowDot: boolean,
-  animShowRings: boolean
+  animShowRings: boolean,
+  autoPlay: boolean = false
 ): string {
   const state: SerializableState = {
     R: params.R,
@@ -180,54 +203,85 @@ export function serializeState(
     animLoopDirection,
     animShowDot,
     animShowRings,
+    autoPlay,
   };
 
   const json = JSON.stringify(state);
   return btoa(json); // Base64 encode
 }
 
-// Validate and sanitize individual fields
-function validateNumber(val: any, min: number, max: number, defaultVal: number): number {
+// Convert to number, use default if invalid (no range validation)
+function validateNumber(val: any, defaultVal: number): number {
   const num = Number(val);
-  if (isNaN(num) || num < min || num > max) return defaultVal;
+  if (isNaN(num)) return defaultVal;
   return num;
 }
 
 function validateString(val: any, defaultVal: string): string {
-  return typeof val === 'string' ? val : defaultVal;
+  return typeof val === "string" ? val : defaultVal;
 }
 
 function validateBoolean(val: any, defaultVal: boolean): boolean {
-  return typeof val === 'boolean' ? val : defaultVal;
+  return typeof val === "boolean" ? val : defaultVal;
 }
 
 function validateWaveType(val: any, defaultVal: WaveType): WaveType {
-  const validWaves: WaveType[] = ['sine', 'triangle', 'square', 'sawtooth', 'reverseSawtooth'];
+  const validWaves: WaveType[] = [
+    "sine",
+    "triangle",
+    "square",
+    "sawtooth",
+    "reverseSawtooth",
+  ];
   return validWaves.includes(val) ? val : defaultVal;
 }
 
 function validateCurveType(val: any, defaultVal: CurveType): CurveType {
-  return (val === 'hypotrochoid' || val === 'epitrochoid') ? val : defaultVal;
+  return val === "hypotrochoid" || val === "epitrochoid" ? val : defaultVal;
 }
 
 function validateEasingType(val: any, defaultVal: EasingType): EasingType {
   const validEasings: EasingType[] = [
-    'linear', 'power1.in', 'power1.out', 'power1.inOut',
-    'power2.in', 'power2.out', 'power2.inOut',
-    'power3.in', 'power3.out', 'power3.inOut',
-    'power4.in', 'power4.out', 'power4.inOut',
-    'circ.in', 'circ.out', 'circ.inOut',
-    'expo.in', 'expo.out', 'expo.inOut',
-    'sine.in', 'sine.out', 'sine.inOut',
-    'back.in', 'back.out', 'back.inOut',
-    'elastic.in', 'elastic.out', 'elastic.inOut',
-    'bounce.in', 'bounce.out', 'bounce.inOut',
+    "linear",
+    "power1.in",
+    "power1.out",
+    "power1.inOut",
+    "power2.in",
+    "power2.out",
+    "power2.inOut",
+    "power3.in",
+    "power3.out",
+    "power3.inOut",
+    "power4.in",
+    "power4.out",
+    "power4.inOut",
+    "circ.in",
+    "circ.out",
+    "circ.inOut",
+    "expo.in",
+    "expo.out",
+    "expo.inOut",
+    "sine.in",
+    "sine.out",
+    "sine.inOut",
+    "back.in",
+    "back.out",
+    "back.inOut",
+    "elastic.in",
+    "elastic.out",
+    "elastic.inOut",
+    "bounce.in",
+    "bounce.out",
+    "bounce.inOut",
   ];
   return validEasings.includes(val) ? val : defaultVal;
 }
 
-function validateLoopDirection(val: any, defaultVal: LoopDirection): LoopDirection {
-  const validLoops: LoopDirection[] = ['none', 'continue', 'pingpong'];
+function validateLoopDirection(
+  val: any,
+  defaultVal: LoopDirection
+): LoopDirection {
+  const validLoops: LoopDirection[] = ["none", "continue", "pingpong"];
   return validLoops.includes(val) ? val : defaultVal;
 }
 
@@ -238,40 +292,77 @@ export function deserializeState(base64: string): SerializableState | null {
     const parsed = JSON.parse(json);
     const defaults = getFixedDefaultState(); // Use fixed defaults for validation, not random
 
-    // Validate and sanitize all fields
+    // Use serialized values directly, fallback to defaults only if invalid
     const state: SerializableState = {
-      R: validateNumber(parsed.R, 50, 200, defaults.R),
-      r: validateNumber(parsed.r, 10, 150, defaults.r),
-      d: validateNumber(parsed.d, 10, 150, defaults.d),
-      strokeWidth: validateNumber(parsed.strokeWidth, 0.5, 8, defaults.strokeWidth),
+      R: validateNumber(parsed.R, defaults.R),
+      r: validateNumber(parsed.r, defaults.r),
+      d: validateNumber(parsed.d, defaults.d),
+      strokeWidth: validateNumber(parsed.strokeWidth, defaults.strokeWidth),
       strokeColor: validateString(parsed.strokeColor, defaults.strokeColor),
-      completion: validateNumber(parsed.completion, 1, 100, defaults.completion),
-      duration: validateNumber(parsed.duration, 0.1, 30, defaults.duration),
-      rotation: validateNumber(parsed.rotation, 0, 360, defaults.rotation),
-      backgroundColor: validateString(parsed.backgroundColor, defaults.backgroundColor),
+      completion: validateNumber(parsed.completion, defaults.completion),
+      duration: validateNumber(parsed.duration, defaults.duration),
+      rotation: validateNumber(parsed.rotation, defaults.rotation),
+      backgroundColor: validateString(
+        parsed.backgroundColor,
+        defaults.backgroundColor
+      ),
       curveType: validateCurveType(parsed.curveType, defaults.curveType),
       oscR_enabled: validateBoolean(parsed.oscR_enabled, defaults.oscR_enabled),
-      oscR_amplitude: validateNumber(parsed.oscR_amplitude, 0, 100, defaults.oscR_amplitude),
-      oscR_frequency: validateNumber(parsed.oscR_frequency, 1, 20, defaults.oscR_frequency),
-      oscR_waveType: validateWaveType(parsed.oscR_waveType, defaults.oscR_waveType),
+      oscR_amplitude: validateNumber(
+        parsed.oscR_amplitude,
+        defaults.oscR_amplitude
+      ),
+      oscR_frequency: validateNumber(
+        parsed.oscR_frequency,
+        defaults.oscR_frequency
+      ),
+      oscR_waveType: validateWaveType(
+        parsed.oscR_waveType,
+        defaults.oscR_waveType
+      ),
       oscr_enabled: validateBoolean(parsed.oscr_enabled, defaults.oscr_enabled),
-      oscr_amplitude: validateNumber(parsed.oscr_amplitude, 0, 100, defaults.oscr_amplitude),
-      oscr_frequency: validateNumber(parsed.oscr_frequency, 1, 20, defaults.oscr_frequency),
-      oscr_waveType: validateWaveType(parsed.oscr_waveType, defaults.oscr_waveType),
+      oscr_amplitude: validateNumber(
+        parsed.oscr_amplitude,
+        defaults.oscr_amplitude
+      ),
+      oscr_frequency: validateNumber(
+        parsed.oscr_frequency,
+        defaults.oscr_frequency
+      ),
+      oscr_waveType: validateWaveType(
+        parsed.oscr_waveType,
+        defaults.oscr_waveType
+      ),
       oscd_enabled: validateBoolean(parsed.oscd_enabled, defaults.oscd_enabled),
-      oscd_amplitude: validateNumber(parsed.oscd_amplitude, 0, 100, defaults.oscd_amplitude),
-      oscd_frequency: validateNumber(parsed.oscd_frequency, 1, 20, defaults.oscd_frequency),
-      oscd_waveType: validateWaveType(parsed.oscd_waveType, defaults.oscd_waveType),
-      animSpeed: validateNumber(parsed.animSpeed, 0.1, 5, defaults.animSpeed),
+      oscd_amplitude: validateNumber(
+        parsed.oscd_amplitude,
+        defaults.oscd_amplitude
+      ),
+      oscd_frequency: validateNumber(
+        parsed.oscd_frequency,
+        defaults.oscd_frequency
+      ),
+      oscd_waveType: validateWaveType(
+        parsed.oscd_waveType,
+        defaults.oscd_waveType
+      ),
+      animSpeed: validateNumber(parsed.animSpeed, defaults.animSpeed),
       animEasing: validateEasingType(parsed.animEasing, defaults.animEasing),
-      animLoopDirection: validateLoopDirection(parsed.animLoopDirection, defaults.animLoopDirection),
+      animLoopDirection: validateLoopDirection(
+        parsed.animLoopDirection,
+        defaults.animLoopDirection
+      ),
       animShowDot: validateBoolean(parsed.animShowDot, defaults.animShowDot),
-      animShowRings: validateBoolean(parsed.animShowRings, defaults.animShowRings),
+      animShowRings: validateBoolean(
+        parsed.animShowRings,
+        defaults.animShowRings
+      ),
+      autoPlay: validateBoolean(parsed.autoPlay, defaults.autoPlay),
     };
 
     return state;
   } catch (e) {
-    console.error('Failed to deserialize state:', e);
+    console.error("Failed to deserialize state:", e);
     return null;
   }
 }
@@ -323,5 +414,6 @@ export function stateToHookParams(state: SerializableState) {
     animLoopDirection: state.animLoopDirection,
     animShowDot: state.animShowDot,
     animShowRings: state.animShowRings,
+    autoPlay: state.autoPlay,
   };
 }

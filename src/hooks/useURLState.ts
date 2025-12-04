@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   serializeState,
   deserializeState,
@@ -10,19 +9,6 @@ import { EasingType } from "../lib/animation/easing";
 import { LoopDirection } from "./useAnimation";
 
 export function useURLState() {
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-
-  // Check for preview mode on mount
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    // If there are no query params at all, preview mode should be false
-    if (params.toString() === "" || params.get("mode") !== "preview") {
-      setIsPreviewMode(false);
-    } else {
-      setIsPreviewMode(true);
-    }
-  }, []);
-
   // Load state from URL
   const loadStateFromURL = () => {
     const params = new URLSearchParams(window.location.search);
@@ -36,6 +22,12 @@ export function useURLState() {
     return stateToHookParams(state);
   };
 
+  // Check if URL has state parameter
+  const hasURLState = (): boolean => {
+    const params = new URLSearchParams(window.location.search);
+    return params.has("state");
+  };
+
   // Generate share URL
   const generateShareURL = (
     params: SpirographParams,
@@ -46,7 +38,7 @@ export function useURLState() {
     animLoopDirection: LoopDirection,
     animShowDot: boolean,
     animShowRings: boolean,
-    preview: boolean = true
+    autoPlay: boolean = false
   ): string => {
     const stateString = serializeState(
       params,
@@ -56,15 +48,13 @@ export function useURLState() {
       animEasing,
       animLoopDirection,
       animShowDot,
-      animShowRings
+      animShowRings,
+      autoPlay
     );
 
     const url = new URL(window.location.href);
     url.search = ""; // Clear existing params
     url.searchParams.set("state", stateString);
-    if (preview) {
-      url.searchParams.set("mode", "preview");
-    }
 
     return url.toString();
   };
@@ -89,14 +79,14 @@ export function useURLState() {
       animLoopDirection,
       animShowDot,
       animShowRings,
-      false // Don't set preview mode for normal updates
+      false // Don't auto-play for normal updates
     );
     window.history.replaceState({}, "", url);
   };
 
   return {
-    isPreviewMode,
     loadStateFromURL,
+    hasURLState,
     generateShareURL,
     updateURL,
   };
