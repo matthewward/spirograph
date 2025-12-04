@@ -94,24 +94,6 @@ export function SpirographCanvas({
         preserveAspectRatio="xMidYMid meet"
         shapeRendering="geometricPrecision"
       >
-        {/* Background grid for technical aesthetic */}
-        <defs>
-          <pattern
-            id="grid"
-            width="20"
-            height="20"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M 20 0 L 0 0 0 20"
-              fill="none"
-              stroke="rgba(255,255,255,0.03)"
-              strokeWidth="0.5"
-            />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-
         {/* The spirograph path */}
         <path
           d={actualPath}

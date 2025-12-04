@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { EasingType, applyEasing } from '../lib/animation/easing';
+import { useState, useEffect, useRef } from "react";
+import { EasingType, applyEasing } from "../lib/animation/easing";
 
-export type LoopDirection = 'none' | 'continue' | 'pingpong';
+export type LoopDirection = "none" | "continue" | "pingpong";
 
 export interface UseAnimationResult {
   isPlaying: boolean;
@@ -30,20 +30,24 @@ export interface UseAnimationResult {
  * - continue: 0 -> 1 (drawing) then 1 -> 0 (erasing forward from end)
  * - pingpong: 0 -> 1 -> 0 (reverses direction)
  */
-function calculateProgress(elapsed: number, duration: number, loopDirection: LoopDirection): { progress: number; isErasing: boolean } {
-  if (loopDirection === 'none') {
+function calculateProgress(
+  elapsed: number,
+  duration: number,
+  loopDirection: LoopDirection
+): { progress: number; isErasing: boolean } {
+  if (loopDirection === "none") {
     return { progress: Math.min(elapsed / duration, 1), isErasing: false };
   }
 
   const cycleDuration = duration * 2; // Full cycle = draw + undraw
   const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
 
-  if (loopDirection === 'pingpong') {
+  if (loopDirection === "pingpong") {
     // Pingpong: 0 -> 1 -> 0 (reverses direction, erases backwards)
     if (cycleProgress < 0.5) {
       return { progress: cycleProgress * 2, isErasing: false }; // 0 to 1 (drawing)
     } else {
-      return { progress: 2 - (cycleProgress * 2), isErasing: true }; // 1 to 0 (undrawing backwards)
+      return { progress: 2 - cycleProgress * 2, isErasing: true }; // 1 to 0 (undrawing backwards)
     }
   } else {
     // Continue: always go forward
@@ -52,7 +56,7 @@ function calculateProgress(elapsed: number, duration: number, loopDirection: Loo
     if (cycleProgress < 0.5) {
       return { progress: cycleProgress * 2, isErasing: false }; // 0 to 1 (drawing)
     } else {
-      return { progress: 2 - (cycleProgress * 2), isErasing: true }; // 1 to 0 (erasing)
+      return { progress: 2 - cycleProgress * 2, isErasing: true }; // 1 to 0 (erasing)
     }
   }
 }
@@ -62,8 +66,8 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
   const [progress, setProgress] = useState(0);
   const [isErasing, setIsErasing] = useState(false);
   const [speed, setSpeed] = useState(1);
-  const [easing, setEasing] = useState<EasingType>('linear');
-  const [loopDirection, setLoopDirection] = useState<LoopDirection>('continue');
+  const [easing, setEasing] = useState<EasingType>("power3.inOut");
+  const [loopDirection, setLoopDirection] = useState<LoopDirection>("continue");
   const [showDot, setShowDot] = useState(false);
   const [showRings, setShowRings] = useState(false);
 
@@ -89,11 +93,12 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
       const adjustedDuration = duration / speed;
 
       // Calculate raw progress based on loop direction
-      const { progress: rawProgress, isErasing: rawIsErasing } = calculateProgress(
-        elapsed + (pausedProgressRef.current * adjustedDuration),
-        adjustedDuration,
-        loopDirection
-      );
+      const { progress: rawProgress, isErasing: rawIsErasing } =
+        calculateProgress(
+          elapsed + pausedProgressRef.current * adjustedDuration,
+          adjustedDuration,
+          loopDirection
+        );
 
       // Apply easing to the raw progress
       const easedProgress = applyEasing(rawProgress, easing);
@@ -103,7 +108,7 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
 
       // For non-looping animations, stop at 1
       // For looping animations, run indefinitely
-      if (loopDirection === 'none' && rawProgress >= 1) {
+      if (loopDirection === "none" && rawProgress >= 1) {
         setIsPlaying(false);
         startTimeRef.current = null;
         pausedProgressRef.current = 0;
