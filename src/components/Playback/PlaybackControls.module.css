@@ -62,31 +62,27 @@
   white-space: nowrap;
 }
 
-.speedButtons {
+.speedSliderRow {
   display: flex;
-  gap: var(--spacing-xs);
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
 }
 
-.speedButton {
+.speedSlider {
   flex: 1;
+  cursor: pointer;
+}
+
+.speedInput {
+  width: 60px;
   padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--bg-tertiary);
+  color: var(--text-primary);
   border-radius: var(--border-radius-sm);
   font-size: 0.75rem;
   font-family: var(--font-mono);
-  transition: all var(--transition-fast);
-}
-
-.speedButton.active {
-  background: var(--accent-amber);
-  color: var(--bg-primary);
-  height: 28px;
-}
-
-.speedButton:hover {
-  background: var(--accent-amber);
-  color: var(--bg-primary);
-  opacity: 1;
+  text-align: center;
 }
 
 .easingSelect {

@@ -55,7 +55,6 @@ export interface SerializableState {
   oscd_waveType: WaveType;
 
   // Animation settings
-  animSpeed: number;
   animEasing: EasingType;
   animLoopDirection: LoopDirection;
   animShowDot: boolean;
@@ -91,7 +90,6 @@ function getFixedDefaultState(): SerializableState {
     oscd_amplitude: 20,
     oscd_frequency: 2,
     oscd_waveType: "sine",
-    animSpeed: 1,
     animEasing: "linear",
     animLoopDirection: "continue",
     animShowDot: false,
@@ -163,7 +161,6 @@ export function getDefaultState(): SerializableState {
     oscd_amplitude: randomInt(5, 30),
     oscd_frequency: randomInt(1, 5),
     oscd_waveType: randomItem(waveTypes),
-    animSpeed: randomFloat(0.5, 2, 1),
     animEasing: randomItem(easingOptions),
     animLoopDirection: "continue",
     animShowDot: false,
@@ -177,7 +174,6 @@ export function serializeState(
   params: SpirographParams,
   curveType: CurveType,
   paramOscillations: SpirographOscillations,
-  animSpeed: number,
   animEasing: EasingType,
   animLoopDirection: LoopDirection,
   animShowDot: boolean,
@@ -210,7 +206,6 @@ export function serializeState(
     oscd_amplitude: paramOscillations.d.amplitude,
     oscd_frequency: paramOscillations.d.frequency,
     oscd_waveType: paramOscillations.d.waveType,
-    animSpeed,
     animEasing,
     animLoopDirection,
     animShowDot,
@@ -361,7 +356,6 @@ export function deserializeState(base64: string): SerializableState | null {
         parsed.oscd_waveType,
         defaults.oscd_waveType
       ),
-      animSpeed: validateNumber(parsed.animSpeed, defaults.animSpeed),
       animEasing: validateEasingType(parsed.animEasing, defaults.animEasing),
       animLoopDirection: validateLoopDirection(
         parsed.animLoopDirection,
@@ -427,7 +421,6 @@ export function stateToHookParams(state: SerializableState) {
     params,
     curveType: state.curveType,
     paramOscillations,
-    animSpeed: state.animSpeed,
     animEasing: state.animEasing,
     animLoopDirection: state.animLoopDirection,
     animShowDot: state.animShowDot,

@@ -21,7 +21,6 @@ interface ExportPanelProps {
   params: SpirographParams;
   curveType: CurveType;
   paramOscillations: SpirographOscillations;
-  animSpeed: number;
   animEasing: EasingType;
   animLoopDirection: LoopDirection;
   animShowDot: boolean;
@@ -38,7 +37,6 @@ export function ExportPanel({
   params,
   curveType,
   paramOscillations,
-  animSpeed,
   animEasing,
   animLoopDirection,
   animShowDot,
@@ -53,7 +51,6 @@ export function ExportPanel({
       params,
       curveType,
       paramOscillations,
-      animSpeed,
       animEasing,
       animLoopDirection,
       animShowDot,

@@ -7,7 +7,6 @@ export interface UseAnimationResult {
   isPlaying: boolean;
   progress: number; // 0 to 1
   isErasing: boolean; // true when in erase phase for continue mode
-  speed: number; // 0.25 to 4
   easing: EasingType;
   loopDirection: LoopDirection;
   showDot: boolean;
@@ -16,7 +15,6 @@ export interface UseAnimationResult {
   pause: () => void;
   reset: () => void;
   setProgress: (progress: number) => void;
-  setSpeed: (speed: number) => void;
   setEasing: (easing: EasingType) => void;
   setLoopDirection: (direction: LoopDirection) => void;
   setShowDot: (show: boolean) => void;
@@ -65,7 +63,6 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isErasing, setIsErasing] = useState(false);
-  const [speed, setSpeed] = useState(1);
   const [easing, setEasing] = useState<EasingType>("power3.inOut");
   const [loopDirection, setLoopDirection] = useState<LoopDirection>("continue");
   const [showDot, setShowDot] = useState(false);
@@ -90,13 +87,12 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
       }
 
       const elapsed = timestamp - startTimeRef.current;
-      const adjustedDuration = duration / speed;
 
       // Calculate raw progress based on loop direction
       const { progress: rawProgress, isErasing: rawIsErasing } =
         calculateProgress(
-          elapsed + pausedProgressRef.current * adjustedDuration,
-          adjustedDuration,
+          elapsed + pausedProgressRef.current * duration,
+          duration,
           loopDirection
         );
 
@@ -124,7 +120,7 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isPlaying, duration, speed, easing, loopDirection]);
+  }, [isPlaying, duration, easing, loopDirection]);
 
   const play = () => {
     if (progress >= 1) {
@@ -160,7 +156,6 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
     isPlaying,
     progress,
     isErasing,
-    speed,
     easing,
     loopDirection,
     showDot,
@@ -169,7 +164,6 @@ export function useAnimation(duration: number = 5000): UseAnimationResult {
     pause,
     reset,
     setProgress: handleSetProgress,
-    setSpeed,
     setEasing,
     setLoopDirection,
     setShowDot,

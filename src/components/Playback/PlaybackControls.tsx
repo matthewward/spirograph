@@ -4,12 +4,13 @@ import {
   getEasingVariants,
 } from "../../lib/animation/easing";
 import { LoopDirection } from "../../hooks/useAnimation";
+import { NumberInput } from "../Controls/NumberInput";
 import styles from "./PlaybackControls.module.css";
 
 interface PlaybackControlsProps {
   isPlaying: boolean;
   progress: number;
-  speed: number;
+  duration: number;
   easing: EasingType;
   loopDirection: LoopDirection;
   showDot: boolean;
@@ -18,7 +19,7 @@ interface PlaybackControlsProps {
   onPause: () => void;
   onReset: () => void;
   onProgressChange: (progress: number) => void;
-  onSpeedChange: (speed: number) => void;
+  onDurationChange: (duration: number) => void;
   onEasingChange: (easing: EasingType) => void;
   onLoopDirectionChange: (direction: LoopDirection) => void;
   onShowDotChange: (show: boolean) => void;
@@ -28,7 +29,7 @@ interface PlaybackControlsProps {
 export function PlaybackControls({
   isPlaying,
   progress,
-  speed,
+  duration,
   easing,
   loopDirection,
   showDot: _showDot,
@@ -37,14 +38,12 @@ export function PlaybackControls({
   onPause: _onPause,
   onReset,
   onProgressChange,
-  onSpeedChange,
+  onDurationChange,
   onEasingChange,
   onLoopDirectionChange,
   onShowDotChange: _onShowDotChange,
   onShowRingsChange: _onShowRingsChange,
 }: PlaybackControlsProps) {
-  const speedOptions = [0.25, 0.5, 1, 2, 4];
-
   return (
     <div className={styles.container}>
       <div className={styles.controlsRow}>
@@ -53,7 +52,7 @@ export function PlaybackControls({
             className={styles.button}
             onClick={isPlaying ? onReset : onPlay}
           >
-            {isPlaying ? "Reset" : "Play"}
+            {isPlaying ? "Stop" : "Play"}
           </button>
 
           {/* <button className={styles.button} onClick={onReset} title="Reset">
@@ -63,17 +62,28 @@ export function PlaybackControls({
 
         <div className={styles.controlsGrid}>
           <div className={styles.controlRow}>
-            <label className={styles.controlLabel}>Speed</label>
-            <div className={styles.speedButtons}>
-              {speedOptions.map((s) => (
-                <button
-                  key={s}
-                  className={`${styles.speedButton} ${speed === s ? styles.active : ""}`}
-                  onClick={() => onSpeedChange(s)}
-                >
-                  {s}x
-                </button>
-              ))}
+            <label htmlFor="speed-slider" className={styles.controlLabel}>
+              Speed
+            </label>
+            <div className={styles.speedSliderRow}>
+              <input
+                id="speed-slider"
+                type="range"
+                min={0.1}
+                max={30}
+                step={0.1}
+                value={duration}
+                onChange={(e) => onDurationChange(Number(e.target.value))}
+                className={styles.speedSlider}
+              />
+              <NumberInput
+                value={duration}
+                onChange={onDurationChange}
+                min={0.1}
+                max={30}
+                step={0.1}
+                className={styles.speedInput}
+              />
             </div>
           </div>
 

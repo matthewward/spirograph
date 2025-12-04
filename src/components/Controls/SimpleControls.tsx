@@ -97,10 +97,7 @@ export function SimpleControls({
           <div className={styles.controlGroup}>
             <div className={styles.arcnessLabelRow}>
               <label htmlFor="edge-curvature-slider">Edge Curvature</label>
-              <label
-                htmlFor="arcness-enabled"
-                className={styles.checkboxLabel}
-              >
+              <label htmlFor="arcness-enabled" className={styles.checkboxLabel}>
                 <input
                   id="arcness-enabled"
                   type="checkbox"
@@ -226,18 +223,6 @@ export function SimpleControls({
           min={1}
           max={100}
           step={1}
-        />
-      </div>
-
-      <div className={styles.controlGroup}>
-        <RangeControl
-          id="duration"
-          label="Duration (seconds)"
-          value={params.duration}
-          onChange={(value) => onChange({ duration: value })}
-          min={0.1}
-          max={30}
-          step={0.1}
         />
       </div>
     </div>

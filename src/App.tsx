@@ -30,7 +30,6 @@ function App() {
     isPlaying,
     progress,
     isErasing,
-    speed,
     easing,
     loopDirection,
     showDot,
@@ -39,7 +38,6 @@ function App() {
     pause,
     reset,
     setProgress,
-    setSpeed,
     setEasing,
     setLoopDirection,
     setShowDot,
@@ -62,7 +60,6 @@ function App() {
       setParams(urlState.params);
       setCurveType(urlState.curveType);
       setParameterOscillations(urlState.paramOscillations);
-      setSpeed(urlState.animSpeed);
       setEasing(urlState.animEasing);
       setLoopDirection(urlState.animLoopDirection);
       setShowDot(urlState.animShowDot);
@@ -146,7 +143,7 @@ function App() {
             <PlaybackControls
               isPlaying={isPlaying}
               progress={progress}
-              speed={speed}
+              duration={params.duration}
               easing={easing}
               loopDirection={loopDirection}
               showDot={showDot}
@@ -155,7 +152,7 @@ function App() {
               onPause={pause}
               onReset={reset}
               onProgressChange={setProgress}
-              onSpeedChange={setSpeed}
+              onDurationChange={(duration) => setParams({ duration })}
               onEasingChange={setEasing}
               onLoopDirectionChange={setLoopDirection}
               onShowDotChange={setShowDot}
@@ -173,7 +170,6 @@ function App() {
               params={params}
               curveType={curveType}
               paramOscillations={parameterOscillations}
-              animSpeed={speed}
               animEasing={easing}
               animLoopDirection={loopDirection}
               animShowDot={showDot}
