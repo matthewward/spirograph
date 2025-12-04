@@ -297,7 +297,7 @@ export function SimpleControls({
                   }
                   min={1}
                   max={12}
-                  step={0.01}
+                  step={0.1}
                 />
               </div>
 
@@ -311,7 +311,7 @@ export function SimpleControls({
                       waveEffect: { ...params.waveEffect, amplitude: value },
                     })
                   }
-                  min={0}
+                  min={1}
                   max={100}
                   step={1}
                 />
@@ -336,7 +336,10 @@ export function SimpleControls({
               <div className={styles.controlGroup}>
                 <div className={styles.animateRow}>
                   <label htmlFor="wave-animate">Animate Gradient</label>
-                  <label htmlFor="wave-animate" className={styles.checkboxLabel}>
+                  <label
+                    htmlFor="wave-animate"
+                    className={styles.checkboxLabel}
+                  >
                     <input
                       id="wave-animate"
                       type="checkbox"
@@ -357,8 +360,13 @@ export function SimpleControls({
               {onShowGradientOverlayChange && (
                 <div className={styles.controlGroup}>
                   <div className={styles.animateRow}>
-                    <label htmlFor="show-gradient-overlay">Show Gradient Overlay</label>
-                    <label htmlFor="show-gradient-overlay" className={styles.checkboxLabel}>
+                    <label htmlFor="show-gradient-overlay">
+                      Show Gradient Overlay
+                    </label>
+                    <label
+                      htmlFor="show-gradient-overlay"
+                      className={styles.checkboxLabel}
+                    >
                       <input
                         id="show-gradient-overlay"
                         type="checkbox"
