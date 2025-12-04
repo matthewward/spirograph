@@ -17,7 +17,8 @@ export function useExport(options: UseExportOptions) {
 
   const exportStatic = useCallback(() => {
     const svg = generateStaticSVG(pathString, viewBox, strokeColor, strokeWidth);
-    const timestamp = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5); // YYYY-MM-DDTHH-MM-SS
     downloadFile(svg, `spirograph-${timestamp}.svg`, 'image/svg+xml');
   }, [pathString, viewBox, strokeColor, strokeWidth]);
 
@@ -32,7 +33,8 @@ export function useExport(options: UseExportOptions) {
       loopDirection,
       easing
     );
-    const timestamp = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5); // YYYY-MM-DDTHH-MM-SS
     downloadFile(svg, `spirograph-animated-${timestamp}.svg`, 'image/svg+xml');
   }, [pathString, viewBox, strokeColor, strokeWidth, pathLength]);
 

@@ -81,7 +81,7 @@ function App() {
               onClick={() => setControlsVisible(true)}
               className={styles.showControlsButton}
             >
-              →
+              Show
             </button>
           )}
           <SpirographCanvas
@@ -114,7 +114,7 @@ function App() {
                 onClick={() => setControlsVisible(false)}
                 className={styles.hideControlsButton}
               >
-                ←
+                Hide
               </button>
             </div>
             <SimpleControls

@@ -59,7 +59,40 @@ export interface SerializableState {
   animShowRings: boolean;
 }
 
-// Default state (matches defaults from hooks)
+// Fixed defaults for validation fallbacks (non-random, stable values)
+function getFixedDefaultState(): SerializableState {
+  return {
+    R: 120,
+    r: 48,
+    d: 84,
+    strokeWidth: 0.5,
+    strokeColor: '#ffffff',
+    completion: 100,
+    duration: 5,
+    rotation: 90,
+    backgroundColor: '#111529',
+    curveType: 'hypotrochoid',
+    oscR_enabled: false,
+    oscR_amplitude: 20,
+    oscR_frequency: 2,
+    oscR_waveType: 'sine',
+    oscr_enabled: false,
+    oscr_amplitude: 10,
+    oscr_frequency: 2,
+    oscr_waveType: 'sine',
+    oscd_enabled: false,
+    oscd_amplitude: 20,
+    oscd_frequency: 2,
+    oscd_waveType: 'sine',
+    animSpeed: 1,
+    animEasing: 'linear',
+    animLoopDirection: 'continue',
+    animShowDot: false,
+    animShowRings: false,
+  };
+}
+
+// Random defaults for initial state creation (only when no URL state exists)
 export function getDefaultState(): SerializableState {
   const R = randomInt(50, 200);
   const r = randomInt(10, Math.min(150, R - 10)); // Ensure r < R
@@ -203,7 +236,7 @@ export function deserializeState(base64: string): SerializableState | null {
   try {
     const json = atob(base64);
     const parsed = JSON.parse(json);
-    const defaults = getDefaultState();
+    const defaults = getFixedDefaultState(); // Use fixed defaults for validation, not random
 
     // Validate and sanitize all fields
     const state: SerializableState = {

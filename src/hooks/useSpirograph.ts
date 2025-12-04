@@ -62,19 +62,54 @@ function getRandomDefaultParams(): SpirographParams {
   };
 }
 
-const DEFAULT_PARAMS: SpirographParams = getRandomDefaultParams();
+// Check if URL state exists (only generate random defaults if no URL state)
+function hasURLState(): boolean {
+  if (typeof window === "undefined") return false;
+  const params = new URLSearchParams(window.location.search);
+  return params.has("state");
+}
+
+function getInitialParams(): SpirographParams {
+  // Only use random defaults if no URL state exists
+  // URL state will be loaded in useEffect and override these
+  return hasURLState()
+    ? {
+        R: 120,
+        r: 48,
+        d: 84,
+        strokeWidth: 0.5,
+        strokeColor: "#ffffff",
+        completion: 100,
+        duration: 5,
+        rotation: 90,
+        backgroundColor: "#222222",
+      }
+    : getRandomDefaultParams();
+}
+
+function getInitialCurveType(): CurveType {
+  return hasURLState()
+    ? "hypotrochoid"
+    : randomItem<CurveType>(["hypotrochoid", "epitrochoid"]);
+}
+
+function getInitialOscillations(
+  baseParams: SpirographParams
+): SpirographOscillations {
+  return {
+    R: createDefaultOscillation(baseParams.R),
+    r: createDefaultOscillation(baseParams.r),
+    d: createDefaultOscillation(baseParams.d),
+  };
+}
+
+const INITIAL_PARAMS = getInitialParams();
 
 export function useSpirograph(): UseSpirographResult {
-  const [params, setParamsState] = useState<SpirographParams>(DEFAULT_PARAMS);
-  const [curveType, setCurveType] = useState<CurveType>(
-    randomItem<CurveType>(["hypotrochoid", "epitrochoid"])
-  );
+  const [params, setParamsState] = useState<SpirographParams>(INITIAL_PARAMS);
+  const [curveType, setCurveType] = useState<CurveType>(getInitialCurveType());
   const [parameterOscillations, setParameterOscillationsState] =
-    useState<SpirographOscillations>({
-      R: createDefaultOscillation(DEFAULT_PARAMS.R),
-      r: createDefaultOscillation(DEFAULT_PARAMS.r),
-      d: createDefaultOscillation(DEFAULT_PARAMS.d),
-    });
+    useState<SpirographOscillations>(getInitialOscillations(INITIAL_PARAMS));
 
   const setParams = (newParams: Partial<SpirographParams>) => {
     setParamsState((prev) => {
