@@ -116,14 +116,6 @@ export function ExportPanel({
       {/* </div> */}
 
       <div className={styles.shareSection}>
-        <label className={styles.checkboxLabel}>
-          <input
-            type="checkbox"
-            checked={autoPlay}
-            onChange={(e) => setAutoPlay(e.target.checked)}
-          />
-          <span>Start animated</span>
-        </label>
         <button className={styles.exportButton} onClick={handleShare}>
           <svg
             width="18"
@@ -141,6 +133,14 @@ export function ExportPanel({
           {copySuccess ? "Copied!" : "Share"}
         </button>
       </div>
+      <label className={styles.checkboxLabel}>
+        <input
+          type="checkbox"
+          checked={autoPlay}
+          onChange={(e) => setAutoPlay(e.target.checked)}
+        />
+        <span>Start animated</span>
+      </label>
     </div>
   );
 }
