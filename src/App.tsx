@@ -4,7 +4,7 @@ import { useAnimation } from "./hooks/useAnimation";
 import { useExport } from "./hooks/useExport";
 import { useURLState } from "./hooks/useURLState";
 import { SpirographCanvas } from "./components/Canvas/SpirographCanvas";
-import { SimpleControls } from "./components/Controls/SimpleControls";
+import { MainControls } from "./components/Controls/MainControls";
 import { WaveAnimationControls } from "./components/Controls/WaveAnimationControls";
 import { PlaybackControls } from "./components/Playback/PlaybackControls";
 import { ExportPanel } from "./components/Export/ExportPanel";
@@ -132,7 +132,7 @@ function App() {
                 Hide
               </button>
             </div>
-            <SimpleControls
+            <MainControls
               params={params}
               onChange={setParams}
               curveType={curveType}

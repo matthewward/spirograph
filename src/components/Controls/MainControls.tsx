@@ -3,9 +3,9 @@ import { SpirographOscillations } from "../../lib/animation/parameterOscillation
 import { RangeControl } from "./RangeControl";
 import { PolygonPreview } from "./PolygonPreview";
 import { NumberInput } from "./NumberInput";
-import styles from "./SimpleControls.module.css";
+import styles from "./MainControls.module.css";
 
-interface SimpleControlsProps {
+interface MainControlsProps {
   params: SpirographParams;
   onChange: (params: Partial<SpirographParams>) => void;
   curveType: CurveType;
@@ -16,14 +16,14 @@ interface SimpleControlsProps {
   ) => void;
 }
 
-export function SimpleControls({
+export function MainControls({
   params,
   onChange,
   curveType,
   onCurveTypeChange,
   parameterOscillations,
   onParameterOscillationsChange,
-}: SimpleControlsProps) {
+}: MainControlsProps) {
   return (
     <div className={styles.container}>
       <div className={styles.controlGroup}>
