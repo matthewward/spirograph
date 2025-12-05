@@ -66,7 +66,7 @@ export function WaveAnimationControls({
               waveEffect: { ...params.waveEffect, frequency: value },
             })
           }
-          min={1}
+          min={0}
           max={12}
           step={0.1}
         />
