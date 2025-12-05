@@ -46,7 +46,6 @@ export function SpirographCanvas({
   curveType: _curveType,
   backgroundColor,
   glowColor,
-  waveEffect,
 }: SpirographCanvasProps) {
   // For "continue" mode during erase, we need to slice the points array
   // and regenerate the path to remove points from the START

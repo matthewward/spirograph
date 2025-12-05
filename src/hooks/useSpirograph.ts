@@ -101,6 +101,7 @@ function getInitialParams(): SpirographParams {
         duration: 5,
         rotation: 90,
         backgroundColor: "#222222",
+        glowColor: "#00d9ff",
         sides: sides === 0 ? 1 : sides,
         arcness: 0,
         arcnessEnabled: false,
