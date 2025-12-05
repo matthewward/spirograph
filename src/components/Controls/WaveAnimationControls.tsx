@@ -15,9 +15,7 @@ export function WaveAnimationControls({
   return (
     <div className={styles.container}>
       <div className={styles.controlGroup}>
-        <label title="Which type of gradient to use">
-          Gradient Type <span className={styles.tooltipIcon}>ⓘ</span>
-        </label>
+        <label title="Which type of gradient to use">Gradient Type</label>
         <div className={styles.gradientTypeButtons}>
           <button
             type="button"
@@ -108,7 +106,7 @@ export function WaveAnimationControls({
           htmlFor="displacement-mode"
           title="How the waves push and pull the lines around"
         >
-          Displacement Mode <span className={styles.tooltipIcon}>ⓘ</span>
+          Displacement Mode
         </label>
         <select
           id="displacement-mode"

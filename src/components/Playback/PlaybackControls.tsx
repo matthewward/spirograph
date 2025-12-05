@@ -64,7 +64,7 @@ export function PlaybackControls({
           htmlFor="speed-slider"
           title="How fast the pattern draws, in seconds"
         >
-          Speed <span className={styles.tooltipIcon}>ⓘ</span>
+          Speed
         </label>
         <div className={styles.speedSliderRow}>
           <input
@@ -93,7 +93,7 @@ export function PlaybackControls({
           htmlFor="rotation"
           title="Which direction do we start drawing from?"
         >
-          Starting Position <span className={styles.tooltipIcon}>ⓘ</span>
+          Starting Position
         </label>
         <select
           id="rotation"
@@ -113,7 +113,7 @@ export function PlaybackControls({
           htmlFor="easing"
           title="How the animation accelerates and decelerates"
         >
-          Easing <span className={styles.tooltipIcon}>ⓘ</span>
+          Easing
         </label>
         <select
           id="easing"
@@ -137,7 +137,7 @@ export function PlaybackControls({
 
       <div className={styles.controlGroup}>
         <label htmlFor="loop-direction" title="How the animation loops">
-          Loop Style <span className={styles.tooltipIcon}>ⓘ</span>
+          Loop Style
         </label>
         <select
           id="loop-direction"

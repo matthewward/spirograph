@@ -116,6 +116,7 @@ function App() {
             d={params.d}
             curveType={curveType}
             backgroundColor={params.backgroundColor}
+            glowColor={params.glowColor}
             waveEffect={params.waveEffect}
           />
         </main>

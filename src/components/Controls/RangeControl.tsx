@@ -33,7 +33,6 @@ export function RangeControl({
       <div className={styles.labelRow}>
         <label htmlFor={id} title={tooltip}>
           {label}
-          {tooltip && <span className={styles.tooltipIcon}>ⓘ</span>}
         </label>
         <NumberInput
           value={value}

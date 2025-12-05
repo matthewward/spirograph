@@ -23,6 +23,7 @@ interface SpirographCanvasProps {
   d: number;
   curveType: CurveType;
   backgroundColor: string;
+  glowColor?: string;
   waveEffect: WaveEffectParams;
 }
 
@@ -44,6 +45,7 @@ export function SpirographCanvas({
   d: _d,
   curveType: _curveType,
   backgroundColor,
+  glowColor,
   waveEffect,
 }: SpirographCanvasProps) {
   // For "continue" mode during erase, we need to slice the points array
@@ -89,6 +91,15 @@ export function SpirographCanvas({
       pathString,
     ]);
 
+  // Convert hex color to rgba for glow effect
+  const hexToRgba = (hex: string | undefined, alpha: number = 0.3) => {
+    if (!hex) return `rgba(0, 217, 255, ${alpha})`; // Default cyan if undefined
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
   return (
     <div className={styles.container} style={{ backgroundColor }}>
       <svg
@@ -96,6 +107,9 @@ export function SpirographCanvas({
         viewBox={viewBox}
         preserveAspectRatio="xMidYMid meet"
         shapeRendering="geometricPrecision"
+        style={{
+          filter: `drop-shadow(0 0 20px ${hexToRgba(glowColor)})`,
+        }}
       >
         {/* The spirograph path */}
         <path

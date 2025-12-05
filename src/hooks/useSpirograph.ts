@@ -60,6 +60,7 @@ function getRandomDefaultParams(): SpirographParams {
     duration: randomFloat(2, 10, 1),
     rotation: 90,
     backgroundColor: "#222222",
+    glowColor: "#00d9ff",
     sides: sides === 0 ? 1 : sides,
     arcness: 0,
     arcnessEnabled: false,
@@ -87,6 +88,8 @@ function hasURLState(): boolean {
 function getInitialParams(): SpirographParams {
   // Only use random defaults if no URL state exists
   // URL state will be loaded in useEffect and override these
+
+  const sides = randomInt(-6, 6);
   return hasURLState()
     ? {
         R: 120,
@@ -98,7 +101,7 @@ function getInitialParams(): SpirographParams {
         duration: 5,
         rotation: 90,
         backgroundColor: "#222222",
-        sides: 1,
+        sides: sides === 0 ? 1 : sides,
         arcness: 0,
         arcnessEnabled: false,
         waveEffect: {

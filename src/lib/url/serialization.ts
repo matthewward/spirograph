@@ -30,6 +30,7 @@ export interface SerializableState {
   duration: number;
   rotation: number;
   backgroundColor: string;
+  glowColor: string;
   sides: number;
   arcness: number;
   arcnessEnabled: boolean;
@@ -86,6 +87,7 @@ function getFixedDefaultState(): SerializableState {
     duration: 5,
     rotation: 90,
     backgroundColor: "#111529",
+    glowColor: "#00d9ff",
     sides: 1,
     arcness: 0,
     arcnessEnabled: false,
@@ -140,6 +142,7 @@ export function serializeState(
     duration: params.duration,
     rotation: params.rotation,
     backgroundColor: params.backgroundColor,
+    glowColor: params.glowColor,
     sides: params.sides,
     arcness: params.arcness,
     arcnessEnabled: params.arcnessEnabled,
@@ -293,6 +296,7 @@ export function deserializeState(base64: string): SerializableState | null {
         parsed.backgroundColor,
         defaults.backgroundColor
       ),
+      glowColor: validateString(parsed.glowColor, defaults.glowColor),
       sides: validateNumber(parsed.sides, defaults.sides),
       arcness: validateNumber(parsed.arcness, defaults.arcness),
       arcnessEnabled: validateBoolean(
@@ -407,6 +411,7 @@ export function stateToHookParams(state: SerializableState) {
     duration: state.duration,
     rotation: state.rotation,
     backgroundColor: state.backgroundColor,
+    glowColor: state.glowColor,
     sides: state.sides,
     arcness: state.arcness,
     arcnessEnabled: state.arcnessEnabled,

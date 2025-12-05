@@ -107,7 +107,7 @@ export function MainControls({
                 htmlFor="edge-curvature-slider"
                 title="Makes the shape edges curve inward or outward. Won't work on a circle ;-("
               >
-                Edge Curvature <span className={styles.tooltipIcon}>ⓘ</span>
+                Edge Curvature
               </label>
               <label htmlFor="arcness-enabled" className={styles.checkboxLabel}>
                 <input
@@ -181,7 +181,12 @@ export function MainControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="background-color">Background Color</label>
+        <label
+          htmlFor="background-color"
+          title="What color should the background be?"
+        >
+          Background Color
+        </label>
         <div className={styles.colorRow}>
           <input
             id="background-color"
@@ -200,10 +205,33 @@ export function MainControls({
 
       <div className={styles.controlGroup}>
         <label
+          htmlFor="glow-color"
+          title="The color of the glow effect around the pattern"
+        >
+          Glow Color
+        </label>
+        <div className={styles.colorRow}>
+          <input
+            id="glow-color"
+            type="color"
+            value={params.glowColor}
+            onChange={(e) => onChange({ glowColor: e.target.value })}
+          />
+          <input
+            type="text"
+            className={styles.colorInput}
+            value={params.glowColor}
+            onChange={(e) => onChange({ glowColor: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className={styles.controlGroup}>
+        <label
           htmlFor="curve-type"
           title="Does the wheel roll inside or outside the ring?"
         >
-          Inside or outside? <span className={styles.tooltipIcon}>ⓘ</span>
+          Inside or outside?
         </label>
         <select
           id="curve-type"
