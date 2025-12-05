@@ -30,6 +30,7 @@ export interface UseSpirographResult {
   pathString: string;
   pathLength: number;
   viewBox: string;
+  randomize: () => void;
 }
 
 // Randomization utilities
@@ -282,6 +283,12 @@ export function useSpirograph(): UseSpirographResult {
     };
   }, [params, curveType, parameterOscillations, hasOscillations]);
 
+  const randomize = () => {
+    const newParams = getRandomDefaultParams();
+    setParamsState(newParams);
+    setParameterOscillationsState(getInitialOscillations(newParams));
+  };
+
   return {
     params,
     setParams,
@@ -293,5 +300,6 @@ export function useSpirograph(): UseSpirographResult {
     pathString,
     pathLength,
     viewBox,
+    randomize,
   };
 }

@@ -14,6 +14,7 @@ interface MainControlsProps {
   onParameterOscillationsChange: (
     update: Partial<SpirographOscillations>
   ) => void;
+  onRandomize: () => void;
 }
 
 export function MainControls({
@@ -23,9 +24,13 @@ export function MainControls({
   onCurveTypeChange,
   parameterOscillations,
   onParameterOscillationsChange,
+  onRandomize,
 }: MainControlsProps) {
   return (
     <div className={styles.container}>
+      <button onClick={onRandomize} className={styles.randomizeButton}>
+        Randomize
+      </button>
       <div className={styles.controlGroup}>
         <RangeControl
           id="ring-size"
@@ -123,7 +128,7 @@ export function MainControls({
                 value={params.arcness}
                 onChange={(value) => onChange({ arcness: value })}
                 min={-0.5}
-                max={2}
+                max={10}
                 step={0.01}
                 className={`${styles.numberInput} ${!params.arcnessEnabled ? styles.disabled : ""}`}
               />
@@ -132,7 +137,7 @@ export function MainControls({
               id="edge-curvature-slider"
               type="range"
               min={-0.5}
-              max={2}
+              max={10}
               step={0.01}
               value={params.arcness}
               onChange={(e) => onChange({ arcness: Number(e.target.value) })}
