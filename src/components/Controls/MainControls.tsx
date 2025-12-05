@@ -30,6 +30,7 @@ export function MainControls({
         <RangeControl
           id="ring-size"
           label="Ring Size"
+          tooltip="The outer circle that everything rolls around"
           value={params.R}
           onChange={(value) => onChange({ R: value })}
           min={1}
@@ -48,6 +49,7 @@ export function MainControls({
         <RangeControl
           id="wheel-size"
           label="Wheel Size"
+          tooltip="The wheel that draws the pattern"
           value={params.r}
           onChange={(value) => onChange({ r: value })}
           min={1}
@@ -66,6 +68,7 @@ export function MainControls({
         <RangeControl
           id="pen-position"
           label="Pen Position"
+          tooltip="Where the pen sits on the wheel"
           value={params.d}
           onChange={(value) => onChange({ d: value })}
           min={1}
@@ -86,6 +89,7 @@ export function MainControls({
             <RangeControl
               id="wheel-sides"
               label="Wheel Sides"
+              tooltip="Turn the wheel into a different shape"
               value={params.sides}
               onChange={(value) => onChange({ sides: Math.round(value) })}
               min={-6}
@@ -96,7 +100,12 @@ export function MainControls({
 
           <div className={styles.controlGroup}>
             <div className={styles.arcnessLabelRow}>
-              <label htmlFor="edge-curvature-slider">Edge Curvature</label>
+              <label
+                htmlFor="edge-curvature-slider"
+                title="Makes the shape edges curve inward or outward. Won't work on a circle ;-("
+              >
+                Edge Curvature <span className={styles.tooltipIcon}>ⓘ</span>
+              </label>
               <label htmlFor="arcness-enabled" className={styles.checkboxLabel}>
                 <input
                   id="arcness-enabled"
@@ -187,7 +196,12 @@ export function MainControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="curve-type">Inside or outside?</label>
+        <label
+          htmlFor="curve-type"
+          title="Does the wheel roll inside or outside the ring?"
+        >
+          Inside or outside? <span className={styles.tooltipIcon}>ⓘ</span>
+        </label>
         <select
           id="curve-type"
           value={curveType}
@@ -200,7 +214,12 @@ export function MainControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="rotation">Starting Position</label>
+        <label
+          htmlFor="rotation"
+          title="Which direction does the pattern start from?"
+        >
+          Starting Position <span className={styles.tooltipIcon}>ⓘ</span>
+        </label>
         <select
           id="rotation"
           value={params.rotation}
@@ -217,7 +236,8 @@ export function MainControls({
       <div className={styles.controlGroup}>
         <RangeControl
           id="completion"
-          label="Completion"
+          label="Completion %"
+          tooltip="How much of the pattern to draw - 100% means we keep drawing until we get back to the start"
           value={params.completion}
           onChange={(value) => onChange({ completion: value })}
           min={1}

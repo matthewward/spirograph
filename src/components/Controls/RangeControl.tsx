@@ -13,6 +13,7 @@ interface RangeControlProps {
   step?: number;
   oscillation?: ParameterOscillation;
   onOscillationChange?: (update: Partial<ParameterOscillation>) => void;
+  tooltip?: string;
 }
 
 export function RangeControl({
@@ -25,11 +26,15 @@ export function RangeControl({
   step = 1,
   oscillation,
   onOscillationChange,
+  tooltip,
 }: RangeControlProps) {
   return (
     <div className={styles.container}>
       <div className={styles.labelRow}>
-        <label htmlFor={id}>{label}</label>
+        <label htmlFor={id} title={tooltip}>
+          {label}
+          {tooltip && <span className={styles.tooltipIcon}>ⓘ</span>}
+        </label>
         <NumberInput
           value={value}
           onChange={onChange}

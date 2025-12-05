@@ -13,6 +13,24 @@
   gap: var(--spacing-sm);
 }
 
+.controlGroup label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: help;
+}
+
+.tooltipIcon {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.controlGroup label:hover .tooltipIcon {
+  opacity: 1;
+}
+
 .select {
   padding: var(--spacing-sm) var(--spacing-md);
   background: var(--bg-tertiary);

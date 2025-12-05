@@ -15,7 +15,9 @@ export function WaveAnimationControls({
   return (
     <div className={styles.container}>
       <div className={styles.controlGroup}>
-        <label htmlFor="gradient-type">Gradient Type</label>
+        <label htmlFor="gradient-type" title="Which type of gradient to use">
+          Gradient Type <span className={styles.tooltipIcon}>ⓘ</span>
+        </label>
         <select
           id="gradient-type"
           value={params.waveEffect.gradientType}
@@ -36,7 +38,12 @@ export function WaveAnimationControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="displacement-mode">Displacement Mode</label>
+        <label
+          htmlFor="displacement-mode"
+          title="How the waves push and pull the lines around"
+        >
+          Displacement Mode <span className={styles.tooltipIcon}>ⓘ</span>
+        </label>
         <select
           id="displacement-mode"
           value={params.waveEffect.displacementMode}
@@ -60,6 +67,7 @@ export function WaveAnimationControls({
         <RangeControl
           id="wave-frequency"
           label="Frequency"
+          tooltip="How many waves appear across the pattern - higher = more wiggly"
           value={params.waveEffect.frequency}
           onChange={(value) =>
             onChange({
@@ -75,6 +83,7 @@ export function WaveAnimationControls({
         <RangeControl
           id="wave-amplitude"
           label="Amplitude"
+          tooltip="How far the waves push the lines around - bigger = more dramatic"
           value={params.waveEffect.amplitude}
           onChange={(value) =>
             onChange({
@@ -90,6 +99,7 @@ export function WaveAnimationControls({
         <RangeControl
           id="wave-easing"
           label="Gradient Smoothness"
+          tooltip="Makes the wave transitions sharper or smoother"
           value={params.waveEffect.easing}
           onChange={(value) =>
             onChange({
@@ -135,6 +145,7 @@ export function WaveAnimationControls({
               <RangeControl
                 id="wave-animation-speed"
                 label="Animation Speed"
+                tooltip="How many seconds it takes for the waves to cycle"
                 value={params.waveEffect.animationSpeed}
                 onChange={(value) =>
                   onChange({
@@ -155,6 +166,7 @@ export function WaveAnimationControls({
               <RangeControl
                 id="wave-offset"
                 label="Animation Offset"
+                tooltip="Where the wave pattern starts - like freezing the animation at different moments"
                 value={params.waveEffect.animationOffset}
                 onChange={(value) =>
                   onChange({
