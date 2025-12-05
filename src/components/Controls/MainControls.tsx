@@ -3,9 +3,9 @@ import { SpirographOscillations } from "../../lib/animation/parameterOscillation
 import { RangeControl } from "./RangeControl";
 import { PolygonPreview } from "./PolygonPreview";
 import { NumberInput } from "./NumberInput";
-import styles from "./SimpleControls.module.css";
+import styles from "./MainControls.module.css";
 
-interface SimpleControlsProps {
+interface MainControlsProps {
   params: SpirographParams;
   onChange: (params: Partial<SpirographParams>) => void;
   curveType: CurveType;
@@ -16,20 +16,21 @@ interface SimpleControlsProps {
   ) => void;
 }
 
-export function SimpleControls({
+export function MainControls({
   params,
   onChange,
   curveType,
   onCurveTypeChange,
   parameterOscillations,
   onParameterOscillationsChange,
-}: SimpleControlsProps) {
+}: MainControlsProps) {
   return (
     <div className={styles.container}>
       <div className={styles.controlGroup}>
         <RangeControl
           id="ring-size"
           label="Ring Size"
+          tooltip="The outer circle that everything rolls around"
           value={params.R}
           onChange={(value) => onChange({ R: value })}
           min={1}
@@ -48,6 +49,7 @@ export function SimpleControls({
         <RangeControl
           id="wheel-size"
           label="Wheel Size"
+          tooltip="The wheel that draws the pattern"
           value={params.r}
           onChange={(value) => onChange({ r: value })}
           min={1}
@@ -66,6 +68,7 @@ export function SimpleControls({
         <RangeControl
           id="pen-position"
           label="Pen Position"
+          tooltip="Where the pen sits on the wheel"
           value={params.d}
           onChange={(value) => onChange({ d: value })}
           min={1}
@@ -86,8 +89,12 @@ export function SimpleControls({
             <RangeControl
               id="wheel-sides"
               label="Wheel Sides"
+              tooltip="Turn the wheel into a different shape"
               value={params.sides}
-              onChange={(value) => onChange({ sides: Math.round(value) })}
+              onChange={(value) => {
+                const n = Math.round(value);
+                onChange({ sides: n === 0 ? 1 : n });
+              }}
               min={-6}
               max={6}
               step={1}
@@ -96,7 +103,12 @@ export function SimpleControls({
 
           <div className={styles.controlGroup}>
             <div className={styles.arcnessLabelRow}>
-              <label htmlFor="edge-curvature-slider">Edge Curvature</label>
+              <label
+                htmlFor="edge-curvature-slider"
+                title="Makes the shape edges curve inward or outward. Won't work on a circle ;-("
+              >
+                Edge Curvature
+              </label>
               <label htmlFor="arcness-enabled" className={styles.checkboxLabel}>
                 <input
                   id="arcness-enabled"
@@ -169,7 +181,12 @@ export function SimpleControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="background-color">Background Color</label>
+        <label
+          htmlFor="background-color"
+          title="What color should the background be?"
+        >
+          Background Color
+        </label>
         <div className={styles.colorRow}>
           <input
             id="background-color"
@@ -187,7 +204,35 @@ export function SimpleControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="curve-type">Inside or outside?</label>
+        <label
+          htmlFor="glow-color"
+          title="The color of the glow effect around the pattern"
+        >
+          Glow Color
+        </label>
+        <div className={styles.colorRow}>
+          <input
+            id="glow-color"
+            type="color"
+            value={params.glowColor}
+            onChange={(e) => onChange({ glowColor: e.target.value })}
+          />
+          <input
+            type="text"
+            className={styles.colorInput}
+            value={params.glowColor}
+            onChange={(e) => onChange({ glowColor: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className={styles.controlGroup}>
+        <label
+          htmlFor="curve-type"
+          title="Does the wheel roll inside or outside the ring?"
+        >
+          Inside or outside?
+        </label>
         <select
           id="curve-type"
           value={curveType}
@@ -200,24 +245,10 @@ export function SimpleControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label htmlFor="rotation">Starting Position</label>
-        <select
-          id="rotation"
-          value={params.rotation}
-          onChange={(e) => onChange({ rotation: Number(e.target.value) })}
-          className={styles.select}
-        >
-          <option value="0">Right</option>
-          <option value="90">Down</option>
-          <option value="180">Left</option>
-          <option value="270">Up</option>
-        </select>
-      </div>
-
-      <div className={styles.controlGroup}>
         <RangeControl
           id="completion"
-          label="Completion"
+          label="Completion %"
+          tooltip="How much of the pattern to draw - 100% means we keep drawing until we get back to the start"
           value={params.completion}
           onChange={(value) => onChange({ completion: value })}
           min={1}

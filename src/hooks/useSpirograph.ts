@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { SpirographParams, Point, CurveType } from "../lib/spirograph/types";
 import {
   sampleSpirograph,
@@ -15,6 +15,7 @@ import {
   createDefaultOscillation,
   getOscillatedValue,
 } from "../lib/animation/parameterOscillation";
+import { applyWaveEffect } from "../lib/animation/waveEffect";
 
 export interface UseSpirographResult {
   params: SpirographParams;
@@ -48,7 +49,7 @@ function randomItem<T>(items: T[]): T {
 function getRandomDefaultParams(): SpirographParams {
   const R = randomInt(50, 200);
   const r = randomInt(10, Math.min(150, R - 10)); // Ensure r < R
-
+  const sides = randomInt(-6, 6);
   return {
     R,
     r,
@@ -59,9 +60,21 @@ function getRandomDefaultParams(): SpirographParams {
     duration: randomFloat(2, 10, 1),
     rotation: 90,
     backgroundColor: "#222222",
-    sides: 1,
+    glowColor: "#00d9ff",
+    sides: sides === 0 ? 1 : sides,
     arcness: 0,
     arcnessEnabled: false,
+    waveEffect: {
+      enabled: false,
+      gradientType: "horizontal",
+      frequency: 1,
+      amplitude: 10,
+      displacementMode: "perpendicular",
+      animationOffset: 0,
+      easing: 0.5,
+      animate: false,
+      animationSpeed: 5,
+    },
   };
 }
 
@@ -75,6 +88,8 @@ function hasURLState(): boolean {
 function getInitialParams(): SpirographParams {
   // Only use random defaults if no URL state exists
   // URL state will be loaded in useEffect and override these
+
+  const sides = randomInt(-6, 6);
   return hasURLState()
     ? {
         R: 120,
@@ -86,9 +101,20 @@ function getInitialParams(): SpirographParams {
         duration: 5,
         rotation: 90,
         backgroundColor: "#222222",
-        sides: 1,
+        sides: sides === 0 ? 1 : sides,
         arcness: 0,
         arcnessEnabled: false,
+        waveEffect: {
+          enabled: false,
+          gradientType: "horizontal",
+          frequency: 1,
+          amplitude: 10,
+          displacementMode: "perpendicular",
+          animationOffset: 0,
+          easing: 0.5,
+          animate: false,
+          animationSpeed: 5,
+        },
       }
     : getRandomDefaultParams();
 }
@@ -116,6 +142,53 @@ export function useSpirograph(): UseSpirographResult {
   const [curveType, setCurveType] = useState<CurveType>(getInitialCurveType());
   const [parameterOscillations, setParameterOscillationsState] =
     useState<SpirographOscillations>(getInitialOscillations(INITIAL_PARAMS));
+
+  const animationFrameRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  // Animate wave effect offset when animate is enabled
+  useEffect(() => {
+    if (!params.waveEffect.enabled || !params.waveEffect.animate) {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+        startTimeRef.current = null;
+      }
+      return;
+    }
+
+    const animateWave = (timestamp: number) => {
+      if (startTimeRef.current === null) {
+        startTimeRef.current = timestamp;
+      }
+
+      const elapsed = timestamp - startTimeRef.current;
+      const duration = params.waveEffect.animationSpeed * 1000; // Convert seconds to milliseconds
+      const newOffset = (elapsed / duration) % 1;
+
+      setParamsState((prev) => ({
+        ...prev,
+        waveEffect: {
+          ...prev.waveEffect,
+          animationOffset: newOffset,
+        },
+      }));
+
+      animationFrameRef.current = requestAnimationFrame(animateWave);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animateWave);
+
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [
+    params.waveEffect.enabled,
+    params.waveEffect.animate,
+    params.waveEffect.animationSpeed,
+  ]);
 
   const setParams = (newParams: Partial<SpirographParams>) => {
     setParamsState((prev) => {
@@ -172,7 +245,22 @@ export function useSpirograph(): UseSpirographResult {
     }
 
     // Simplify to reduce point count (lower epsilon for smoother curves)
-    const simplifiedPoints = simplifyPath(rawPoints, 0.1);
+    let simplifiedPoints = simplifyPath(rawPoints, 0.1);
+
+    // Apply wave effect if enabled
+    if (params.waveEffect.enabled) {
+      const bbox = getBoundingBox(simplifiedPoints);
+      const bounds = {
+        minX: bbox.minX,
+        maxX: bbox.maxX,
+        minY: bbox.minY,
+        maxY: bbox.maxY,
+      };
+
+      simplifiedPoints = simplifiedPoints.map((point) =>
+        applyWaveEffect(point, params.waveEffect, bounds)
+      );
+    }
 
     // Generate SVG path
     const path = pointsToPath(simplifiedPoints);

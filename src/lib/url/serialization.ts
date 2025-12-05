@@ -3,6 +3,7 @@ import { WaveType } from "../animation/oscillationWaves";
 import { SpirographOscillations } from "../animation/parameterOscillation";
 import { EasingType } from "../animation/easing";
 import { LoopDirection } from "../../hooks/useAnimation";
+import { GradientType, DisplacementMode } from "../animation/waveEffect";
 
 // Randomization utilities
 function randomInt(min: number, max: number): number {
@@ -29,9 +30,21 @@ export interface SerializableState {
   duration: number;
   rotation: number;
   backgroundColor: string;
+  glowColor: string;
   sides: number;
   arcness: number;
   arcnessEnabled: boolean;
+
+  // Wave Effect
+  waveEffect_enabled: boolean;
+  waveEffect_gradientType: GradientType;
+  waveEffect_frequency: number;
+  waveEffect_amplitude: number;
+  waveEffect_displacementMode: DisplacementMode;
+  waveEffect_animationOffset: number;
+  waveEffect_easing: number;
+  waveEffect_animate: boolean;
+  waveEffect_animationSpeed: number;
 
   // CurveType
   curveType: CurveType;
@@ -74,9 +87,19 @@ function getFixedDefaultState(): SerializableState {
     duration: 5,
     rotation: 90,
     backgroundColor: "#111529",
+    glowColor: "#00d9ff",
     sides: 1,
     arcness: 0,
     arcnessEnabled: false,
+    waveEffect_enabled: false,
+    waveEffect_gradientType: "horizontal",
+    waveEffect_frequency: 1,
+    waveEffect_amplitude: 10,
+    waveEffect_displacementMode: "perpendicular",
+    waveEffect_animationOffset: 0,
+    waveEffect_easing: 0.5,
+    waveEffect_animate: false,
+    waveEffect_animationSpeed: 5,
     curveType: "hypotrochoid",
     oscR_enabled: false,
     oscR_amplitude: 20,
@@ -91,77 +114,6 @@ function getFixedDefaultState(): SerializableState {
     oscd_frequency: 2,
     oscd_waveType: "sine",
     animEasing: "linear",
-    animLoopDirection: "continue",
-    animShowDot: false,
-    animShowRings: false,
-    autoPlay: false,
-  };
-}
-
-// Random defaults for initial state creation (only when no URL state exists)
-export function getDefaultState(): SerializableState {
-  const R = randomInt(50, 200);
-  const r = randomInt(10, Math.min(150, R - 10)); // Ensure r < R
-  const d = randomInt(10, 150);
-
-  const easingOptions: EasingType[] = [
-    "linear",
-    "power1.in",
-    "power1.out",
-    "power1.inOut",
-    "power2.in",
-    "power2.out",
-    "power2.inOut",
-    "power3.in",
-    "power3.out",
-    "power3.inOut",
-    "sine.in",
-    "sine.out",
-    "sine.inOut",
-    "circ.in",
-    "circ.out",
-    "circ.inOut",
-    "expo.in",
-    "expo.out",
-    "expo.inOut",
-  ];
-
-  const waveTypes: WaveType[] = [
-    "sine",
-    "triangle",
-    "square",
-    "sawtooth",
-    "reverseSawtooth",
-  ];
-  const curveTypes: CurveType[] = ["hypotrochoid", "epitrochoid"];
-
-  return {
-    R,
-    r,
-    d,
-    strokeWidth: 0.5,
-    strokeColor: "#ffffff",
-    completion: 100,
-    duration: randomFloat(2, 10, 1),
-    rotation: 90,
-    backgroundColor: "#111529",
-    sides: 1,
-    arcness: 0,
-    arcnessEnabled: false,
-    curveType: randomItem(curveTypes),
-    oscR_enabled: Math.random() < 0.3, // 30% chance
-    oscR_amplitude: randomInt(5, 30),
-    oscR_frequency: randomInt(1, 5),
-    oscR_waveType: randomItem(waveTypes),
-    oscr_enabled: Math.random() < 0.3,
-    oscr_amplitude: randomInt(5, 20),
-    oscr_frequency: randomInt(1, 5),
-    oscr_waveType: randomItem(waveTypes),
-    oscd_enabled: Math.random() < 0.3,
-    oscd_amplitude: randomInt(5, 30),
-    oscd_frequency: randomInt(1, 5),
-    oscd_waveType: randomItem(waveTypes),
-    animEasing: randomItem(easingOptions),
     animLoopDirection: "continue",
     animShowDot: false,
     animShowRings: false,
@@ -190,9 +142,19 @@ export function serializeState(
     duration: params.duration,
     rotation: params.rotation,
     backgroundColor: params.backgroundColor,
+    glowColor: params.glowColor,
     sides: params.sides,
     arcness: params.arcness,
     arcnessEnabled: params.arcnessEnabled,
+    waveEffect_enabled: params.waveEffect.enabled,
+    waveEffect_gradientType: params.waveEffect.gradientType,
+    waveEffect_frequency: params.waveEffect.frequency,
+    waveEffect_amplitude: params.waveEffect.amplitude,
+    waveEffect_displacementMode: params.waveEffect.displacementMode,
+    waveEffect_animationOffset: params.waveEffect.animationOffset,
+    waveEffect_easing: params.waveEffect.easing,
+    waveEffect_animate: params.waveEffect.animate,
+    waveEffect_animationSpeed: params.waveEffect.animationSpeed,
     curveType,
     oscR_enabled: paramOscillations.R.enabled,
     oscR_amplitude: paramOscillations.R.amplitude,
@@ -284,6 +246,27 @@ function validateEasingType(val: any, defaultVal: EasingType): EasingType {
   return validEasings.includes(val) ? val : defaultVal;
 }
 
+function validateGradientType(
+  val: any,
+  defaultVal: GradientType
+): GradientType {
+  const validTypes: GradientType[] = ["horizontal", "vertical", "radial", "diamond"];
+  return validTypes.includes(val) ? val : defaultVal;
+}
+
+function validateDisplacementMode(
+  val: any,
+  defaultVal: DisplacementMode
+): DisplacementMode {
+  const validModes: DisplacementMode[] = [
+    "perpendicular",
+    "radial",
+    "horizontal",
+    "vertical",
+  ];
+  return validModes.includes(val) ? val : defaultVal;
+}
+
 function validateLoopDirection(
   val: any,
   defaultVal: LoopDirection
@@ -313,9 +296,49 @@ export function deserializeState(base64: string): SerializableState | null {
         parsed.backgroundColor,
         defaults.backgroundColor
       ),
+      glowColor: validateString(parsed.glowColor, defaults.glowColor),
       sides: validateNumber(parsed.sides, defaults.sides),
       arcness: validateNumber(parsed.arcness, defaults.arcness),
-      arcnessEnabled: validateBoolean(parsed.arcnessEnabled, defaults.arcnessEnabled),
+      arcnessEnabled: validateBoolean(
+        parsed.arcnessEnabled,
+        defaults.arcnessEnabled
+      ),
+      waveEffect_enabled: validateBoolean(
+        parsed.waveEffect_enabled,
+        defaults.waveEffect_enabled
+      ),
+      waveEffect_gradientType: validateGradientType(
+        parsed.waveEffect_gradientType,
+        defaults.waveEffect_gradientType
+      ),
+      waveEffect_frequency: validateNumber(
+        parsed.waveEffect_frequency,
+        defaults.waveEffect_frequency
+      ),
+      waveEffect_amplitude: validateNumber(
+        parsed.waveEffect_amplitude,
+        defaults.waveEffect_amplitude
+      ),
+      waveEffect_displacementMode: validateDisplacementMode(
+        parsed.waveEffect_displacementMode,
+        defaults.waveEffect_displacementMode
+      ),
+      waveEffect_animationOffset: validateNumber(
+        parsed.waveEffect_animationOffset,
+        defaults.waveEffect_animationOffset
+      ),
+      waveEffect_easing: validateNumber(
+        parsed.waveEffect_easing,
+        defaults.waveEffect_easing
+      ),
+      waveEffect_animate: validateBoolean(
+        parsed.waveEffect_animate,
+        defaults.waveEffect_animate
+      ),
+      waveEffect_animationSpeed: validateNumber(
+        parsed.waveEffect_animationSpeed,
+        defaults.waveEffect_animationSpeed
+      ),
       curveType: validateCurveType(parsed.curveType, defaults.curveType),
       oscR_enabled: validateBoolean(parsed.oscR_enabled, defaults.oscR_enabled),
       oscR_amplitude: validateNumber(
@@ -388,9 +411,21 @@ export function stateToHookParams(state: SerializableState) {
     duration: state.duration,
     rotation: state.rotation,
     backgroundColor: state.backgroundColor,
+    glowColor: state.glowColor,
     sides: state.sides,
     arcness: state.arcness,
     arcnessEnabled: state.arcnessEnabled,
+    waveEffect: {
+      enabled: state.waveEffect_enabled,
+      gradientType: state.waveEffect_gradientType,
+      frequency: state.waveEffect_frequency,
+      amplitude: state.waveEffect_amplitude,
+      displacementMode: state.waveEffect_displacementMode,
+      animationOffset: state.waveEffect_animationOffset,
+      easing: state.waveEffect_easing,
+      animate: state.waveEffect_animate,
+      animationSpeed: state.waveEffect_animationSpeed,
+    },
   };
 
   const paramOscillations: SpirographOscillations = {
