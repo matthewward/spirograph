@@ -30,7 +30,9 @@ export function ParameterOscillationControl({
       {oscillation.enabled && (
         <div className={styles.settings}>
           <div className={styles.controlRow}>
-            <label>AMP</label>
+            <label title="How much + or - we oscillate (wiggle) from the base value. If base is 100, then amplitude is 20 means we'll wiggle between80-120">
+              AMP
+            </label>
             <NumberInput
               value={Math.round(oscillation.amplitude)}
               onChange={(value) => onChange({ amplitude: value })}
@@ -42,7 +44,9 @@ export function ParameterOscillationControl({
           </div>
 
           <div className={styles.controlRow}>
-            <label>FREQ</label>
+            <label title="How many times we wiggle from the starting point to the end point">
+              FREQ
+            </label>
             <NumberInput
               value={oscillation.frequency}
               onChange={(value) => onChange({ frequency: value })}
@@ -54,7 +58,7 @@ export function ParameterOscillationControl({
           </div>
 
           <div className={styles.controlRow}>
-            <label>SHAPE</label>
+            <label title="The shape of the wiggle">SHAPE</label>
             <select
               value={oscillation.waveType}
               onChange={(e) =>

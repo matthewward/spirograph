@@ -30,7 +30,7 @@ interface PlaybackControlsProps {
 
 export function PlaybackControls({
   isPlaying,
-  progress,
+  // progress,
   duration,
   easing,
   loopDirection,
@@ -40,7 +40,7 @@ export function PlaybackControls({
   onPlay,
   onPause: _onPause,
   onReset,
-  onProgressChange,
+  // onProgressChange,
   onDurationChange,
   onEasingChange,
   onLoopDirectionChange,

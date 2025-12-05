@@ -25,6 +25,7 @@ function App() {
     pathString,
     pathLength,
     viewBox,
+    randomize,
   } = useSpirograph();
 
   const {
@@ -140,6 +141,7 @@ function App() {
               onCurveTypeChange={setCurveType}
               parameterOscillations={parameterOscillations}
               onParameterOscillationsChange={setParameterOscillations}
+              onRandomize={randomize}
             />
 
             <div className={styles.waveAnimationSection}>

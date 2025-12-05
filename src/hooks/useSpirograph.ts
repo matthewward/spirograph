@@ -30,6 +30,7 @@ export interface UseSpirographResult {
   pathString: string;
   pathLength: number;
   viewBox: string;
+  randomize: () => void;
 }
 
 // Randomization utilities
@@ -101,6 +102,7 @@ function getInitialParams(): SpirographParams {
         duration: 5,
         rotation: 90,
         backgroundColor: "#222222",
+        glowColor: "#00d9ff",
         sides: sides === 0 ? 1 : sides,
         arcness: 0,
         arcnessEnabled: false,
@@ -281,6 +283,12 @@ export function useSpirograph(): UseSpirographResult {
     };
   }, [params, curveType, parameterOscillations, hasOscillations]);
 
+  const randomize = () => {
+    const newParams = getRandomDefaultParams();
+    setParamsState(newParams);
+    setParameterOscillationsState(getInitialOscillations(newParams));
+  };
+
   return {
     params,
     setParams,
@@ -292,5 +300,6 @@ export function useSpirograph(): UseSpirographResult {
     pathString,
     pathLength,
     viewBox,
+    randomize,
   };
 }
