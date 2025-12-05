@@ -91,7 +91,10 @@ export function MainControls({
               label="Wheel Sides"
               tooltip="Turn the wheel into a different shape"
               value={params.sides}
-              onChange={(value) => onChange({ sides: Math.round(value) })}
+              onChange={(value) => {
+                const n = Math.round(value);
+                onChange({ sides: n === 0 ? 1 : n });
+              }}
               min={-6}
               max={6}
               step={1}
