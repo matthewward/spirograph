@@ -49,7 +49,7 @@ function randomItem<T>(items: T[]): T {
 function getRandomDefaultParams(): SpirographParams {
   const R = randomInt(50, 200);
   const r = randomInt(10, Math.min(150, R - 10)); // Ensure r < R
-
+  const sides = randomInt(-6, 6);
   return {
     R,
     r,
@@ -60,7 +60,7 @@ function getRandomDefaultParams(): SpirographParams {
     duration: randomFloat(2, 10, 1),
     rotation: 90,
     backgroundColor: "#222222",
-    sides: 1,
+    sides: sides === 0 ? 1 : sides,
     arcness: 0,
     arcnessEnabled: false,
     waveEffect: {
@@ -181,7 +181,11 @@ export function useSpirograph(): UseSpirographResult {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [params.waveEffect.enabled, params.waveEffect.animate, params.waveEffect.animationSpeed]);
+  }, [
+    params.waveEffect.enabled,
+    params.waveEffect.animate,
+    params.waveEffect.animationSpeed,
+  ]);
 
   const setParams = (newParams: Partial<SpirographParams>) => {
     setParamsState((prev) => {

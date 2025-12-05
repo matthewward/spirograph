@@ -156,6 +156,8 @@ export function getDefaultState(): SerializableState {
   ];
   const curveTypes: CurveType[] = ["hypotrochoid", "epitrochoid"];
 
+  const sides = randomInt(-6, 6) === 0 ? 1 : randomInt(-6, 6);
+
   return {
     R,
     r,
@@ -166,7 +168,7 @@ export function getDefaultState(): SerializableState {
     duration: randomFloat(2, 10, 1),
     rotation: 90,
     backgroundColor: "#111529",
-    sides: 1,
+    sides,
     arcness: 0,
     arcnessEnabled: false,
     waveEffect_enabled: false,
@@ -323,13 +325,24 @@ function validateEasingType(val: any, defaultVal: EasingType): EasingType {
   return validEasings.includes(val) ? val : defaultVal;
 }
 
-function validateGradientType(val: any, defaultVal: GradientType): GradientType {
+function validateGradientType(
+  val: any,
+  defaultVal: GradientType
+): GradientType {
   const validTypes: GradientType[] = ["horizontal", "vertical", "radial"];
   return validTypes.includes(val) ? val : defaultVal;
 }
 
-function validateDisplacementMode(val: any, defaultVal: DisplacementMode): DisplacementMode {
-  const validModes: DisplacementMode[] = ["perpendicular", "radial", "horizontal", "vertical"];
+function validateDisplacementMode(
+  val: any,
+  defaultVal: DisplacementMode
+): DisplacementMode {
+  const validModes: DisplacementMode[] = [
+    "perpendicular",
+    "radial",
+    "horizontal",
+    "vertical",
+  ];
   return validModes.includes(val) ? val : defaultVal;
 }
 
@@ -364,16 +377,46 @@ export function deserializeState(base64: string): SerializableState | null {
       ),
       sides: validateNumber(parsed.sides, defaults.sides),
       arcness: validateNumber(parsed.arcness, defaults.arcness),
-      arcnessEnabled: validateBoolean(parsed.arcnessEnabled, defaults.arcnessEnabled),
-      waveEffect_enabled: validateBoolean(parsed.waveEffect_enabled, defaults.waveEffect_enabled),
-      waveEffect_gradientType: validateGradientType(parsed.waveEffect_gradientType, defaults.waveEffect_gradientType),
-      waveEffect_frequency: validateNumber(parsed.waveEffect_frequency, defaults.waveEffect_frequency),
-      waveEffect_amplitude: validateNumber(parsed.waveEffect_amplitude, defaults.waveEffect_amplitude),
-      waveEffect_displacementMode: validateDisplacementMode(parsed.waveEffect_displacementMode, defaults.waveEffect_displacementMode),
-      waveEffect_animationOffset: validateNumber(parsed.waveEffect_animationOffset, defaults.waveEffect_animationOffset),
-      waveEffect_easing: validateNumber(parsed.waveEffect_easing, defaults.waveEffect_easing),
-      waveEffect_animate: validateBoolean(parsed.waveEffect_animate, defaults.waveEffect_animate),
-      waveEffect_animationSpeed: validateNumber(parsed.waveEffect_animationSpeed, defaults.waveEffect_animationSpeed),
+      arcnessEnabled: validateBoolean(
+        parsed.arcnessEnabled,
+        defaults.arcnessEnabled
+      ),
+      waveEffect_enabled: validateBoolean(
+        parsed.waveEffect_enabled,
+        defaults.waveEffect_enabled
+      ),
+      waveEffect_gradientType: validateGradientType(
+        parsed.waveEffect_gradientType,
+        defaults.waveEffect_gradientType
+      ),
+      waveEffect_frequency: validateNumber(
+        parsed.waveEffect_frequency,
+        defaults.waveEffect_frequency
+      ),
+      waveEffect_amplitude: validateNumber(
+        parsed.waveEffect_amplitude,
+        defaults.waveEffect_amplitude
+      ),
+      waveEffect_displacementMode: validateDisplacementMode(
+        parsed.waveEffect_displacementMode,
+        defaults.waveEffect_displacementMode
+      ),
+      waveEffect_animationOffset: validateNumber(
+        parsed.waveEffect_animationOffset,
+        defaults.waveEffect_animationOffset
+      ),
+      waveEffect_easing: validateNumber(
+        parsed.waveEffect_easing,
+        defaults.waveEffect_easing
+      ),
+      waveEffect_animate: validateBoolean(
+        parsed.waveEffect_animate,
+        defaults.waveEffect_animate
+      ),
+      waveEffect_animationSpeed: validateNumber(
+        parsed.waveEffect_animationSpeed,
+        defaults.waveEffect_animationSpeed
+      ),
       curveType: validateCurveType(parsed.curveType, defaults.curveType),
       oscR_enabled: validateBoolean(parsed.oscR_enabled, defaults.oscR_enabled),
       oscR_amplitude: validateNumber(
