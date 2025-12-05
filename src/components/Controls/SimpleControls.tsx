@@ -2,7 +2,6 @@ import { SpirographParams, CurveType } from "../../lib/spirograph/types";
 import { SpirographOscillations } from "../../lib/animation/parameterOscillation";
 import { RangeControl } from "./RangeControl";
 import { PolygonPreview } from "./PolygonPreview";
-import { GradientPreview } from "./GradientPreview";
 import { NumberInput } from "./NumberInput";
 import styles from "./SimpleControls.module.css";
 
@@ -15,8 +14,6 @@ interface SimpleControlsProps {
   onParameterOscillationsChange: (
     update: Partial<SpirographOscillations>
   ) => void;
-  showGradientOverlay?: boolean;
-  onShowGradientOverlayChange?: (show: boolean) => void;
 }
 
 export function SimpleControls({
@@ -26,8 +23,6 @@ export function SimpleControls({
   onCurveTypeChange,
   parameterOscillations,
   onParameterOscillationsChange,
-  showGradientOverlay,
-  onShowGradientOverlayChange,
 }: SimpleControlsProps) {
   return (
     <div className={styles.container}>
@@ -217,224 +212,6 @@ export function SimpleControls({
           <option value="180">Left</option>
           <option value="270">Up</option>
         </select>
-      </div>
-
-      <div className={styles.waveEffectSection}>
-        <div className={styles.waveEffectHeader}>
-          <h4 className={styles.sectionSubtitle}>Wave Effect</h4>
-          <label htmlFor="wave-enabled" className={styles.checkboxLabel}>
-            <input
-              id="wave-enabled"
-              type="checkbox"
-              checked={params.waveEffect.enabled}
-              onChange={(e) =>
-                onChange({
-                  waveEffect: {
-                    ...params.waveEffect,
-                    enabled: e.target.checked,
-                  },
-                })
-              }
-            />
-          </label>
-        </div>
-
-        {params.waveEffect.enabled && (
-          <div className={styles.waveEffectContent}>
-            <div className={styles.waveEffectControls}>
-              <div className={styles.controlGroup}>
-                <label htmlFor="gradient-type">Gradient Type</label>
-                <select
-                  id="gradient-type"
-                  value={params.waveEffect.gradientType}
-                  onChange={(e) =>
-                    onChange({
-                      waveEffect: {
-                        ...params.waveEffect,
-                        gradientType: e.target.value as any,
-                      },
-                    })
-                  }
-                  className={styles.select}
-                >
-                  <option value="horizontal">Horizontal</option>
-                  <option value="vertical">Vertical</option>
-                  <option value="radial">Radial</option>
-                </select>
-              </div>
-
-              <div className={styles.controlGroup}>
-                <label htmlFor="displacement-mode">Displacement Mode</label>
-                <select
-                  id="displacement-mode"
-                  value={params.waveEffect.displacementMode}
-                  onChange={(e) =>
-                    onChange({
-                      waveEffect: {
-                        ...params.waveEffect,
-                        displacementMode: e.target.value as any,
-                      },
-                    })
-                  }
-                  className={styles.select}
-                >
-                  <option value="perpendicular">Perpendicular</option>
-                  <option value="radial">Radial</option>
-                  <option value="horizontal">Horizontal</option>
-                  <option value="vertical">Vertical</option>
-                </select>
-              </div>
-
-              <div className={styles.controlGroup}>
-                <RangeControl
-                  id="wave-frequency"
-                  label="Frequency"
-                  value={params.waveEffect.frequency}
-                  onChange={(value) =>
-                    onChange({
-                      waveEffect: { ...params.waveEffect, frequency: value },
-                    })
-                  }
-                  min={1}
-                  max={12}
-                  step={0.1}
-                />
-              </div>
-
-              <div className={styles.controlGroup}>
-                <RangeControl
-                  id="wave-amplitude"
-                  label="Amplitude"
-                  value={params.waveEffect.amplitude}
-                  onChange={(value) =>
-                    onChange({
-                      waveEffect: { ...params.waveEffect, amplitude: value },
-                    })
-                  }
-                  min={1}
-                  max={100}
-                  step={1}
-                />
-              </div>
-
-              <div className={styles.controlGroup}>
-                <RangeControl
-                  id="wave-easing"
-                  label="Gradient Smoothness"
-                  value={params.waveEffect.easing}
-                  onChange={(value) =>
-                    onChange({
-                      waveEffect: { ...params.waveEffect, easing: value },
-                    })
-                  }
-                  min={0}
-                  max={1}
-                  step={0.01}
-                />
-              </div>
-
-              <div className={styles.controlGroup}>
-                <div className={styles.animateRow}>
-                  <label htmlFor="wave-animate">Animate Gradient</label>
-                  <label
-                    htmlFor="wave-animate"
-                    className={styles.checkboxLabel}
-                  >
-                    <input
-                      id="wave-animate"
-                      type="checkbox"
-                      checked={params.waveEffect.animate}
-                      onChange={(e) =>
-                        onChange({
-                          waveEffect: {
-                            ...params.waveEffect,
-                            animate: e.target.checked,
-                          },
-                        })
-                      }
-                    />
-                  </label>
-                </div>
-              </div>
-
-              {onShowGradientOverlayChange && (
-                <div className={styles.controlGroup}>
-                  <div className={styles.animateRow}>
-                    <label htmlFor="show-gradient-overlay">
-                      Show Gradient Overlay
-                    </label>
-                    <label
-                      htmlFor="show-gradient-overlay"
-                      className={styles.checkboxLabel}
-                    >
-                      <input
-                        id="show-gradient-overlay"
-                        type="checkbox"
-                        checked={showGradientOverlay || false}
-                        onChange={(e) =>
-                          onShowGradientOverlayChange(e.target.checked)
-                        }
-                      />
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {params.waveEffect.animate && (
-                <div className={styles.controlGroup}>
-                  <RangeControl
-                    id="wave-animation-speed"
-                    label="Animation Speed"
-                    value={params.waveEffect.animationSpeed}
-                    onChange={(value) =>
-                      onChange({
-                        waveEffect: {
-                          ...params.waveEffect,
-                          animationSpeed: value,
-                        },
-                      })
-                    }
-                    min={0.1}
-                    max={30}
-                    step={0.1}
-                  />
-                </div>
-              )}
-
-              {!params.waveEffect.animate && (
-                <div className={styles.controlGroup}>
-                  <RangeControl
-                    id="wave-offset"
-                    label="Animation Offset"
-                    value={params.waveEffect.animationOffset}
-                    onChange={(value) =>
-                      onChange({
-                        waveEffect: {
-                          ...params.waveEffect,
-                          animationOffset: value,
-                        },
-                      })
-                    }
-                    min={0}
-                    max={1}
-                    step={0.01}
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className={styles.gradientPreviewWrapper}>
-              <GradientPreview
-                gradientType={params.waveEffect.gradientType}
-                frequency={params.waveEffect.frequency}
-                easing={params.waveEffect.easing}
-                animationOffset={params.waveEffect.animationOffset}
-                animate={params.waveEffect.animate}
-                animationSpeed={params.waveEffect.animationSpeed}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       <div className={styles.controlGroup}>

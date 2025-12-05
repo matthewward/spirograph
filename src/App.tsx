@@ -5,6 +5,7 @@ import { useExport } from "./hooks/useExport";
 import { useURLState } from "./hooks/useURLState";
 import { SpirographCanvas } from "./components/Canvas/SpirographCanvas";
 import { SimpleControls } from "./components/Controls/SimpleControls";
+import { WaveAnimationControls } from "./components/Controls/WaveAnimationControls";
 import { PlaybackControls } from "./components/Playback/PlaybackControls";
 import { ExportPanel } from "./components/Export/ExportPanel";
 import styles from "./App.module.css";
@@ -12,7 +13,6 @@ import styles from "./App.module.css";
 function App() {
   const { loadStateFromURL, hasURLState } = useURLState();
   const [controlsVisible, setControlsVisible] = useState(() => !hasURLState());
-  const [showGradientOverlay, setShowGradientOverlay] = useState(false);
 
   const {
     params,
@@ -117,7 +117,6 @@ function App() {
             curveType={curveType}
             backgroundColor={params.backgroundColor}
             waveEffect={params.waveEffect}
-            showGradientOverlay={showGradientOverlay}
           />
         </main>
         {controlsVisible && (
@@ -140,11 +139,35 @@ function App() {
               onCurveTypeChange={setCurveType}
               parameterOscillations={parameterOscillations}
               onParameterOscillationsChange={setParameterOscillations}
-              showGradientOverlay={showGradientOverlay}
-              onShowGradientOverlayChange={setShowGradientOverlay}
             />
 
-            <h3 className={styles.sectionTitle}>Animation</h3>
+            <div className={styles.waveAnimationSection}>
+              <div className={styles.waveAnimationHeader}>
+                <h3 className={styles.sectionTitle}>Get wavey</h3>
+                <label htmlFor="wave-enabled" className={styles.checkboxLabel}>
+                  <input
+                    id="wave-enabled"
+                    type="checkbox"
+                    checked={params.waveEffect.enabled}
+                    onChange={(e) => {
+                      const enabled = e.target.checked;
+                      setParams({
+                        waveEffect: {
+                          ...params.waveEffect,
+                          enabled,
+                          animate: enabled ? true : params.waveEffect.animate,
+                        },
+                      });
+                    }}
+                  />
+                </label>
+              </div>
+              {params.waveEffect.enabled && (
+                <WaveAnimationControls params={params} onChange={setParams} />
+              )}
+            </div>
+
+            <h3 className={styles.sectionTitle}>Watch it draw</h3>
             <PlaybackControls
               isPlaying={isPlaying}
               progress={progress}

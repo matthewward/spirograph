@@ -91,7 +91,9 @@ export function GradientPreview({
       stops.push({ position: normalizedPosition * 100, color });
     }
 
-    const gradientStops = stops.map(s => `${s.color} ${s.position}%`).join(", ");
+    const gradientStops = stops
+      .map((s) => `${s.color} ${s.position}%`)
+      .join(", ");
 
     switch (gradientType) {
       case "horizontal":
@@ -111,9 +113,9 @@ export function GradientPreview({
           background: generateGradient(),
         }}
       />
-      <div className={styles.label}>
+      {/* <div className={styles.label}>
         {frequency} {frequency === 1 ? "stripe" : "stripes"}
-      </div>
+      </div> */}
     </div>
   );
 }
