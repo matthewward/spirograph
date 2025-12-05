@@ -188,7 +188,7 @@ export function WaveAnimationControls({
         >
           <div className={styles.controlGroup}>
             <div className={styles.animateRow}>
-              <label htmlFor="wave-animate">Animate Gradient</label>
+              <label htmlFor="wave-animate">Animate it?</label>
               <label htmlFor="wave-animate" className={styles.checkboxLabel}>
                 <input
                   id="wave-animate"
@@ -210,7 +210,7 @@ export function WaveAnimationControls({
             <div className={styles.controlGroup}>
               <RangeControl
                 id="wave-animation-speed"
-                label="Animation Speed"
+                label="Speed"
                 tooltip="How many seconds it takes for the waves to cycle"
                 value={params.waveEffect.animationSpeed}
                 onChange={(value) =>
@@ -231,7 +231,7 @@ export function WaveAnimationControls({
             <div className={styles.controlGroup}>
               <RangeControl
                 id="wave-offset"
-                label="Animation Offset"
+                label="Offset"
                 tooltip="Where the wave pattern starts - like freezing the animation at different moments"
                 value={params.waveEffect.animationOffset}
                 onChange={(value) =>

@@ -176,6 +176,7 @@ function App() {
               loopDirection={loopDirection}
               showDot={showDot}
               showRings={showRings}
+              rotation={params.rotation}
               onPlay={play}
               onPause={pause}
               onReset={reset}
@@ -185,6 +186,7 @@ function App() {
               onLoopDirectionChange={setLoopDirection}
               onShowDotChange={setShowDot}
               onShowRingsChange={setShowRings}
+              onRotationChange={(rotation) => setParams({ rotation })}
             />
 
             <h3 className={styles.sectionTitle}>Export</h3>

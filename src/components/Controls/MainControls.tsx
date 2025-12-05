@@ -214,26 +214,6 @@ export function MainControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label
-          htmlFor="rotation"
-          title="Which direction does the pattern start from?"
-        >
-          Starting Position <span className={styles.tooltipIcon}>ⓘ</span>
-        </label>
-        <select
-          id="rotation"
-          value={params.rotation}
-          onChange={(e) => onChange({ rotation: Number(e.target.value) })}
-          className={styles.select}
-        >
-          <option value="0">Right</option>
-          <option value="90">Down</option>
-          <option value="180">Left</option>
-          <option value="270">Up</option>
-        </select>
-      </div>
-
-      <div className={styles.controlGroup}>
         <RangeControl
           id="completion"
           label="Completion %"
