@@ -102,6 +102,8 @@ export function GradientPreview({
         return `linear-gradient(to bottom, ${gradientStops})`;
       case "radial":
         return `radial-gradient(circle, ${gradientStops})`;
+      case "diamond":
+        return `conic-gradient(from 45deg, ${gradientStops}, ${stops[0].color})`;
     }
   };
 

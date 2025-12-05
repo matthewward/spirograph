@@ -15,26 +15,92 @@ export function WaveAnimationControls({
   return (
     <div className={styles.container}>
       <div className={styles.controlGroup}>
-        <label htmlFor="gradient-type" title="Which type of gradient to use">
+        <label title="Which type of gradient to use">
           Gradient Type <span className={styles.tooltipIcon}>ⓘ</span>
         </label>
-        <select
-          id="gradient-type"
-          value={params.waveEffect.gradientType}
-          onChange={(e) =>
-            onChange({
-              waveEffect: {
-                ...params.waveEffect,
-                gradientType: e.target.value as any,
-              },
-            })
-          }
-          className={styles.select}
-        >
-          <option value="horizontal">Horizontal</option>
-          <option value="vertical">Vertical</option>
-          <option value="radial">Radial</option>
-        </select>
+        <div className={styles.gradientTypeButtons}>
+          <button
+            type="button"
+            className={`${styles.gradientButton} ${params.waveEffect.gradientType === "horizontal" ? styles.active : ""}`}
+            onClick={() =>
+              onChange({
+                waveEffect: {
+                  ...params.waveEffect,
+                  gradientType: "horizontal",
+                },
+              })
+            }
+            title="Horizontal"
+          >
+            <div
+              className={styles.gradientPreviewButton}
+              style={{
+                background: "linear-gradient(to right, black, white)",
+              }}
+            />
+          </button>
+          <button
+            type="button"
+            className={`${styles.gradientButton} ${params.waveEffect.gradientType === "vertical" ? styles.active : ""}`}
+            onClick={() =>
+              onChange({
+                waveEffect: {
+                  ...params.waveEffect,
+                  gradientType: "vertical",
+                },
+              })
+            }
+            title="Vertical"
+          >
+            <div
+              className={styles.gradientPreviewButton}
+              style={{
+                background: "linear-gradient(to bottom, black, white)",
+              }}
+            />
+          </button>
+          <button
+            type="button"
+            className={`${styles.gradientButton} ${params.waveEffect.gradientType === "radial" ? styles.active : ""}`}
+            onClick={() =>
+              onChange({
+                waveEffect: {
+                  ...params.waveEffect,
+                  gradientType: "radial",
+                },
+              })
+            }
+            title="Radial"
+          >
+            <div
+              className={styles.gradientPreviewButton}
+              style={{
+                background: "radial-gradient(circle, black, white)",
+              }}
+            />
+          </button>
+          <button
+            type="button"
+            className={`${styles.gradientButton} ${params.waveEffect.gradientType === "diamond" ? styles.active : ""}`}
+            onClick={() =>
+              onChange({
+                waveEffect: {
+                  ...params.waveEffect,
+                  gradientType: "diamond",
+                },
+              })
+            }
+            title="Diamond"
+          >
+            <div
+              className={styles.gradientPreviewButton}
+              style={{
+                background:
+                  "conic-gradient(from 45deg, black, white, black, white, black)",
+              }}
+            />
+          </button>
+        </div>
       </div>
 
       <div className={styles.controlGroup}>

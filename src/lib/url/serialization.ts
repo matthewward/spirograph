@@ -247,7 +247,7 @@ function validateGradientType(
   val: any,
   defaultVal: GradientType
 ): GradientType {
-  const validTypes: GradientType[] = ["horizontal", "vertical", "radial"];
+  const validTypes: GradientType[] = ["horizontal", "vertical", "radial", "diamond"];
   return validTypes.includes(val) ? val : defaultVal;
 }
 

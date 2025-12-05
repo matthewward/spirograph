@@ -1,6 +1,6 @@
 import { Point } from "../spirograph/types";
 
-export type GradientType = "horizontal" | "vertical" | "radial";
+export type GradientType = "horizontal" | "vertical" | "radial" | "diamond";
 export type DisplacementMode = "perpendicular" | "radial" | "horizontal" | "vertical";
 
 export interface WaveEffectParams {
@@ -99,6 +99,35 @@ function sampleRadialGradient(
 }
 
 /**
+ * Sample a diamond gradient at point (x, y)
+ * Returns value 0-1 based on Manhattan distance (L1 norm) from center
+ */
+function sampleDiamondGradient(
+  x: number,
+  y: number,
+  centerX: number,
+  centerY: number,
+  maxRadius: number,
+  frequency: number,
+  offset: number,
+  easing: number
+): number {
+  const dx = Math.abs(x - centerX);
+  const dy = Math.abs(y - centerY);
+  const distance = dx + dy; // Manhattan distance creates diamond shape
+  const normalizedDistance = distance / (maxRadius * 2);
+  const cyclicDistance = (normalizedDistance * frequency + offset) % 1;
+
+  if (easing === 0) {
+    return cyclicDistance;
+  } else {
+    const t = cyclicDistance;
+    const smooth = t * t * (3 - 2 * t);
+    return cyclicDistance * (1 - easing) + smooth * easing;
+  }
+}
+
+/**
  * Sample the gradient at a given point
  */
 export function sampleGradient(
@@ -121,6 +150,8 @@ export function sampleGradient(
       return sampleVerticalGradient(point.x, point.y, minY, maxY, frequency, offset, easing);
     case "radial":
       return sampleRadialGradient(point.x, point.y, centerX, centerY, maxRadius, frequency, offset, easing);
+    case "diamond":
+      return sampleDiamondGradient(point.x, point.y, centerX, centerY, maxRadius, frequency, offset, easing);
   }
 }
 
