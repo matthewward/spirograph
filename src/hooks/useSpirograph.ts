@@ -274,9 +274,9 @@ export function useSpirograph(): UseSpirographResult {
     // Calculate path length for animation
     const length = calculatePathLength(finalPoints);
 
-    // Get bounding box and create viewBox with padding
+    // Get bounding box and create viewBox with minimal padding
     const finalBbox = getBoundingBox(finalPoints);
-    const padding = 20;
+    const padding = 2;
     const vb = `${finalBbox.minX - padding} ${finalBbox.minY - padding} ${finalBbox.width + padding * 2} ${finalBbox.height + padding * 2}`;
 
     return {

@@ -112,17 +112,21 @@ export function ExportPanel({
 
   return (
     <div className={styles.container}>
-      <button className={styles.exportButton} onClick={onExportStatic}>
-        Static SVG
-      </button>
+      <div className={styles.sectionHeader}>Static</div>
 
-      <button className={styles.exportButton} onClick={() => onExportPNG()}>
-        PNG
-      </button>
+      <div className={styles.staticButtons}>
+        <button className={styles.exportButton} onClick={onExportStatic}>
+          SVG
+        </button>
+
+        <button className={styles.exportButton} onClick={() => onExportPNG()}>
+          PNG
+        </button>
+      </div>
 
       {hasAnimation && (
         <>
-          <div className={styles.sectionHeader}>Animated Export</div>
+          <div className={styles.sectionHeader}>Animated</div>
 
           <div className={styles.animationControls}>
             <div className={styles.controlGroup}>
@@ -202,7 +206,7 @@ export function ExportPanel({
 
       <div className={styles.shareSection}>
         <button className={styles.exportButton} onClick={handleShare}>
-          {copySuccess ? "Copied" : "Share"}
+          {copySuccess ? "COPIED 2 CLIPBOARD" : "OR SHARE A LINK"}
         </button>
       </div>
     </div>
