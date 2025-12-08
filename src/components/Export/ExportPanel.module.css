@@ -176,3 +176,16 @@
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-sm);
 }
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 1;
+}

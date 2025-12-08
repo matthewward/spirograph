@@ -167,14 +167,34 @@ export function ExportPanel({
               onClick={handleExportGIF}
               disabled={isExportingGIF}
             >
-              {isExportingGIF ? "One sec..." : "GIF"}
+              {isExportingGIF ? (
+                <span className={styles.loadingContainer}>
+                  <img
+                    src="/loading-spinner.svg"
+                    alt=""
+                    className={styles.loadingSpinner}
+                  />
+                </span>
+              ) : (
+                "GIF"
+              )}
             </button>
             <button
               className={styles.exportButton}
               onClick={handleExportWebM}
               disabled={isExportingWebM}
             >
-              {isExportingWebM ? "One sec..." : "VID"}
+              {isExportingWebM ? (
+                <span className={styles.loadingContainer}>
+                  <img
+                    src="/loading-spinner.svg"
+                    alt=""
+                    className={styles.loadingSpinner}
+                  />
+                </span>
+              ) : (
+                "VID"
+              )}
             </button>
           </div>
         </>
