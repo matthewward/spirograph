@@ -6,13 +6,14 @@ import { useURLState } from "./hooks/useURLState";
 import { SpirographCanvas } from "./components/Canvas/SpirographCanvas";
 import { MainControls } from "./components/Controls/MainControls";
 import { WaveAnimationControls } from "./components/Controls/WaveAnimationControls";
-import { PlaybackControls } from "./components/Playback/PlaybackControls";
+import { DrawAnimationControls } from "./components/DrawAnimation/DrawAnimationControls";
 import { ExportPanel } from "./components/Export/ExportPanel";
 import styles from "./App.module.css";
 
 function App() {
   const { loadStateFromURL, hasURLState } = useURLState();
   const [controlsVisible, setControlsVisible] = useState(() => !hasURLState());
+  const [drawAnimationEnabled, setDrawAnimationEnabled] = useState(true);
 
   const {
     params,
@@ -79,6 +80,47 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const toggleWaveEffect = () => {
+    const enabled = !params.waveEffect.enabled;
+    setParams({
+      waveEffect: {
+        ...params.waveEffect,
+        enabled,
+        animate: enabled ? true : params.waveEffect.animate,
+      },
+    });
+  };
+
+  const toggleDrawAnimation = () => {
+    setDrawAnimationEnabled((prev) => {
+      if (prev) {
+        reset();
+      }
+      return !prev;
+    });
+  };
+
+  const handlePlay = () => {
+    if (!drawAnimationEnabled) {
+      return;
+    }
+    play();
+  };
+
+  const handlePause = () => {
+    if (!drawAnimationEnabled) {
+      return;
+    }
+    pause();
+  };
+
+  const handleReset = () => {
+    if (!drawAnimationEnabled) {
+      return;
+    }
+    reset();
+  };
+
   return (
     <div className={styles.app}>
       <div className={styles.layout}>
@@ -92,7 +134,7 @@ function App() {
                 Show
               </button>
               <button
-                onClick={isPlaying ? pause : play}
+                onClick={isPlaying ? handlePause : handlePlay}
                 className={styles.playButton}
               >
                 {isPlaying ? "Stop" : "Play"}
@@ -145,52 +187,55 @@ function App() {
             />
 
             <div className={styles.waveAnimationSection}>
-              <div className={styles.waveAnimationHeader}>
+              <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>Get wavey</h3>
-                <label htmlFor="wave-enabled" className={styles.checkboxLabel}>
-                  <input
-                    id="wave-enabled"
-                    type="checkbox"
-                    checked={params.waveEffect.enabled}
-                    onChange={(e) => {
-                      const enabled = e.target.checked;
-                      setParams({
-                        waveEffect: {
-                          ...params.waveEffect,
-                          enabled,
-                          animate: enabled ? true : params.waveEffect.animate,
-                        },
-                      });
-                    }}
-                  />
-                </label>
+                <button
+                  type="button"
+                  className={`${styles.sectionToggleButton} ${params.waveEffect.enabled ? styles.sectionToggleButtonActive : ""}`}
+                  onClick={toggleWaveEffect}
+                >
+                  {params.waveEffect.enabled ? "Disable" : "Enable"}
+                </button>
               </div>
               {params.waveEffect.enabled && (
                 <WaveAnimationControls params={params} onChange={setParams} />
               )}
             </div>
 
-            <h3 className={styles.sectionTitle}>Watch it draw</h3>
-            <PlaybackControls
-              isPlaying={isPlaying}
-              progress={progress}
-              duration={params.duration}
-              easing={easing}
-              loopDirection={loopDirection}
-              showDot={showDot}
-              showRings={showRings}
-              rotation={params.rotation}
-              onPlay={play}
-              onPause={pause}
-              onReset={reset}
-              onProgressChange={setProgress}
-              onDurationChange={(duration) => setParams({ duration })}
-              onEasingChange={setEasing}
-              onLoopDirectionChange={setLoopDirection}
-              onShowDotChange={setShowDot}
-              onShowRingsChange={setShowRings}
-              onRotationChange={(rotation) => setParams({ rotation })}
-            />
+            <div className={styles.drawAnimationSection}>
+              <div className={styles.sectionHeader}>
+                <h3 className={styles.sectionTitle}>Draw it</h3>
+                <button
+                  type="button"
+                  className={`${styles.sectionToggleButton} ${drawAnimationEnabled ? styles.sectionToggleButtonActive : ""}`}
+                  onClick={toggleDrawAnimation}
+                >
+                  {drawAnimationEnabled ? "Disable" : "Enable"}
+                </button>
+              </div>
+              {drawAnimationEnabled && (
+                <DrawAnimationControls
+                  isPlaying={isPlaying}
+                  progress={progress}
+                  duration={params.duration}
+                  easing={easing}
+                  loopDirection={loopDirection}
+                  showDot={showDot}
+                  showRings={showRings}
+                  rotation={params.rotation}
+                  onPlay={handlePlay}
+                  onPause={handlePause}
+                  onReset={handleReset}
+                  onProgressChange={setProgress}
+                  onDurationChange={(duration) => setParams({ duration })}
+                  onEasingChange={setEasing}
+                  onLoopDirectionChange={setLoopDirection}
+                  onShowDotChange={setShowDot}
+                  onShowRingsChange={setShowRings}
+                  onRotationChange={(rotation) => setParams({ rotation })}
+                />
+              )}
+            </div>
 
             <h3 className={styles.sectionTitle}>Export</h3>
             <ExportPanel

@@ -5,9 +5,9 @@ import {
 } from "../../lib/animation/easing";
 import { LoopDirection } from "../../hooks/useAnimation";
 import { NumberInput } from "../Controls/NumberInput";
-import styles from "./PlaybackControls.module.css";
+import styles from "./DrawAnimationControls.module.css";
 
-interface PlaybackControlsProps {
+interface DrawAnimationControlsProps {
   isPlaying: boolean;
   progress: number;
   duration: number;
@@ -28,7 +28,7 @@ interface PlaybackControlsProps {
   onRotationChange: (rotation: number) => void;
 }
 
-export function PlaybackControls({
+export function DrawAnimationControls({
   isPlaying,
   // progress,
   duration,
@@ -47,7 +47,7 @@ export function PlaybackControls({
   onShowDotChange: _onShowDotChange,
   onShowRingsChange: _onShowRingsChange,
   onRotationChange,
-}: PlaybackControlsProps) {
+}: DrawAnimationControlsProps) {
   return (
     <div className={styles.container}>
       <div className={styles.playbackButtons}>
@@ -55,7 +55,7 @@ export function PlaybackControls({
           className={styles.button}
           onClick={isPlaying ? onReset : onPlay}
         >
-          {isPlaying ? "Stop" : "Play"}
+          {isPlaying ? "Reset" : "Play"}
         </button>
       </div>
 
