@@ -31,6 +31,26 @@ export function MainControls({
       <button onClick={onRandomize} className={styles.randomizeButton}>
         Randomize
       </button>
+
+      <div className={styles.controlGroup}>
+        <RangeControl
+          id="pen-position"
+          label="Pen Position"
+          tooltip="Where the pen sits on the wheel"
+          value={params.d}
+          onChange={(value) => onChange({ d: value })}
+          min={1}
+          max={150}
+          step={1}
+          oscillation={parameterOscillations.d}
+          onOscillationChange={(update) =>
+            onParameterOscillationsChange({
+              d: { ...parameterOscillations.d, ...update },
+            })
+          }
+        />
+      </div>
+
       <div className={styles.controlGroup}>
         <RangeControl
           id="ring-size"
@@ -64,25 +84,6 @@ export function MainControls({
           onOscillationChange={(update) =>
             onParameterOscillationsChange({
               r: { ...parameterOscillations.r, ...update },
-            })
-          }
-        />
-      </div>
-
-      <div className={styles.controlGroup}>
-        <RangeControl
-          id="pen-position"
-          label="Pen Position"
-          tooltip="Where the pen sits on the wheel"
-          value={params.d}
-          onChange={(value) => onChange({ d: value })}
-          min={1}
-          max={150}
-          step={1}
-          oscillation={parameterOscillations.d}
-          onOscillationChange={(update) =>
-            onParameterOscillationsChange({
-              d: { ...parameterOscillations.d, ...update },
             })
           }
         />
@@ -156,16 +157,24 @@ export function MainControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <RangeControl
-          id="stroke-width"
-          label="Line Width"
-          value={params.strokeWidth}
-          onChange={(value) => onChange({ strokeWidth: value })}
-          min={0.1}
-          max={10}
-          step={0.1}
-        />
+        <label
+          htmlFor="curve-type"
+          title="Does the wheel roll inside or outside the ring?"
+        >
+          Inside or outside?
+        </label>
+        <select
+          id="curve-type"
+          value={curveType}
+          onChange={(e) => onCurveTypeChange(e.target.value as CurveType)}
+          className={styles.select}
+        >
+          <option value="hypotrochoid">In</option>
+          <option value="epitrochoid">Out</option>
+        </select>
       </div>
+
+      <div className={styles.dashedLine} />
 
       <div className={styles.controlGroup}>
         <label htmlFor="stroke-color">Color</label>
@@ -232,21 +241,15 @@ export function MainControls({
       </div>
 
       <div className={styles.controlGroup}>
-        <label
-          htmlFor="curve-type"
-          title="Does the wheel roll inside or outside the ring?"
-        >
-          Inside or outside?
-        </label>
-        <select
-          id="curve-type"
-          value={curveType}
-          onChange={(e) => onCurveTypeChange(e.target.value as CurveType)}
-          className={styles.select}
-        >
-          <option value="hypotrochoid">In</option>
-          <option value="epitrochoid">Out</option>
-        </select>
+        <RangeControl
+          id="stroke-width"
+          label="Line Width"
+          value={params.strokeWidth}
+          onChange={(value) => onChange({ strokeWidth: value })}
+          min={0.1}
+          max={10}
+          step={0.1}
+        />
       </div>
 
       <div className={styles.controlGroup}>

@@ -27,6 +27,18 @@
   color: var(--bg-primary);
 }
 
+.dashedLine {
+  width: 100%;
+  height: 1px;
+  border-bottom: 1px dashed var(--bg-tertiary);
+}
+
+@keyframes dash {
+  to {
+    dashoffset: 20;
+  }
+}
+
 .controlGroup {
   display: flex;
   flex-direction: column;
