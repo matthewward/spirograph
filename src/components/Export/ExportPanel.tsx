@@ -22,13 +22,13 @@ interface ExportPanelProps {
     easing: EasingType,
     fps: number,
     size: number
-  ) => void;
+  ) => Promise<void>;
   onExportWebM: (
     duration: number,
     easing: EasingType,
     fps: number,
     size: number
-  ) => void;
+  ) => Promise<void>;
   // New props for sharing
   params: SpirographParams;
   curveType: CurveType;
@@ -62,6 +62,8 @@ export function ExportPanel({
   const [copySuccess, setCopySuccess] = useState(false);
   const [fps, setFps] = useState(30);
   const [resolution, setResolution] = useState(800);
+  const [isExportingGIF, setIsExportingGIF] = useState(false);
+  const [isExportingWebM, setIsExportingWebM] = useState(false);
 
   const handleShare = async () => {
     const shareURL = generateShareURL(
@@ -86,7 +88,27 @@ export function ExportPanel({
     }
   };
 
-  const hasAnimation = drawAnimationEnabled || (params.waveEffect.enabled && params.waveEffect.animate);
+  const hasAnimation =
+    drawAnimationEnabled ||
+    (params.waveEffect.enabled && params.waveEffect.animate);
+
+  const handleExportGIF = async () => {
+    setIsExportingGIF(true);
+    try {
+      await onExportGIF(duration, easing, fps, resolution);
+    } finally {
+      setIsExportingGIF(false);
+    }
+  };
+
+  const handleExportWebM = async () => {
+    setIsExportingWebM(true);
+    try {
+      await onExportWebM(duration, easing, fps, resolution);
+    } finally {
+      setIsExportingWebM(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -142,15 +164,17 @@ export function ExportPanel({
             </button>
             <button
               className={styles.exportButton}
-              onClick={() => onExportGIF(duration, easing, fps, resolution)}
+              onClick={handleExportGIF}
+              disabled={isExportingGIF}
             >
-              GIF
+              {isExportingGIF ? "One sec..." : "GIF"}
             </button>
             <button
               className={styles.exportButton}
-              onClick={() => onExportWebM(duration, easing, fps, resolution)}
+              onClick={handleExportWebM}
+              disabled={isExportingWebM}
             >
-              VID
+              {isExportingWebM ? "One sec..." : "VID"}
             </button>
           </div>
         </>

@@ -149,12 +149,12 @@ export function useExport(options: UseExportOptions) {
     img.src = url;
   }, [pathString, viewBox, strokeColor, strokeWidth, backgroundColor]);
 
-  const exportGIF = useCallback((
+  const exportGIF = useCallback(async (
     duration: number,
     easing: EasingType,
     fps: number = 30,
     size: number = 800
-  ) => {
+  ): Promise<void> => {
     console.log('exportGIF called', { duration, easing, fps, size });
 
     const frameCount = calculateFrameCount(duration, waveEffect, drawAnimationEnabled, fps);
@@ -204,28 +204,37 @@ export function useExport(options: UseExportOptions) {
       gif.addFrame(ctx, { copy: true, delay: 1000 / fps });
     }
 
-    gif.on('finished', (blob: Blob) => {
-      console.log('GIF encoding finished');
-      const now = new Date();
-      const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `spirograph-${timestamp}.gif`;
-      link.click();
-      URL.revokeObjectURL(url);
-    });
+    // Return a promise that resolves when encoding is finished
+    return new Promise((resolve, reject) => {
+      gif.on('finished', (blob: Blob) => {
+        console.log('GIF encoding finished');
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `spirograph-${timestamp}.gif`;
+        link.click();
+        URL.revokeObjectURL(url);
+        resolve();
+      });
 
-    console.log('Starting GIF encoding...');
-    gif.render();
+      gif.on('error', (error: Error) => {
+        console.error('GIF encoding failed:', error);
+        reject(error);
+      });
+
+      console.log('Starting GIF encoding...');
+      gif.render();
+    });
   }, [basePoints, bounds, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor, waveEffect, drawAnimationEnabled]);
 
-  const exportWebM = useCallback((
+  const exportWebM = useCallback(async (
     duration: number,
     easing: EasingType,
     fps: number = 30,
     size: number = 800
-  ) => {
+  ): Promise<void> => {
     console.log('exportWebM called', { duration, easing, fps, size });
 
     const frameCount = calculateFrameCount(duration, waveEffect, drawAnimationEnabled, fps);
@@ -272,46 +281,55 @@ export function useExport(options: UseExportOptions) {
       }
     };
 
-    mediaRecorder.onstop = () => {
-      console.log('WebM encoding finished');
-      const blob = new Blob(chunks, { type: 'video/webm' });
-      const now = new Date();
-      const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `spirograph-${timestamp}.webm`;
-      link.click();
-      URL.revokeObjectURL(url);
-    };
+    // Return a promise that resolves when recording is finished
+    return new Promise((resolve, reject) => {
+      mediaRecorder.onstop = () => {
+        console.log('WebM encoding finished');
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `spirograph-${timestamp}.webm`;
+        link.click();
+        URL.revokeObjectURL(url);
+        resolve();
+      };
 
-    console.log('Starting WebM recording...');
-    mediaRecorder.start();
+      mediaRecorder.onerror = (error) => {
+        console.error('WebM recording failed:', error);
+        reject(error);
+      };
 
-    // Render frames at the specified FPS
-    let frameIndex = 0;
-    const frameInterval = 1000 / fps;
-    const startTime = performance.now();
+      console.log('Starting WebM recording...');
+      mediaRecorder.start();
 
-    const renderNextFrame = () => {
-      if (frameIndex < frameCount) {
-        renderFrame(ctx, frameOptions, frameIndex);
-        frameIndex++;
+      // Render frames at the specified FPS
+      let frameIndex = 0;
+      const frameInterval = 1000 / fps;
+      const startTime = performance.now();
 
-        const elapsed = performance.now() - startTime;
-        const expectedTime = frameIndex * frameInterval;
-        const delay = Math.max(0, expectedTime - elapsed);
+      const renderNextFrame = () => {
+        if (frameIndex < frameCount) {
+          renderFrame(ctx, frameOptions, frameIndex);
+          frameIndex++;
 
-        setTimeout(renderNextFrame, delay);
-      } else {
-        // Finished rendering all frames
-        setTimeout(() => {
-          mediaRecorder.stop();
-        }, 100); // Small delay to ensure last frame is captured
-      }
-    };
+          const elapsed = performance.now() - startTime;
+          const expectedTime = frameIndex * frameInterval;
+          const delay = Math.max(0, expectedTime - elapsed);
 
-    renderNextFrame();
+          setTimeout(renderNextFrame, delay);
+        } else {
+          // Finished rendering all frames
+          setTimeout(() => {
+            mediaRecorder.stop();
+          }, 100); // Small delay to ensure last frame is captured
+        }
+      };
+
+      renderNextFrame();
+    });
   }, [basePoints, bounds, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor, waveEffect, drawAnimationEnabled]);
 
   return {
