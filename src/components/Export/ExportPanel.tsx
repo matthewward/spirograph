@@ -87,12 +87,14 @@ export function ExportPanel({
           </div>
         </div> */}
 
-      <button
-        className={styles.exportButton}
-        onClick={() => onExportAnimated(duration, loopDirection, easing)}
-      >
-        Animated SVG
-      </button>
+      {(drawAnimationEnabled || (params.waveEffect.enabled && params.waveEffect.animate)) && (
+        <button
+          className={styles.exportButton}
+          onClick={() => onExportAnimated(duration, loopDirection, easing)}
+        >
+          Animated SVG
+        </button>
+      )}
 
       <button className={styles.exportButton} onClick={() => onExportPNG()}>
         PNG

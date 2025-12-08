@@ -1,8 +1,10 @@
 import { useCallback } from 'react';
-import { generateStaticSVG, generateAnimatedSVG } from '../lib/svg/animator';
+import { generateStaticSVG, generateAnimatedSVG, generateWaveOnlySVG, generateCombinedSVG } from '../lib/svg/animator';
 import { downloadFile } from '../lib/utils/download';
 import { EasingType } from '../lib/animation/easing';
 import { LoopDirection } from './useAnimation';
+import { WaveEffectParams } from '../lib/animation/waveEffect';
+import { Point } from '../lib/spirograph/types';
 
 export interface UseExportOptions {
   pathString: string;
@@ -11,10 +13,14 @@ export interface UseExportOptions {
   strokeWidth: number;
   pathLength: number;
   backgroundColor: string;
+  waveEffect: WaveEffectParams;
+  drawAnimationEnabled: boolean;
+  basePoints: Point[];
+  bounds: { minX: number; maxX: number; minY: number; maxY: number };
 }
 
 export function useExport(options: UseExportOptions) {
-  const { pathString, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor } = options;
+  const { pathString, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor, waveEffect, drawAnimationEnabled, basePoints, bounds } = options;
 
   const exportStatic = useCallback(() => {
     const svg = generateStaticSVG(pathString, viewBox, strokeColor, strokeWidth);
@@ -24,20 +30,55 @@ export function useExport(options: UseExportOptions) {
   }, [pathString, viewBox, strokeColor, strokeWidth]);
 
   const exportAnimated = useCallback((duration: number = 5, loopDirection: LoopDirection = 'none', easing: EasingType = 'linear') => {
-    const svg = generateAnimatedSVG(
-      pathString,
-      viewBox,
-      strokeColor,
-      strokeWidth,
-      pathLength,
-      duration,
-      loopDirection,
-      easing
-    );
+    let svg: string;
+
+    // Determine which animation to generate
+    const waveEnabled = waveEffect.enabled && waveEffect.animate;
+
+    if (waveEnabled && !drawAnimationEnabled) {
+      // Wave-only animation
+      svg = generateWaveOnlySVG(
+        basePoints,
+        waveEffect,
+        bounds,
+        viewBox,
+        strokeColor,
+        strokeWidth,
+        backgroundColor
+      );
+    } else if (waveEnabled && drawAnimationEnabled) {
+      // Combined draw + wave animation
+      svg = generateCombinedSVG(
+        basePoints,
+        waveEffect,
+        bounds,
+        viewBox,
+        strokeColor,
+        strokeWidth,
+        pathLength,
+        duration,
+        easing,
+        loopDirection,
+        backgroundColor
+      );
+    } else {
+      // Draw-only animation (existing)
+      svg = generateAnimatedSVG(
+        pathString,
+        viewBox,
+        strokeColor,
+        strokeWidth,
+        pathLength,
+        duration,
+        loopDirection,
+        easing
+      );
+    }
+
     const now = new Date();
     const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5); // YYYY-MM-DDTHH-MM-SS
     downloadFile(svg, `spirograph-animated-${timestamp}.svg`, 'image/svg+xml');
-  }, [pathString, viewBox, strokeColor, strokeWidth, pathLength]);
+  }, [pathString, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor, waveEffect, drawAnimationEnabled, basePoints, bounds]);
 
   const exportPNG = useCallback((size: number = 2048) => {
     console.log('exportPNG called', { size, pathString: pathString.substring(0, 50), viewBox, strokeColor, strokeWidth, backgroundColor });

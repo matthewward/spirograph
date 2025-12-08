@@ -31,6 +31,8 @@ export interface UseSpirographResult {
   pathLength: number;
   viewBox: string;
   randomize: () => void;
+  basePoints: Point[];
+  bounds: { minX: number; maxX: number; minY: number; maxY: number };
 }
 
 // Randomization utilities
@@ -224,7 +226,7 @@ export function useSpirograph(): UseSpirographResult {
   }, [parameterOscillations]);
 
   // Memoize the expensive calculations
-  const { points, pathString, pathLength, viewBox } = useMemo(() => {
+  const { points, pathString, pathLength, viewBox, basePoints, bounds } = useMemo(() => {
     let rawPoints: Point[];
 
     if (hasOscillations) {
@@ -247,39 +249,43 @@ export function useSpirograph(): UseSpirographResult {
     }
 
     // Simplify to reduce point count (lower epsilon for smoother curves)
-    let simplifiedPoints = simplifyPath(rawPoints, 0.1);
+    const simplifiedPoints = simplifyPath(rawPoints, 0.1);
+
+    // Calculate bounds from base points
+    const bbox = getBoundingBox(simplifiedPoints);
+    const bounds = {
+      minX: bbox.minX,
+      maxX: bbox.maxX,
+      minY: bbox.minY,
+      maxY: bbox.maxY,
+    };
 
     // Apply wave effect if enabled
+    let finalPoints = simplifiedPoints;
     if (params.waveEffect.enabled) {
-      const bbox = getBoundingBox(simplifiedPoints);
-      const bounds = {
-        minX: bbox.minX,
-        maxX: bbox.maxX,
-        minY: bbox.minY,
-        maxY: bbox.maxY,
-      };
-
-      simplifiedPoints = simplifiedPoints.map((point) =>
+      finalPoints = simplifiedPoints.map((point) =>
         applyWaveEffect(point, params.waveEffect, bounds)
       );
     }
 
     // Generate SVG path
-    const path = pointsToPath(simplifiedPoints);
+    const path = pointsToPath(finalPoints);
 
     // Calculate path length for animation
-    const length = calculatePathLength(simplifiedPoints);
+    const length = calculatePathLength(finalPoints);
 
     // Get bounding box and create viewBox with padding
-    const bbox = getBoundingBox(simplifiedPoints);
+    const finalBbox = getBoundingBox(finalPoints);
     const padding = 20;
-    const vb = `${bbox.minX - padding} ${bbox.minY - padding} ${bbox.width + padding * 2} ${bbox.height + padding * 2}`;
+    const vb = `${finalBbox.minX - padding} ${finalBbox.minY - padding} ${finalBbox.width + padding * 2} ${finalBbox.height + padding * 2}`;
 
     return {
-      points: simplifiedPoints,
+      points: finalPoints,
       pathString: path,
       pathLength: length,
       viewBox: vb,
+      basePoints: simplifiedPoints,
+      bounds,
     };
   }, [params, curveType, parameterOscillations, hasOscillations]);
 
@@ -301,5 +307,7 @@ export function useSpirograph(): UseSpirographResult {
     pathLength,
     viewBox,
     randomize,
+    basePoints,
+    bounds,
   };
 }

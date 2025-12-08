@@ -1,5 +1,8 @@
 import { EasingType } from '../animation/easing';
 import { LoopDirection } from '../../hooks/useAnimation';
+import { applyWaveEffect, WaveEffectParams } from '../animation/waveEffect';
+import { pointsToPath } from './generator';
+import { Point } from '../spirograph/types';
 
 /**
  * Convert easing type to SMIL keySplines
@@ -161,4 +164,154 @@ export function generateStaticSVG(
     stroke-linejoin="round"
   />
 </svg>`;
+}
+
+/**
+ * Generate keyframe paths for wave animation
+ */
+function generateWaveKeyframePaths(
+  basePoints: Point[],
+  waveParams: WaveEffectParams,
+  bounds: { minX: number; maxX: number; minY: number; maxY: number },
+  numFrames: number = 24
+): string[] {
+  const paths: string[] = [];
+
+  for (let i = 0; i < numFrames; i++) {
+    const offset = i / numFrames;
+    const modifiedParams = { ...waveParams, animationOffset: offset };
+    const displacedPoints = basePoints.map(p =>
+      applyWaveEffect(p, modifiedParams, bounds)
+    );
+    paths.push(pointsToPath(displacedPoints));
+  }
+
+  return paths;
+}
+
+/**
+ * Generate wave-only animated SVG
+ */
+export function generateWaveOnlySVG(
+  basePoints: Point[],
+  waveParams: WaveEffectParams,
+  bounds: { minX: number; maxX: number; minY: number; maxY: number },
+  viewBox: string,
+  strokeColor: string,
+  strokeWidth: number,
+  backgroundColor: string
+): string {
+  const paths = generateWaveKeyframePaths(basePoints, waveParams, bounds);
+  const values = paths.join(';');
+  const duration = waveParams.animationSpeed;
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="800" height="800">
+  <path
+    d="${paths[0]}"
+    stroke="${strokeColor}"
+    stroke-width="${strokeWidth}"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  >
+    <animate
+      attributeName="d"
+      values="${values}"
+      dur="${duration}s"
+      repeatCount="indefinite"
+      calcMode="linear"
+    />
+  </path>
+</svg>`;
+}
+
+/**
+ * Generate combined draw + wave animated SVG
+ */
+export function generateCombinedSVG(
+  basePoints: Point[],
+  waveParams: WaveEffectParams,
+  bounds: { minX: number; maxX: number; minY: number; maxY: number },
+  viewBox: string,
+  strokeColor: string,
+  strokeWidth: number,
+  pathLength: number,
+  drawDuration: number,
+  drawEasing: EasingType,
+  loopDirection: LoopDirection,
+  backgroundColor: string
+): string {
+  const wavePaths = generateWaveKeyframePaths(basePoints, waveParams, bounds);
+  const waveValues = wavePaths.join(';');
+  const keySplines = getKeySplines(drawEasing);
+
+  if (loopDirection === 'none') {
+    // One-way draw animation with wave
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="800" height="800">
+  <path
+    d="${wavePaths[0]}"
+    stroke="${strokeColor}"
+    stroke-width="${strokeWidth}"
+    stroke-dasharray="${pathLength}"
+    stroke-dashoffset="${pathLength}"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  >
+    <animate
+      attributeName="d"
+      values="${waveValues}"
+      dur="${waveParams.animationSpeed}s"
+      repeatCount="indefinite"
+      calcMode="linear"
+    />
+    <animate
+      attributeName="stroke-dashoffset"
+      from="${pathLength}"
+      to="0"
+      dur="${drawDuration}s"
+      keySplines="${keySplines}"
+      keyTimes="0;1"
+      calcMode="spline"
+      fill="freeze"
+    />
+  </path>
+</svg>`;
+  } else {
+    // Looping draw animation with wave
+    const cycleDuration = drawDuration * 2;
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="800" height="800">
+  <path
+    d="${wavePaths[0]}"
+    stroke="${strokeColor}"
+    stroke-width="${strokeWidth}"
+    stroke-dasharray="${pathLength}"
+    stroke-dashoffset="${pathLength}"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  >
+    <animate
+      attributeName="d"
+      values="${waveValues}"
+      dur="${waveParams.animationSpeed}s"
+      repeatCount="indefinite"
+      calcMode="linear"
+    />
+    <animate
+      attributeName="stroke-dashoffset"
+      values="${pathLength};0;${pathLength}"
+      keyTimes="0;0.5;1"
+      keySplines="${keySplines};${keySplines}"
+      dur="${cycleDuration}s"
+      repeatCount="indefinite"
+      calcMode="spline"
+    />
+  </path>
+</svg>`;
+  }
 }

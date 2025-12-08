@@ -27,6 +27,8 @@ function App() {
     pathLength,
     viewBox,
     randomize,
+    basePoints,
+    bounds,
   } = useSpirograph();
 
   const {
@@ -53,6 +55,10 @@ function App() {
     strokeWidth: params.strokeWidth,
     pathLength,
     backgroundColor: params.backgroundColor,
+    waveEffect: params.waveEffect,
+    drawAnimationEnabled: drawAnimationEnabled,
+    basePoints: basePoints,
+    bounds: bounds,
   });
 
   // Load state from URL on mount
