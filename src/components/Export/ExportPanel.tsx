@@ -204,11 +204,10 @@ export function ExportPanel({
         </>
       )}
 
-      <div className={styles.shareSection}>
-        <button className={styles.exportButton} onClick={handleShare}>
-          {copySuccess ? "COPIED 2 CLIPBOARD" : "OR SHARE A LINK"}
-        </button>
-      </div>
+      <div className={styles.sectionHeader}>LINK</div>
+      <button className={styles.exportButton} onClick={handleShare}>
+        {copySuccess ? "COPIED " : "COPY LINK"}
+      </button>
     </div>
   );
 }
