@@ -17,6 +17,18 @@ interface ExportPanelProps {
     easing: EasingType
   ) => void;
   onExportPNG: () => void;
+  onExportGIF: (
+    duration: number,
+    easing: EasingType,
+    fps: number,
+    size: number
+  ) => void;
+  onExportWebM: (
+    duration: number,
+    easing: EasingType,
+    fps: number,
+    size: number
+  ) => void;
   // New props for sharing
   params: SpirographParams;
   curveType: CurveType;
@@ -35,6 +47,8 @@ export function ExportPanel({
   onExportStatic,
   onExportAnimated,
   onExportPNG,
+  onExportGIF,
+  onExportWebM,
   params,
   curveType,
   paramOscillations,
@@ -46,6 +60,8 @@ export function ExportPanel({
 }: ExportPanelProps) {
   const { generateShareURL } = useURLState();
   const [copySuccess, setCopySuccess] = useState(false);
+  const [fps, setFps] = useState(30);
+  const [resolution, setResolution] = useState(800);
 
   const handleShare = async () => {
     const shareURL = generateShareURL(
@@ -70,36 +86,75 @@ export function ExportPanel({
     }
   };
 
+  const hasAnimation = drawAnimationEnabled || (params.waveEffect.enabled && params.waveEffect.animate);
+
   return (
     <div className={styles.container}>
       <button className={styles.exportButton} onClick={onExportStatic}>
         Static SVG
       </button>
 
-      {/* <div className={styles.animatedSection}> */}
-      {/* <div className={styles.options}>
-          <div className={styles.info}>
-            <p className={styles.infoText}>
-              Using current animation settings: <strong>{duration}s</strong> duration,
-              <strong> {easing}</strong> easing,
-              <strong> {loopLabel}</strong>
-            </p>
-          </div>
-        </div> */}
-
-      {(drawAnimationEnabled || (params.waveEffect.enabled && params.waveEffect.animate)) && (
-        <button
-          className={styles.exportButton}
-          onClick={() => onExportAnimated(duration, loopDirection, easing)}
-        >
-          Animated SVG
-        </button>
-      )}
-
       <button className={styles.exportButton} onClick={() => onExportPNG()}>
         PNG
       </button>
-      {/* </div> */}
+
+      {hasAnimation && (
+        <>
+          <div className={styles.sectionHeader}>Animated Export</div>
+
+          <div className={styles.animationControls}>
+            <div className={styles.controlGroup}>
+              <label htmlFor="fps">Frame Rate (FPS)</label>
+              <select
+                id="fps"
+                value={fps}
+                onChange={(e) => setFps(Number(e.target.value))}
+                className={styles.select}
+              >
+                <option value="24">24 FPS</option>
+                <option value="30">30 FPS</option>
+                <option value="60">60 FPS</option>
+              </select>
+            </div>
+
+            <div className={styles.controlGroup}>
+              <label htmlFor="resolution">Resolution</label>
+              <select
+                id="resolution"
+                value={resolution}
+                onChange={(e) => setResolution(Number(e.target.value))}
+                className={styles.select}
+              >
+                <option value="512">512px</option>
+                <option value="800">800px</option>
+                <option value="1024">1024px</option>
+                <option value="2048">2048px</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.animatedButtons}>
+            <button
+              className={styles.exportButton}
+              onClick={() => onExportAnimated(duration, loopDirection, easing)}
+            >
+              SVG
+            </button>
+            <button
+              className={styles.exportButton}
+              onClick={() => onExportGIF(duration, easing, fps, resolution)}
+            >
+              GIF
+            </button>
+            <button
+              className={styles.exportButton}
+              onClick={() => onExportWebM(duration, easing, fps, resolution)}
+            >
+              VID
+            </button>
+          </div>
+        </>
+      )}
 
       <div className={styles.shareSection}>
         <button className={styles.exportButton} onClick={handleShare}>

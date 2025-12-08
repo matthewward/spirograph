@@ -5,6 +5,9 @@ import { EasingType } from '../lib/animation/easing';
 import { LoopDirection } from './useAnimation';
 import { WaveEffectParams } from '../lib/animation/waveEffect';
 import { Point } from '../lib/spirograph/types';
+import { renderFrame, calculateFrameCount, FrameRenderOptions } from '../lib/animation/frameRenderer';
+// @ts-ignore - gif.js doesn't have TypeScript definitions
+import GIF from 'gif.js';
 
 export interface UseExportOptions {
   pathString: string;
@@ -146,9 +149,176 @@ export function useExport(options: UseExportOptions) {
     img.src = url;
   }, [pathString, viewBox, strokeColor, strokeWidth, backgroundColor]);
 
+  const exportGIF = useCallback((
+    duration: number,
+    easing: EasingType,
+    fps: number = 30,
+    size: number = 800
+  ) => {
+    console.log('exportGIF called', { duration, easing, fps, size });
+
+    const frameCount = calculateFrameCount(duration, waveEffect, drawAnimationEnabled, fps);
+    console.log('Rendering', frameCount, 'frames for GIF');
+
+    // Create canvas for rendering
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      console.error('Could not get canvas context');
+      return;
+    }
+
+    const frameOptions: FrameRenderOptions = {
+      basePoints,
+      bounds,
+      viewBox,
+      strokeColor,
+      strokeWidth,
+      backgroundColor: 'transparent', // Transparent background for GIF
+      pathLength,
+      waveEffect,
+      drawAnimationEnabled,
+      drawDuration: duration,
+      drawEasing: easing,
+      frameCount,
+      size,
+    };
+
+    // Initialize GIF encoder
+    const gif = new GIF({
+      workers: 2,
+      quality: 10, // 1-30, lower is better quality
+      width: size,
+      height: size,
+      transparent: 0x000000, // Use black as transparent color
+      background: 0x000000,
+      workerScript: '/gif.worker.js',
+    });
+
+    // Render all frames
+    for (let i = 0; i < frameCount; i++) {
+      renderFrame(ctx, frameOptions, i);
+      gif.addFrame(ctx, { copy: true, delay: 1000 / fps });
+    }
+
+    gif.on('finished', (blob: Blob) => {
+      console.log('GIF encoding finished');
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `spirograph-${timestamp}.gif`;
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    console.log('Starting GIF encoding...');
+    gif.render();
+  }, [basePoints, bounds, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor, waveEffect, drawAnimationEnabled]);
+
+  const exportWebM = useCallback((
+    duration: number,
+    easing: EasingType,
+    fps: number = 30,
+    size: number = 800
+  ) => {
+    console.log('exportWebM called', { duration, easing, fps, size });
+
+    const frameCount = calculateFrameCount(duration, waveEffect, drawAnimationEnabled, fps);
+    console.log('Rendering', frameCount, 'frames for WebM');
+
+    // Create canvas for rendering
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      console.error('Could not get canvas context');
+      return;
+    }
+
+    const frameOptions: FrameRenderOptions = {
+      basePoints,
+      bounds,
+      viewBox,
+      strokeColor,
+      strokeWidth,
+      backgroundColor, // Use background color for video
+      pathLength,
+      waveEffect,
+      drawAnimationEnabled,
+      drawDuration: duration,
+      drawEasing: easing,
+      frameCount,
+      size,
+    };
+
+    // Create a canvas stream and MediaRecorder
+    const stream = canvas.captureStream(fps);
+    const mediaRecorder = new MediaRecorder(stream, {
+      mimeType: 'video/webm;codecs=vp9',
+      videoBitsPerSecond: 5000000, // 5 Mbps
+    });
+
+    const chunks: Blob[] = [];
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) {
+        chunks.push(e.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      console.log('WebM encoding finished');
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `spirograph-${timestamp}.webm`;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    console.log('Starting WebM recording...');
+    mediaRecorder.start();
+
+    // Render frames at the specified FPS
+    let frameIndex = 0;
+    const frameInterval = 1000 / fps;
+    const startTime = performance.now();
+
+    const renderNextFrame = () => {
+      if (frameIndex < frameCount) {
+        renderFrame(ctx, frameOptions, frameIndex);
+        frameIndex++;
+
+        const elapsed = performance.now() - startTime;
+        const expectedTime = frameIndex * frameInterval;
+        const delay = Math.max(0, expectedTime - elapsed);
+
+        setTimeout(renderNextFrame, delay);
+      } else {
+        // Finished rendering all frames
+        setTimeout(() => {
+          mediaRecorder.stop();
+        }, 100); // Small delay to ensure last frame is captured
+      }
+    };
+
+    renderNextFrame();
+  }, [basePoints, bounds, viewBox, strokeColor, strokeWidth, pathLength, backgroundColor, waveEffect, drawAnimationEnabled]);
+
   return {
     exportStatic,
     exportAnimated,
     exportPNG,
+    exportGIF,
+    exportWebM,
   };
 }

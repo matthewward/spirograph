@@ -48,7 +48,7 @@ function App() {
     setShowRings,
   } = useAnimation(params.duration * 1000); // Convert seconds to milliseconds
 
-  const { exportStatic, exportAnimated, exportPNG } = useExport({
+  const { exportStatic, exportAnimated, exportPNG, exportGIF, exportWebM } = useExport({
     pathString,
     viewBox,
     strokeColor: params.strokeColor,
@@ -222,6 +222,8 @@ function App() {
               onExportStatic={exportStatic}
               onExportAnimated={exportAnimated}
               onExportPNG={exportPNG}
+              onExportGIF={exportGIF}
+              onExportWebM={exportWebM}
               params={params}
               curveType={curveType}
               paramOscillations={parameterOscillations}
