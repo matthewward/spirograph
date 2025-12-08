@@ -73,6 +73,8 @@ export interface SerializableState {
   animShowDot: boolean;
   animShowRings: boolean;
   autoPlay: boolean;
+  drawAnimationEnabled: boolean;
+  waveAnimationEnabled: boolean;
 }
 
 // Fixed defaults for validation fallbacks (non-random, stable values)
@@ -118,6 +120,8 @@ function getFixedDefaultState(): SerializableState {
     animShowDot: false,
     animShowRings: false,
     autoPlay: false,
+    drawAnimationEnabled: false,
+    waveAnimationEnabled: false,
   };
 }
 
@@ -130,7 +134,9 @@ export function serializeState(
   animLoopDirection: LoopDirection,
   animShowDot: boolean,
   animShowRings: boolean,
-  autoPlay: boolean = false
+  autoPlay: boolean = false,
+  drawAnimationEnabled: boolean = false,
+  waveAnimationEnabled: boolean = false
 ): string {
   const state: SerializableState = {
     R: params.R,
@@ -173,6 +179,8 @@ export function serializeState(
     animShowDot,
     animShowRings,
     autoPlay,
+    drawAnimationEnabled,
+    waveAnimationEnabled,
   };
 
   const json = JSON.stringify(state);
@@ -390,6 +398,14 @@ export function deserializeState(base64: string): SerializableState | null {
         defaults.animShowRings
       ),
       autoPlay: validateBoolean(parsed.autoPlay, defaults.autoPlay),
+      drawAnimationEnabled: validateBoolean(
+        parsed.drawAnimationEnabled,
+        defaults.drawAnimationEnabled
+      ),
+      waveAnimationEnabled: validateBoolean(
+        parsed.waveAnimationEnabled,
+        defaults.waveAnimationEnabled
+      ),
     };
 
     return state;
@@ -461,5 +477,7 @@ export function stateToHookParams(state: SerializableState) {
     animShowDot: state.animShowDot,
     animShowRings: state.animShowRings,
     autoPlay: state.autoPlay,
+    drawAnimationEnabled: state.drawAnimationEnabled,
+    waveAnimationEnabled: state.waveAnimationEnabled,
   };
 }

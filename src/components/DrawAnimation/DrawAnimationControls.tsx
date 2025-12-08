@@ -8,7 +8,6 @@ import { NumberInput } from "../Controls/NumberInput";
 import styles from "./DrawAnimationControls.module.css";
 
 interface DrawAnimationControlsProps {
-  isPlaying: boolean;
   progress: number;
   duration: number;
   easing: EasingType;
@@ -16,9 +15,6 @@ interface DrawAnimationControlsProps {
   showDot: boolean;
   showRings: boolean;
   rotation: number;
-  onPlay: () => void;
-  onPause: () => void;
-  onReset: () => void;
   onProgressChange: (progress: number) => void;
   onDurationChange: (duration: number) => void;
   onEasingChange: (easing: EasingType) => void;
@@ -29,7 +25,6 @@ interface DrawAnimationControlsProps {
 }
 
 export function DrawAnimationControls({
-  isPlaying,
   // progress,
   duration,
   easing,
@@ -37,9 +32,6 @@ export function DrawAnimationControls({
   showDot: _showDot,
   showRings: _showRings,
   rotation,
-  onPlay,
-  onPause: _onPause,
-  onReset,
   // onProgressChange,
   onDurationChange,
   onEasingChange,
@@ -50,15 +42,6 @@ export function DrawAnimationControls({
 }: DrawAnimationControlsProps) {
   return (
     <div className={styles.container}>
-      <div className={styles.playbackButtons}>
-        <button
-          className={styles.button}
-          onClick={isPlaying ? onReset : onPlay}
-        >
-          {isPlaying ? "Reset" : "Play"}
-        </button>
-      </div>
-
       <div className={styles.controlGroup}>
         <label
           htmlFor="speed-slider"

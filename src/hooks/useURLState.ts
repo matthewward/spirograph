@@ -37,7 +37,9 @@ export function useURLState() {
     animLoopDirection: LoopDirection,
     animShowDot: boolean,
     animShowRings: boolean,
-    autoPlay: boolean = false
+    autoPlay: boolean = false,
+    drawAnimationEnabled: boolean = false,
+    waveAnimationEnabled: boolean = false
   ): string => {
     const stateString = serializeState(
       params,
@@ -47,7 +49,9 @@ export function useURLState() {
       animLoopDirection,
       animShowDot,
       animShowRings,
-      autoPlay
+      autoPlay,
+      drawAnimationEnabled,
+      waveAnimationEnabled
     );
 
     const url = new URL(window.location.href);
@@ -65,7 +69,9 @@ export function useURLState() {
     animEasing: EasingType,
     animLoopDirection: LoopDirection,
     animShowDot: boolean,
-    animShowRings: boolean
+    animShowRings: boolean,
+    drawAnimationEnabled: boolean = false,
+    waveAnimationEnabled: boolean = false
   ) => {
     const url = generateShareURL(
       params,
@@ -75,7 +81,9 @@ export function useURLState() {
       animLoopDirection,
       animShowDot,
       animShowRings,
-      false // Don't auto-play for normal updates
+      false, // Don't auto-play for normal updates
+      drawAnimationEnabled,
+      waveAnimationEnabled
     );
     window.history.replaceState({}, "", url);
   };

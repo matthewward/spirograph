@@ -13,7 +13,7 @@ import styles from "./App.module.css";
 function App() {
   const { loadStateFromURL, hasURLState } = useURLState();
   const [controlsVisible, setControlsVisible] = useState(() => !hasURLState());
-  const [drawAnimationEnabled, setDrawAnimationEnabled] = useState(true);
+  const [drawAnimationEnabled, setDrawAnimationEnabled] = useState(false);
 
   const {
     params,
@@ -38,7 +38,6 @@ function App() {
     showDot,
     showRings,
     play,
-    pause,
     reset,
     setProgress,
     setEasing,
@@ -67,8 +66,9 @@ function App() {
       setLoopDirection(urlState.animLoopDirection);
       setShowDot(urlState.animShowDot);
       setShowRings(urlState.animShowRings);
-      // Auto-play if URL state has autoPlay enabled
-      if (urlState.autoPlay) {
+      setDrawAnimationEnabled(urlState.drawAnimationEnabled);
+      // Auto-play if draw animation is enabled
+      if (urlState.drawAnimationEnabled) {
         // Use setTimeout to ensure state is set before playing
         setTimeout(() => play(), 100);
       }
@@ -93,32 +93,15 @@ function App() {
 
   const toggleDrawAnimation = () => {
     setDrawAnimationEnabled((prev) => {
-      if (prev) {
+      if (!prev) {
+        // Enabling - auto-play
+        setTimeout(() => play(), 0);
+      } else {
+        // Disabling - reset
         reset();
       }
       return !prev;
     });
-  };
-
-  const handlePlay = () => {
-    if (!drawAnimationEnabled) {
-      return;
-    }
-    play();
-  };
-
-  const handlePause = () => {
-    if (!drawAnimationEnabled) {
-      return;
-    }
-    pause();
-  };
-
-  const handleReset = () => {
-    if (!drawAnimationEnabled) {
-      return;
-    }
-    reset();
   };
 
   return (
@@ -126,20 +109,12 @@ function App() {
       <div className={styles.layout}>
         <main className={styles.canvasArea}>
           {!controlsVisible && (
-            <>
-              <button
-                onClick={() => setControlsVisible(true)}
-                className={styles.showControlsButton}
-              >
-                Show
-              </button>
-              <button
-                onClick={isPlaying ? handlePause : handlePlay}
-                className={styles.playButton}
-              >
-                {isPlaying ? "Stop" : "Play"}
-              </button>
-            </>
+            <button
+              onClick={() => setControlsVisible(true)}
+              className={styles.showControlsButton}
+            >
+              Show
+            </button>
           )}
           <SpirographCanvas
             points={points}
@@ -215,7 +190,6 @@ function App() {
               </div>
               {drawAnimationEnabled && (
                 <DrawAnimationControls
-                  isPlaying={isPlaying}
                   progress={progress}
                   duration={params.duration}
                   easing={easing}
@@ -223,9 +197,6 @@ function App() {
                   showDot={showDot}
                   showRings={showRings}
                   rotation={params.rotation}
-                  onPlay={handlePlay}
-                  onPause={handlePause}
-                  onReset={handleReset}
                   onProgressChange={setProgress}
                   onDurationChange={(duration) => setParams({ duration })}
                   onEasingChange={setEasing}
@@ -252,6 +223,7 @@ function App() {
               animLoopDirection={loopDirection}
               animShowDot={showDot}
               animShowRings={showRings}
+              drawAnimationEnabled={drawAnimationEnabled}
             />
           </aside>
         )}

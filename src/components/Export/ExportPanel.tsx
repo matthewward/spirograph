@@ -25,6 +25,7 @@ interface ExportPanelProps {
   animLoopDirection: LoopDirection;
   animShowDot: boolean;
   animShowRings: boolean;
+  drawAnimationEnabled: boolean;
 }
 
 export function ExportPanel({
@@ -41,10 +42,10 @@ export function ExportPanel({
   animLoopDirection,
   animShowDot,
   animShowRings,
+  drawAnimationEnabled,
 }: ExportPanelProps) {
   const { generateShareURL } = useURLState();
   const [copySuccess, setCopySuccess] = useState(false);
-  const [autoPlay, setAutoPlay] = useState(false);
 
   const handleShare = async () => {
     const shareURL = generateShareURL(
@@ -55,7 +56,9 @@ export function ExportPanel({
       animLoopDirection,
       animShowDot,
       animShowRings,
-      autoPlay
+      drawAnimationEnabled,
+      drawAnimationEnabled,
+      params.waveEffect.enabled
     );
 
     try {
@@ -101,14 +104,6 @@ export function ExportPanel({
           {copySuccess ? "Copied" : "Share"}
         </button>
       </div>
-      <label className={styles.checkboxLabel}>
-        <input
-          type="checkbox"
-          checked={autoPlay}
-          onChange={(e) => setAutoPlay(e.target.checked)}
-        />
-        <span>Start animated</span>
-      </label>
     </div>
   );
 }
