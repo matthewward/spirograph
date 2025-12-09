@@ -241,15 +241,15 @@ export function useSpirograph(): UseSpirographResult {
         params,
         curveType,
         getOscillatedParams,
-        720
+        1440
       );
     } else {
       // Normal sampling without oscillation
-      rawPoints = sampleSpirograph(params, curveType, 720);
+      rawPoints = sampleSpirograph(params, curveType, 1440);
     }
 
     // Simplify to reduce point count (lower epsilon for smoother curves)
-    const simplifiedPoints = simplifyPath(rawPoints, 0.1);
+    const simplifiedPoints = simplifyPath(rawPoints, 0.05);
 
     // Calculate bounds from base points
     const bbox = getBoundingBox(simplifiedPoints);

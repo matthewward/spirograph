@@ -130,7 +130,7 @@ export function DrawAnimationControls({
           }
           className={styles.select}
         >
-          <option value="none">None</option>
+          {/* <option value="none">None</option> */}
           <option value="continue">Continue</option>
           <option value="pingpong">Ping-Pong</option>
         </select>
