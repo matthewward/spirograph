@@ -274,9 +274,10 @@ export function useSpirograph(): UseSpirographResult {
     // Calculate path length for animation
     const length = calculatePathLength(finalPoints);
 
-    // Get bounding box and create viewBox with minimal padding
+    // Get bounding box and create viewBox with padding based on stroke width
     const finalBbox = getBoundingBox(finalPoints);
-    const padding = 2;
+    // Padding should be at least half the stroke width (plus a small buffer)
+    const padding = Math.max(params.strokeWidth / 2 + 1, 2);
     const vb = `${finalBbox.minX - padding} ${finalBbox.minY - padding} ${finalBbox.width + padding * 2} ${finalBbox.height + padding * 2}`;
 
     return {

@@ -128,7 +128,7 @@ export function MainControls({
               <NumberInput
                 value={params.arcness}
                 onChange={(value) => onChange({ arcness: value })}
-                min={-0.5}
+                min={-0.49}
                 max={10}
                 step={0.01}
                 className={`${styles.numberInput} ${!params.arcnessEnabled ? styles.disabled : ""}`}
