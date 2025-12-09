@@ -139,7 +139,7 @@ export function WaveAnimationControls({
             })
           }
           min={0}
-          max={12}
+          max={20}
           step={0.1}
         />
       </div>
