@@ -27,6 +27,8 @@ function App() {
     pathLength,
     viewBox,
     randomize,
+    goBack,
+    canGoBack,
     basePoints,
     bounds,
   } = useSpirograph();
@@ -165,6 +167,8 @@ function App() {
               parameterOscillations={parameterOscillations}
               onParameterOscillationsChange={setParameterOscillations}
               onRandomize={randomize}
+              onGoBack={goBack}
+              canGoBack={canGoBack}
             />
 
             <div className={styles.waveAnimationSection}>

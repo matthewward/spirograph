@@ -15,6 +15,8 @@ interface MainControlsProps {
     update: Partial<SpirographOscillations>
   ) => void;
   onRandomize: () => void;
+  onGoBack: () => void;
+  canGoBack: boolean;
 }
 
 export function MainControls({
@@ -25,12 +27,42 @@ export function MainControls({
   parameterOscillations,
   onParameterOscillationsChange,
   onRandomize,
+  onGoBack,
+  canGoBack,
 }: MainControlsProps) {
   return (
     <div className={styles.container}>
-      <button onClick={onRandomize} className={styles.randomizeButton}>
-        Randomize
-      </button>
+      <div className={styles.randomizeRow}>
+        <button onClick={onRandomize} className={styles.randomizeButton}>
+          Randomize
+        </button>
+        {canGoBack && (
+          <button
+            onClick={onGoBack}
+            className={styles.backButton}
+            title="Go back to previous randomization"
+          >
+            <svg
+              width="25px"
+              height="25px"
+              viewBox="0 0 25 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5.88468 17C7.32466 19.1128 9.75033 20.5 12.5 20.5C16.9183 20.5 20.5 16.9183 20.5 12.5C20.5 8.08172 16.9183 4.5 12.5 4.5C8.08172 4.5 4.5 8.08172 4.5 12.5V13.5"
+                stroke="currentColor"
+                stroke-width="1.2"
+              />
+              <path
+                d="M7 11L4.5 13.5L2 11"
+                stroke="currentColor"
+                stroke-width="1.2"
+              />
+            </svg>
+          </button>
+        )}
+      </div>
 
       <div className={styles.controlGroup}>
         <RangeControl

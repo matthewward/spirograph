@@ -31,6 +31,8 @@ export interface UseSpirographResult {
   pathLength: number;
   viewBox: string;
   randomize: () => void;
+  goBack: () => void;
+  canGoBack: boolean;
   basePoints: Point[];
   bounds: { minX: number; maxX: number; minY: number; maxY: number };
 }
@@ -141,11 +143,17 @@ function getInitialOscillations(
 
 const INITIAL_PARAMS = getInitialParams();
 
+interface HistoryEntry {
+  params: SpirographParams;
+  oscillations: SpirographOscillations;
+}
+
 export function useSpirograph(): UseSpirographResult {
   const [params, setParamsState] = useState<SpirographParams>(INITIAL_PARAMS);
   const [curveType, setCurveType] = useState<CurveType>(getInitialCurveType());
   const [parameterOscillations, setParameterOscillationsState] =
     useState<SpirographOscillations>(getInitialOscillations(INITIAL_PARAMS));
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   const animationFrameRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -291,9 +299,32 @@ export function useSpirograph(): UseSpirographResult {
   }, [params, curveType, parameterOscillations, hasOscillations]);
 
   const randomize = () => {
+    // Save current state to history before randomizing
+    setHistory((prev) => [
+      ...prev,
+      {
+        params,
+        oscillations: parameterOscillations,
+      },
+    ]);
+
     const newParams = getRandomDefaultParams();
     setParamsState(newParams);
     setParameterOscillationsState(getInitialOscillations(newParams));
+  };
+
+  const goBack = () => {
+    if (history.length === 0) return;
+
+    // Get the last entry from history
+    const lastEntry = history[history.length - 1];
+
+    // Remove it from history
+    setHistory((prev) => prev.slice(0, -1));
+
+    // Restore the state
+    setParamsState(lastEntry.params);
+    setParameterOscillationsState(lastEntry.oscillations);
   };
 
   return {
@@ -308,6 +339,8 @@ export function useSpirograph(): UseSpirographResult {
     pathLength,
     viewBox,
     randomize,
+    goBack,
+    canGoBack: history.length > 0,
     basePoints,
     bounds,
   };

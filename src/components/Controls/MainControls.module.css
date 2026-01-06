@@ -7,12 +7,18 @@
   border-radius: var(--border-radius);
 }
 
+.randomizeRow {
+  display: flex;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
 .randomizeButton {
   font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  flex: 1;
   height: 44px;
   background: var(--bg-tertiary);
   border-radius: var(--border-radius-sm);
@@ -23,6 +29,28 @@
 }
 
 .randomizeButton:hover {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  &:hover {
+    color: var(--text-tertiary);
+  }
+}
+
+.backButton:hover {
   background: var(--accent-cyan);
   color: var(--bg-primary);
 }
